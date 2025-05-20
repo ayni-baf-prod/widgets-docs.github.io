@@ -1,0 +1,88 @@
+site_name: Documentación de Widgets
+site_url: https://TU_USUARIO_GITHUB.github.io/widgets-doc/ # Cambia esto!
+site_author: Wiliams Jiménez - BAF - Aynitech Factory
+# site_description: Descripción breve de tu plataforma de documentación.
+
+
+# Theme Configuration
+theme:
+  name: material
+  language: es # Para que los textos del tema estén en español (ej. "Buscar")
+  logo: assets/logo.png # Opcional: si tienes un logo
+  favicon: assets/favicon.ico # Opcional: si tienes un favicon
+  features:
+    - navigation.tabs # Para una navegación superior si tienes muchas secciones de primer nivel
+    - navigation.sections # Para expandir secciones en la barra lateral
+    - navigation.expand # Para expandir todas las secciones en la barra lateral por defecto
+    - navigation.indexes # Para que las páginas 'index.md' de cada sección aparezcan como la página principal de esa sección.
+    - toc.integrate # Para integrar la tabla de contenidos en la barra lateral
+    - search.suggest # Sugerencias de búsqueda
+    - search.highlight # Resaltar términos de búsqueda
+    # - content.tabs.link # Para enlazar pestañas de contenido
+    - content.code.annotate # Para anotaciones en bloques de código
+  palette:
+    # Paleta para modo claro
+    - scheme: default
+      primary: indigo # Color principal (puedes cambiarlo, e.g., blue, teal)
+      accent: blue # Color de acento
+      toggle:
+        icon: material/brightness-7
+        name: Cambiar a modo oscuro
+    # Paleta para modo oscuro
+    - scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Cambiar a modo claro
+  font:
+    text: Poppins # Ya que es la fuente principal de tus widgets
+    code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/github # Para el enlace al repositorio
+
+# Repository
+repo_name: NOMBRE_DEL_REPOSITORIO # El nombre de tu repo en GitHub
+repo_url: https://github.com/TU_USUARIO_GITHUB/NOMBRE_DEL_REPOSITORIO # Enlace completo
+
+# Extensions
+markdown_extensions:
+  - pymdownx.highlight: # Para resaltado de sintaxis en bloques de código
+      anchor_linenums: true
+  - pymdownx.superfences # Para bloques de código anidados y más
+  - pymdownx.inlinehilite
+  - pymdownx.snippets # Para incluir fragmentos de archivos
+  - admonition # Para bloques de notas, advertencias, etc. (ej. !!! note "Título")
+  - pymdownx.details # Para bloques desplegables
+  - attr_list # Para añadir atributos HTML a elementos Markdown
+  - md_in_html # Para procesar Markdown dentro de bloques HTML
+  - toc:
+      permalink: true # Añade enlaces permanentes a los encabezados
+
+# Navigation Structure (Aquí definiremos tu estructura)
+nav:
+  - Inicio: index.md
+  - Catálogo de Widgets:
+    - Introducción: catalogo/index.md
+    - Indicadores de Desempeño (KPIs):
+      - catalogo/kpis/index.md # Página de introducción a la categoría KPIs
+      # - KPI Card: catalogo/kpis/kpi-card.md (Ejemplo, lo añadiremos luego)
+      # - Circular Progress: catalogo/kpis/circular-progress.md
+      # - Gauge Chart: catalogo/kpis/gauge-chart.md
+    - Gráficos de Progreso y Proporción:
+      - catalogo/progreso_proporcion/index.md
+      # - Donut Chart: catalogo/progreso_proporcion/donut-chart.md
+    - Gráficos de Comparación:
+      - catalogo/comparacion/index.md
+      - Gráfico Combinado (COMBO_CHART_01): catalogo/comparacion/combo-chart-01.md
+      # - Horizontal Bar Chart: catalogo/comparacion/horizontal-bar-chart.md
+    - Gráficos de Distribución y Densidad:
+      - catalogo/distribucion_densidad/index.md
+      # - Heatmap: catalogo/distribucion_densidad/heatmap.md
+    - Tablas y Grillas Avanzadas:
+      - catalogo/tablas_grillas/index.md
+      # - Advanced Grid: catalogo/tablas_grillas/advanced-grid.md
+    - Más Widgets:
+      - catalogo/mas_widgets/index.md
+      # - (Aquí irían los widgets personalizados)
+  - Changelog: changelog.md

@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico Combinado Apilado Interactivo (Responsividad Mejorada)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column; /* Better for potential multiple items */
+            justify-content: center; /* Centers vertically if content is smaller than min-height */
+            align-items: center; /* Centers horizontally */
+            min-height: 100vh;
+            margin: 0; /* Remove default margin */
+            padding: 20px; /* Add padding to the body itself */
+            background-color: #f7f9fc;
+            box-sizing: border-box; /* So padding doesn't add to total width/height */
+        }
+        .chart-container {
+            width: 100%; /* Occupy full width of padded body */
+            max-width: 1200px; /* Increased max-width for larger screens */
+            padding: 20px; /* Internal padding for the chart card */
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box; /* padding included in width/height */
+        }
+        canvas {
+            font-family: 'Poppins', sans-serif;
+            /* width and height of canvas are controlled by Chart.js options and its container */
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <canvas id="comboStackedChartResponsive"></canvas>
+    </div>
+
+    <script>
+        const ctxStackedResponsive = document.getElementById('comboStackedChartResponsive').getContext('2d');
+        const chartDataStackedResponsive = {
+            labels: ['2018', '2019', '2020', '2021', '2022', '2023'],
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Revenue',
+                    data: [200000.0, 250000.0, 300000.0, 350000.0, 400000.0, 450000.0],
+                    backgroundColor: '#5A81FB',
+                    borderColor: '#5A81FB',
+                    borderWidth: 1,
+                    yAxisID: 'y1',
+                    stack: 'Stack0',
+                    order: 2
+                },
+                {
+                    type: 'bar',
+                    label: 'Cost',
+                    data: [150000.0, 180000.0, 220000.0, 250000.0, 300000.0, 350000.0],
+                    backgroundColor: '#00C6FC',
+                    borderColor: '#00C6FC',
+                    borderWidth: 1,
+                    yAxisID: 'y1',
+                    stack: 'Stack0',
+                    order: 2
+                },
+                {
+                    type: 'line',
+                    label: 'EBIT %',
+                    data: [0.25, 0.28, 0.27, 0.29, 0.25, 0.22],
+                    backgroundColor: '#FFBF00',
+                    borderColor: '#FFBF00',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#FFBF00',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#FFBF00',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.4,
+                    yAxisID: 'y2',
+                    order: 1
+                }
+            ]
+        };
+
+        const configStackedResponsive = {
+            data: chartDataStackedResponsive,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2, // You can adjust this if needed, e.g., 2.5 for wider, 1.7 for taller bias
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: 'Poppins',
+                                size: 12
+                            },
+                            color: 'rgba(100, 100, 100, 1)',
+                            boxWidth: 15,
+                            padding: 25
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index', 
+                        intersect: false,
+                        titleFont: {
+                            family: 'Poppins',
+                            size: 12,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            family: 'Poppins',
+                            size: 12
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    if (context.dataset.yAxisID === 'y2') {
+                                        label += (context.parsed.y * 100).toFixed(0) + '%';
+                                    } else {
+                                        label += (context.parsed.y / 1000).toLocaleString('en-US') + 'K $';
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Poppins',
+                                size: 12
+                            },
+                            color: 'rgba(100, 100, 100, 1)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'left',
+                        stacked: true,
+                        grid: {
+                            color: 'rgba(200, 200, 200, 0.3)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Poppins',
+                                size: 12
+                            },
+                            color: 'rgba(100, 100, 100, 1)',
+                            callback: function(value, index, values) {
+                                if (value === 0) return '0$';
+                                return (value / 1000) + 'K $';
+                            }
+                        }
+                    },
+                    y2: {
+                        type: 'linear',
+                        position: 'right',
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Poppins',
+                                size: 12
+                            },
+                            color: 'rgba(100, 100, 100, 1)',
+                            callback: function(value, index, values) {
+                                return (value * 100).toFixed(0) + '%';
+                            }
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: (Math.max(...[0.25, 0.28, 0.27, 0.29, 0.25, 0.22]) > 0.4) ? Math.max(...[0.25, 0.28, 0.27, 0.29, 0.25, 0.22]) * 1.2 : 0.4
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+            }
+        };
+
+        const comboStackedChartResponsive = new Chart(ctxStackedResponsive, configStackedResponsive);
+    </script>
+</body>
+</html>
