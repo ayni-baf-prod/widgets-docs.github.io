@@ -1,5 +1,5 @@
 site_name: Documentación de Widgets
-site_url: https://TU_USUARIO_GITHUB.github.io/widgets-doc/ # Cambia esto!
+site_url: https://github.com/ayni-baf-prod/widgets-docs.github.io/ # Cambia esto!
 site_author: Wiliams Jiménez - BAF - Aynitech Factory
 # site_description: Descripción breve de tu plataforma de documentación.
 
@@ -43,7 +43,7 @@ theme:
 
 # Repository
 repo_name: NOMBRE_DEL_REPOSITORIO # El nombre de tu repo en GitHub
-repo_url: https://github.com/TU_USUARIO_GITHUB/NOMBRE_DEL_REPOSITORIO # Enlace completo
+repo_url: https://github.com/ayni-baf-prod/widgets-docs.github.io # Enlace completo
 
 # Extensions
 markdown_extensions:
