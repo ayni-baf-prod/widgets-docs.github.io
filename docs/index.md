@@ -9,6 +9,7 @@ Ayudar a los desarrolladores a entender funcionalmente para que y como se usa el
 ## Principios de Diseño y Estilo
 
 Para efectos de documentación todos los widgets siguen una línea de diseño, pero para cuando estén en producción en la plataforma, estas deben de permitir personalización de acuerdo a los proyectos particulares.
+
 - **Tipografía Principal:** Poppins
 - **Paleta de Colores Principal:**
     - Azul Primario: `#5A81FB`

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Updates</title>
+    <style>
+        .recent-updates {
+            max-width: 800px;
+            margin: 20px auto;
+            font-family: 'Poppins', sans-serif;
+        }
+        .update-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .update-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .update-content {
+            flex-grow: 1;
+        }
+        .commit-message {
+            font-size: 14px;
+            color: #0056A3;
+        }
+        .commit-meta {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="recent-updates"></div>
+
+    <script>
+        //fetch('https://github.com/ayni-baf-prod/widgets-docs.github.io/commits')
+        fetch('https://api.github.com/repos/ayni-baf-prod/widgets-docs.github.io/commits', {
+    headers: {
+        'Authorization': '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'
+    }
+})
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const updatesContainer = document.querySelector('.recent-updates');
+                updatesContainer.innerHTML = '<h2>Recent Updates</h2>'; // Reset the section
+
+                data.forEach(commit => {
+                    const updateItem = document.createElement('div');
+                    updateItem.className = 'update-item';
+
+                    updateItem.innerHTML = `
+                        <img src="${commit.author?.avatar_url || 'https://via.placeholder.com/32'}" alt="${commit.commit.author.name} avatar">
+                        <div class="update-content">
+                            <div class="commit-message">${commit.commit.message}</div>
+                            <div class="commit-meta">
+                                ${commit.commit.author.name} • ${new Date(commit.commit.author.date).toLocaleString()}
+                            </div>
+                        </div>
+                    `;
+
+                    updatesContainer.appendChild(updateItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching commits:', error);
+                const updatesContainer = document.querySelector('.recent-updates');
+                updatesContainer.innerHTML += '<p>Failed to load commits. Please check the console for details.</p>';
+            });
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'943224f1dd29676b',t:'MTc0NzgxMDI3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

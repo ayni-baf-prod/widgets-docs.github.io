@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grilla de Indicadores (v2)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Allow body to be at least height of viewport if needed by content */
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: rgba(75, 75, 75, 1);
+            background-color: #f7f9fc; /* Background for the entire iframe viewport */
+            display: flex;
+            justify-content: center; /* Centers .grid-container horizontally */
+            align-items: flex-start; /* Aligns .grid-container to the top */
+            padding: 20px; /* Provides spacing around .grid-container */
+            box-sizing: border-box; /* Padding included in width/height calculation */
+            /* min-height: 100vh; REMOVED to prevent excessive height */
+        }
+        .grid-container {
+            background-color: #fff; /* White background for the actual widget card */
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            width: 100%; /* Takes full width available from padded body */
+            max-width: 600px; /* Max width of the widget card */
+            box-sizing: border-box;
+            /* The height of grid-container will be determined by its content */
+        }
+        .widget-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: rgba(50, 50, 50, 1);
+            margin-bottom: 8px;
+        }
+        .widget-subtitle {
+            font-size: 13px;
+            color: rgba(75, 75, 75, 1);
+            margin-bottom: 25px;
+        }
+        .indicator-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+        .indicator-table th, .indicator-table td {
+            padding: 10px 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        .indicator-table th {
+            font-weight: 600;
+            color: rgba(50, 50, 50, 1);
+            font-size: 13px;
+            border-bottom: 1px solid rgba(150, 150, 150, 0.5);
+        }
+        .indicator-table .th-variation {
+            text-align: right;
+            padding-right: 20px;
+        }
+        .indicator-table .th-value {
+            text-align: right;
+        }
+        .indicator-table td:first-child {
+            font-weight: 400;
+        }
+        .indicator-table .variation-cell {
+            text-align: right;
+            font-weight: 600;
+            padding-right: 20px;
+        }
+        .indicator-table .value-cell {
+            text-align: right;
+            font-weight: 600;
+        }
+        .var-positive { color: #20c997; }
+        .var-negative { color: #dc3545; }
+        .var-neutral { color: rgba(75, 75, 75, 1); }
+        .total-row td {
+            font-weight: 700 !important;
+            color: rgba(0, 0, 0, 0.85);
+        }
+        .total-row {
+             border-top: 1.5px solid rgba(150, 150, 150, 0.5);
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; } /* Less padding on small screens */
+            .grid-container { padding: 15px; }
+            .widget-title { font-size: 20px; }
+            .widget-subtitle { font-size: 12px; }
+            .indicator-table, .indicator-table th, .indicator-table td {
+                font-size: 13px;
+            }
+            .indicator-table th, .indicator-table td {
+                 padding: 8px 5px;
+            }
+            .indicator-table .th-variation, .indicator-table .variation-cell {
+                 padding-right: 10px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="widget-title">Income Statement</div>
+        <div class="widget-subtitle">All figures in USD millions unless stated</div>
+        <table class="indicator-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="th-variation">▲ %</th>
+                    <th class="th-value">2022</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr class="">
+            <td>Revenue</td>
+            <td class="variation-cell var-positive">▲ 10.0%</td>
+            <td class="value-cell">98,67M</td>
+        </tr>
+    
+        <tr class="">
+            <td>Cost of Goods</td>
+            <td class="variation-cell var-positive">▲ 5.0%</td>
+            <td class="value-cell">44,40M</td>
+        </tr>
+    
+        <tr class="total-row">
+            <td>Gross Profit</td>
+            <td class="variation-cell var-positive">▲ 1.0%</td>
+            <td class="value-cell">54,26M</td>
+        </tr>
+    
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

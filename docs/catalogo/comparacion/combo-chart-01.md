@@ -7,16 +7,16 @@
 ## 2. Propósito y Casos de Uso
 - **Objetivo**: Comparar distribuciones (barras) y tendencias (líneas) en un mismo contexto, como ingresos y porcentajes de utilidad, permitiendo visualizar valores con distintas unidades.
 - **Casos de uso**:
-  - Mostrar ingresos (barras) y porcentaje de EBIT (línea) a lo largo del tiempo.
-  - Comparar costos (barras) y ganancias netas (línea) por año.
+    - Mostrar ingresos (barras) y porcentaje de EBIT (línea) a lo largo del tiempo.
+    - Comparar costos (barras) y ganancias netas (línea) por año.
 - **Tipos de análisis soportados**: Descriptivo, comparativo, tendencia.
 
 ## 3. Requerimientos de Datos
 - **Variables/Indicadores**:
-  - Mínimo: 2 variables numéricas (ej. ingresos, porcentaje), 1 variable temporal.
-  - Máximo: 3 variables numéricas (ej. ingresos, costos, porcentaje), 1 variable temporal.
-  - Tipos de datos: Numérico (valores), temporal (eje X).
-  - **Estructura de datos** (grilla):
+    - Mínimo: 2 variables numéricas (ej. ingresos, porcentaje), 1 variable temporal.
+    - Máximo: 3 variables numéricas (ej. ingresos, costos, porcentaje), 1 variable temporal.
+    - Tipos de datos: Numérico (valores), temporal (eje X).
+- **Estructura de datos** (grilla):
     ```
     | Año  | Revenue (USD) | Cost (USD) | EBIT % |
     |------|---------------|------------|--------|
@@ -29,25 +29,25 @@
 
 ## 4. Configuración Visual
 - **Estructura del gráfico**:
-  - Barras apiladas (ej. ingresos y costos) y línea (ej. EBIT %).
-  - Dimensiones: Mínimo 500x300 px, adaptable a pantalla.
+    - Barras apiladas (ej. ingresos y costos) y línea (ej. EBIT %).
+    - Dimensiones: Mínimo 500x300 px, adaptable a pantalla.
 - **Categorías/Series**:
-  - Máximo 10 puntos temporales (ej. años o trimestres).
-  - Exceso de categorías: Mostrar advertencia o paginación.
+    - Máximo 10 puntos temporales (ej. años o trimestres).
+    - Exceso de categorías: Mostrar advertencia o paginación.
 - **Opciones de personalización**:
-  - Colores: Paleta personalizable (barras: azul/naranja, línea: amarillo).
-  - Etiquetas: Mostrar/ocultar valores en barras y puntos de línea.
-  - Formato de valores: Moneda (USD), % para líneas, decimales.
-  - Formato de texto (valores y puntos temporales): Font personalizable (ej. Arial, Roboto), tamaño (8-16px), color (cualquier hexadecimal).
-  - Ejes: Opción para ocultar líneas de ejes (tanto X como Y).
-  - Ordenamiento: Cronológico por eje temporal.
-  - Escalas: Eje Y izquierdo (valores en USD), eje Y derecho (%).
+    - Colores: Paleta personalizable (barras: azul/naranja, línea: amarillo).
+    - Etiquetas: Mostrar/ocultar valores en barras y puntos de línea.
+    - Formato de valores: Moneda (USD), % para líneas, decimales.
+    - Formato de texto (valores y puntos temporales): Font personalizable (ej. Arial, Roboto), tamaño (8-16px), color (cualquier hexadecimal).
+    - Ejes: Opción para ocultar líneas de ejes (tanto X como Y).
+    - Ordenamiento: Cronológico por eje temporal.
+    - Escalas: Eje Y izquierdo (valores en USD), eje Y derecho (%).
 
 ## 5. Interactividad
 - **Funcionalidades interactivas**:
-  - Filtros: Seleccionar rango de años.
-  - Tooltips: Mostrar valores exactos de barras y líneas al pasar el cursor.
-  - Zoom: En eje temporal (ej. de años a trimestres).
+    - Filtros: Seleccionar rango de años.
+    - Tooltips: Mostrar valores exactos de barras y líneas al pasar el cursor.
+    - Zoom: En eje temporal (ej. de años a trimestres).
 - **Eventos soportados**: Clic en barra/línea para detalle, exportar como PNG/CSV.
 
 ## 6. Limitaciones

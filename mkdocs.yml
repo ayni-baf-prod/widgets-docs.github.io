@@ -42,8 +42,10 @@ theme:
     repo: fontawesome/brands/github # Para el enlace al repositorio
 
 # Repository
-repo_name: NOMBRE_DEL_REPOSITORIO # El nombre de tu repo en GitHub
-repo_url: https://github.com/ayni-baf-prod/widgets-docs.github.io # Enlace completo
+repo_name: widgets-docs # El nombre de tu repo en GitHub
+#repo_url: https://github.com/ayni-baf-prod/widgets-docs.github.io # Enlace completo
+extra:
+  generator: false
 
 # Extensions
 markdown_extensions:
@@ -81,7 +83,7 @@ nav:
       # - Heatmap: catalogo/distribucion_densidad/heatmap.md
     - Tablas y Grillas Avanzadas:
       - catalogo/tablas_grillas/index.md
-      # - Advanced Grid: catalogo/tablas_grillas/advanced-grid.md
+      - Indicators Grid (INDICATOR-GRID-01): catalogo/tablas_grillas/indicator-grid-01.md
     - Más Widgets:
       - catalogo/mas_widgets/index.md
       # - (Aquí irían los widgets personalizados)
