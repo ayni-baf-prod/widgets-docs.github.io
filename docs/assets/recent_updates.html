@@ -40,12 +40,7 @@
     <div class="recent-updates"></div>
 
     <script>
-        //fetch('https://github.com/ayni-baf-prod/widgets-docs.github.io/commits')
-        fetch('https://api.github.com/repos/ayni-baf-prod/widgets-docs.github.io/commits', {
-    headers: {
-        'Authorization': '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'
-    }
-})
+        fetch('https://api.github.com/repos/ayni-baf-prod/widgets-docs.github.io/commits')        
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
