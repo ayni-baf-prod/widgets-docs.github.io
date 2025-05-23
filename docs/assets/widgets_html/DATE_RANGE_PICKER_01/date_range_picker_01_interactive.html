@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector de Rango de Fechas (v4 - SyntaxError Fix)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        html, body { margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; box-sizing: border-box;
+        }
+        .date-picker-widget { display: flex; align-items: center; gap: 10px; position: relative; }
+        .date-picker-label { font-size: 12px; font-weight: 600; color: rgba(50, 50, 50, 1); text-transform: uppercase; }
+        .date-display-field { display: flex; align-items: center; background-color: #fff; border: 1px solid rgba(208,213,221,1); border-radius: 10px; padding: 0; height: 40px; min-width: 230px; cursor: pointer; transition: border-color 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+        .date-display-field:hover { border-color: #b0b0b0; }
+        .date-display-text { flex-grow: 1; font-size: 14px; font-weight: 500; color: rgba(75,85,99,1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 12px; line-height: 40px; }
+        .date-display-icon-wrapper { display: flex; align-items: center; justify-content: center; width: 42px; height: 36px; background-color: rgba(229,231,235,.7); border-radius: 8px; margin-right: 2px; }
+        .date-display-icon-wrapper svg { width: 18px; height: 18px; fill: rgba(107,114,128,1); }
+        .date-picker-popup { display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); 
+            /*width: 380px;*/ 
+            width: auto; /* Allow content to define width, then constrain with max-width */
+            min-width: 320px; /* A new minimum width for the popup */
+            max-width: 380px; /* Keep max width if needed */
+            background-color: #fff; border: 1px solid rgba(229,231,235,1); border-radius: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.12); padding: 16px; z-index: 1000; }
+        .date-picker-popup.open { display: block; }
+        .popup-inputs-row { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+        .popup-input-group { flex: 1; }
+        .popup-input-group label { display: block; font-size: 11px; font-weight: 600; color: rgba(50,50,50,1); margin-bottom: 6px; text-transform: uppercase; }
+        .popup-input-field-wrapper { display: flex; align-items: center; background-color: rgba(243,244,246,1); border: 1px solid rgba(208,213,221,1); border-radius: 6px; padding-left: 10px; height: 36px; }
+        .popup-input-field-wrapper input[type="text"] { 
+            width: calc(100% - 48px); /* Width of wrapper minus icon and some padding */
+            max-width: 110px; /* Max width for date text: dd.mm.yyyy + padding */
+            min-width: 90px; /* Min width for date text */
+            padding: 0 10px; /* 10px padding on sides of text */
+            flex-grow: 1; 
+            border: none; 
+            outline: none; 
+            background-color: transparent; 
+            font-family: 'Poppins', sans-serif; 
+            font-size: 13px; 
+            font-weight: 500; 
+            color: rgba(75,85,99,1); 
+        }
+        .popup-input-icon-wrapper { display: flex; align-items: center; justify-content: center; width: 38px; height: 32px; background-color: rgba(229,231,235,.9); border-radius: 5px; margin-right: 1px; cursor: pointer; }
+        .popup-input-icon-wrapper svg { width: 16px; height: 16px; fill: rgba(107,114,128,1); }
+        .popup-presets { display: flex; flex-direction: column; gap: 8px; }
+        .popup-preset-button { background-color: rgba(243,244,246,.9); color: rgba(55,65,81,1); border: none; border-radius: 6px; padding: 9px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; transition: background-color 0.2s; }
+        .popup-preset-button:hover { background-color: rgba(229,231,235,1); }
+        .flatpickr-calendar { font-family: 'Poppins', sans-serif; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid rgba(229,231,235,1); background: #fff; width: auto; }
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: #5A81FB; border-color: #5A81FB; color: #fff; }
+        .flatpickr-day.today { border-color: #FFC87C; color: #FFC87C; }
+        .flatpickr-day.today:not(.selected):hover { border-color: #FFC87C; }
+        .flatpickr-day:hover { background: #e9e9e9; border-color: #e9e9e9; }
+        .flatpickr-months .flatpickr-month, .flatpickr-weekdays { background: #fff; }
+        .flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month { fill: rgba(75,85,99,1); }
+        .flatpickr-current-month .flatpickr-monthDropdown-months, .flatpickr-current-month input.cur-year { font-weight: 500; color: rgba(75,85,99,1); }
+    </style>
+</head>
+<body>
+    <div class="date-picker-widget">
+        <label class="date-picker-label">DATE</label>
+        <div class="date-display-field" id="dateDisplayField" tabindex="0">
+            <span class="date-display-text" id="dateDisplayText">July 05 - October 15, 2021</span>
+            <div class="date-display-icon-wrapper"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm10 5H4v8h12V7z" clip-rule="evenodd"></path></svg></div>
+        </div>
+
+        <div class="date-picker-popup" id="datePickerPopup">
+            <div class="popup-inputs-row">
+                <div class="popup-input-group">
+                    <label for="dateFromInput">FROM</label>
+                    <div class="popup-input-field-wrapper">
+                        <input type="text" id="dateFromInput" placeholder="dd.mm.yyyy" value="05.07.2021">
+                        <div class="popup-input-icon-wrapper" id="fromIcon"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm10 5H4v8h12V7z" clip-rule="evenodd"></path></svg></div>
+                    </div>
+                </div>
+                <div class="popup-input-group">
+                    <label for="dateToInput">TO</label>
+                     <div class="popup-input-field-wrapper">
+                        <input type="text" id="dateToInput" placeholder="dd.mm.yyyy" value="15.10.2021">
+                        <div class="popup-input-icon-wrapper" id="toIcon"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm10 5H4v8h12V7z" clip-rule="evenodd"></path></svg></div>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-presets">
+                <button type="button" class="popup-preset-button" data-range="last-week">Last Week</button>
+                <button type="button" class="popup-preset-button" data-range="last-month">Last Month</button>
+                <button type="button" class="popup-preset-button" data-range="last-year">Last Year</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const displayField = document.getElementById('dateDisplayField');
+            const displayTextElement = document.getElementById('dateDisplayText');
+            const popup = document.getElementById('datePickerPopup');
+            const fromInput = document.getElementById('dateFromInput');
+            const toInput = document.getElementById('dateToInput');
+            const fromIcon = document.getElementById('fromIcon');
+            const toIcon = document.getElementById('toIcon');
+
+            let fpFrom, fpTo;
+            let currentDateFrom = new Date("2021-07-05");
+            let currentDateTo = new Date("2021-10-15");
+
+            function jsFormatDateRangeDisplay(startDate, endDate) {
+                const sMonth = startDate.toLocaleString('en-US', { month: 'long' });
+                const sDay = startDate.getDate().toString().padStart(2, '0');
+                const sYear = startDate.getFullYear();
+                const eMonth = endDate.toLocaleString('en-US', { month: 'long' });
+                const eDay = endDate.getDate().toString().padStart(2, '0');
+                const eYear = endDate.getFullYear();
+
+                // Using string concatenation instead of template literals for robustness
+                if (sYear === eYear) {
+                    if (sMonth === eMonth) {
+                        return sMonth + " " + sDay + " - " + eDay + ", " + sYear;
+                    } else {
+                        return sMonth + " " + sDay + " - " + eMonth + " " + eDay + ", " + sYear;
+                    }
+                } else {
+                    return sMonth + " " + sDay + ", " + sYear + " - " + eMonth + " " + eDay + ", " + eYear;
+                }
+            }
+            
+            function updateMainDisplay() {
+                if (currentDateFrom && currentDateTo) {
+                    displayTextElement.textContent = jsFormatDateRangeDisplay(currentDateFrom, currentDateTo);
+                }
+            }
+
+            const commonFlatpickrOptions = {
+                dateFormat: "d.m.Y",
+                allowInput: true,
+                static: true,
+            };
+
+            fpFrom = flatpickr(fromInput, {
+                ...commonFlatpickrOptions,
+                defaultDate: currentDateFrom,
+                onChange: function(selectedDates) {
+                    if (selectedDates[0]) {
+                        currentDateFrom = selectedDates[0];
+                        if (fpTo) { fpTo.set('minDate', currentDateFrom); }
+                        if (currentDateTo && currentDateFrom > currentDateTo) {
+                            currentDateTo = new Date(currentDateFrom.getTime()); // Ensure new Date object
+                            if (fpTo) { fpTo.setDate(currentDateTo, false); }
+                        }
+                        updateMainDisplay();
+                    }
+                }
+            });
+
+            fpTo = flatpickr(toInput, {
+                ...commonFlatpickrOptions,
+                defaultDate: currentDateTo,
+                onChange: function(selectedDates) {
+                     if (selectedDates[0]) {
+                        currentDateTo = selectedDates[0];
+                        if (fpFrom) { fpFrom.set('maxDate', currentDateTo); }
+                        updateMainDisplay();
+                    }
+                }
+            });
+            
+            // Initial sync for min/max dates
+            if (currentDateFrom && fpTo) { fpTo.set('minDate', currentDateFrom); }
+            if (currentDateTo && fpFrom) { fpFrom.set('maxDate', currentDateTo); }
+            updateMainDisplay(); // Call initial display update
+
+            fromIcon.addEventListener('click', function() { fpFrom.open(); });
+            toIcon.addEventListener('click', function() { fpTo.open(); });
+
+            displayField.addEventListener('click', function(event) {
+                event.stopPropagation();
+                popup.classList.toggle('open');
+            });
+            
+            displayField.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault(); 
+                    popup.classList.toggle('open');
+                } else if (event.key === 'Escape' && popup.classList.contains('open')) {
+                     popup.classList.remove('open');
+                }
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!popup.contains(event.target) && !displayField.contains(event.target) && popup.classList.contains('open')) {
+                    popup.classList.remove('open');
+                }
+            });
+            
+            document.querySelectorAll('.popup-preset-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const rangeType = this.dataset.range; // Use 'this'
+                    const todayForCalc = new Date(); // Fresh 'today' for each calculation
+                    
+                    let startDate, endDate; 
+
+                    if (rangeType === 'last-week') {
+                        let currentDay = todayForCalc.getDay(); // 0 (Sun) - 6 (Sat)
+                        let diffToPrevSunday = todayForCalc.getDate() - currentDay - 7;
+                        startDate = new Date(todayForCalc.getFullYear(), todayForCalc.getMonth(), diffToPrevSunday);
+                        endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 6);
+                    } else if (rangeType === 'last-month') {
+                        startDate = new Date(todayForCalc.getFullYear(), todayForCalc.getMonth() - 1, 1);
+                        endDate = new Date(todayForCalc.getFullYear(), todayForCalc.getMonth(), 0);
+                    } else if (rangeType === 'last-year') {
+                        const lastYear = todayForCalc.getFullYear() - 1;
+                        startDate = new Date(lastYear, 0, 1);
+                        endDate = new Date(lastYear, 11, 31);
+                    }
+                    
+                    if (startDate && endDate) {
+                        currentDateFrom = startDate;
+                        currentDateTo = endDate;
+                        if(fpFrom) { fpFrom.setDate(startDate, true); }
+                        if(fpTo) { fpTo.setDate(endDate, true); }
+                        // updateMainDisplay(); // Called by fp onChange
+                        popup.classList.remove('open');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

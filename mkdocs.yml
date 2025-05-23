@@ -73,18 +73,20 @@ nav:
       # - Gauge Chart: catalogo/kpis/gauge-chart.md
     - Gráficos de Progreso y Proporción:
       - catalogo/progreso_proporcion/index.md
+      - Gauge Chart: catalogo/progreso_proporcion/gauge-chart-01.md
       # - Donut Chart: catalogo/progreso_proporcion/donut-chart.md
     - Gráficos de Comparación:
       - catalogo/comparacion/index.md
-      - Gráfico Combinado (COMBO_CHART_01): catalogo/comparacion/combo-chart-01.md
+      - Gráfico Combinado: catalogo/comparacion/combo-chart-01.md
       # - Horizontal Bar Chart: catalogo/comparacion/horizontal-bar-chart.md
     - Gráficos de Distribución y Densidad:
       - catalogo/distribucion_densidad/index.md
-      # - Heatmap: catalogo/distribucion_densidad/heatmap.md
+      - Heatmap: catalogo/distribucion_densidad/heatmap-01.md
     - Tablas y Grillas Avanzadas:
       - catalogo/tablas_grillas/index.md
-      - Indicators Grid (INDICATOR-GRID-01): catalogo/tablas_grillas/indicator-grid-01.md
+      - Indicators Grid: catalogo/tablas_grillas/indicator-grid-01.md
     - Más Widgets:
       - catalogo/mas_widgets/index.md
-      # - (Aquí irían los widgets personalizados)
+      - Filtro Desplegable: catalogo/mas_widgets/filter-dropdown-01.md
+      - Selector rango de fechas: catalogo/mas_widgets/date-range-picker-01.md
   - Changelog: changelog.md

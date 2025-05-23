@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro Desplegable Personalizado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            box-sizing: border-box;
+            min-height: 250px; /* Min height to see dropdown open */
+        }
+        .filter-widget-container {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Space between label and dropdown */
+        }
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600; 
+            color: rgba(50, 50, 50, 1);
+            text-transform: uppercase; 
+        }
+        
+        /* Custom Dropdown Styles */
+        .custom-dropdown {
+            position: relative;
+            display: inline-block;
+            min-width: 180px; /* Approximate width from image */
+            font-size: 15px;
+            user-select: none; /* Prevent text selection */
+        }
+        .custom-dropdown-selected {
+            background-color: #ffffff;
+            color: rgba(75, 85, 99, 1);
+            padding: 10px 35px 10px 15px; /* Right padding for arrow */
+            border: 1px solid rgba(208, 213, 221, 1);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 18px; /* Content height, total height will be ~40px with padding */
+            line-height: 18px;
+            font-weight: 400; /* Normal weight for selected text */
+            transition: border-color 0.2s ease-in-out;
+        }
+        .custom-dropdown-selected:hover, .custom-dropdown.open .custom-dropdown-selected {
+            border-color: #5A81FB;
+        }
+        .custom-dropdown-arrow {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid rgba(50, 50, 50, 1); /* Arrow color */
+            transition: transform 0.2s ease;
+        }
+        .custom-dropdown.open .custom-dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        .custom-dropdown-options {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: calc(100% + 6px); /* Position below the selected box with a small gap */
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            border: 1px solid rgba(208, 213, 221, 1);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 6px 0; /* Padding top/bottom for the list container */
+            max-height: 200px; /* Optional: if list can be very long */
+            overflow-y: auto; /* Optional: if list can be very long */
+        }
+        .custom-dropdown.open .custom-dropdown-options {
+            display: block;
+        }
+        .custom-dropdown-options ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .custom-dropdown-options li {
+            padding: 10px 15px;
+            color: rgba(31, 41, 55, 1);
+            cursor: pointer;
+            font-weight: 400;
+            transition: background-color 0.15s ease-in-out;
+            white-space: nowrap;
+        }
+        .custom-dropdown-options li:hover {
+            background-color: rgba(243, 244, 246, 0.8);
+        }
+        .custom-dropdown-options li.selected-option-item { /* If we want to highlight selected in list */
+            /* background-color: #5A81FB; */
+            /* color: white; */
+            font-weight: 500; /* Slightly bolder if selected in list */
+        }
+    </style>
+</head>
+<body>
+    <div class="filter-widget-container">
+        <label for="filter_dropdown_custom_01" class="filter-label">COMPARED TO</label>
+        <div class="custom-dropdown" id="filter_dropdown_custom_01">
+            <div class="custom-dropdown-selected" tabindex="0">
+                <span class="selected-text">Budget</span>
+                <span class="custom-dropdown-arrow"></span>
+            </div>
+            <div class="custom-dropdown-options">
+                <ul>
+                    <li class="custom-dropdown-option" data-value="budget">Budget</li>
+<li class="custom-dropdown-option" data-value="last-year">Last Year</li>
+<li class="custom-dropdown-option" data-value="doesn't-compare">Doesn't Compare</li>
+
+                </ul>
+            </div>
+            <input type="hidden" name="compare_to_value" id="compare_to_value_hidden" value="budget">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.custom-dropdown');
+
+            dropdowns.forEach(dropdown => {
+                const selectedDisplay = dropdown.querySelector('.custom-dropdown-selected');
+                const selectedTextSpan = dropdown.querySelector('.selected-text');
+                const optionsContainer = dropdown.querySelector('.custom-dropdown-options');
+                const optionsList = optionsContainer.querySelectorAll('.custom-dropdown-option');
+                const hiddenInput = dropdown.querySelector('input[type="hidden"]'); // Assuming one hidden input per dropdown
+
+                // Toggle dropdown visibility
+                selectedDisplay.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent click from bubbling to document
+                    // Close other dropdowns first
+                    dropdowns.forEach(otherDropdown => {
+                        if (otherDropdown !== dropdown) {
+                            otherDropdown.classList.remove('open');
+                        }
+                    });
+                    dropdown.classList.toggle('open');
+                });
+                
+                // Keyboard accessibility for opening dropdown
+                selectedDisplay.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        dropdowns.forEach(otherDropdown => {
+                            if (otherDropdown !== dropdown) {
+                                otherDropdown.classList.remove('open');
+                            }
+                        });
+                        dropdown.classList.toggle('open');
+                    } else if (event.key === 'Escape' && dropdown.classList.contains('open')) {
+                        dropdown.classList.remove('open');
+                        selectedDisplay.focus();
+                    }
+                });
+
+                // Handle option selection
+                optionsList.forEach(option => {
+                    option.addEventListener('click', function() {
+                        selectedTextSpan.textContent = this.textContent;
+                        if (hiddenInput) {
+                            hiddenInput.value = this.dataset.value;
+                        }
+                        // Optional: Add a class to the selected LI if needed for styling
+                        optionsList.forEach(opt => opt.classList.remove('selected-option-item'));
+                        this.classList.add('selected-option-item');
+
+                        dropdown.classList.remove('open');
+                        selectedDisplay.focus(); // Return focus to the main element
+                    });
+                    // Mark default selected option in the list
+                    if (option.textContent === selectedTextSpan.textContent) {
+                        option.classList.add('selected-option-item');
+                    }
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                dropdowns.forEach(dropdown => {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

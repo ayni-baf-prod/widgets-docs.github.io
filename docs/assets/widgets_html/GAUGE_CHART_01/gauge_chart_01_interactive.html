@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Tacómetro (v6)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFFFF; 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; box-sizing: border-box; min-height: 350px; 
+        }
+        .gauge-widget-container {
+            background-color: #fff; padding: 20px 25px 20px 25px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; max-width: 300px; text-align: center;
+        }
+        .gauge-title {
+            font-size: 16px; font-weight: 700; color: rgba(50, 50, 50, 1);
+            margin-bottom: 10px; text-align: left;
+        }
+        .chart-area-wrapper {
+            position: relative; width: 100%; max-width: 230px; /* Slightly increased from 220 for labels */
+            margin: 0 auto; aspect-ratio: 2 / 1.1; /* Adjusted to give bit more height for labels */
+        }
+        #gaugeChartCanvasV6 { /* Unique ID */ }
+        /* .gauge-axis-labels-container removed as labels will be drawn on canvas */
+    </style>
+</head>
+<body>
+    <div class="gauge-widget-container">
+        <div class="gauge-title">% of Expenses Budget</div>
+        <div class="chart-area-wrapper">
+            <canvas id="gaugeChartCanvasV6"></canvas>
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxGaugeV6 = document.getElementById('gaugeChartCanvasV6').getContext('2d');
+            
+            const currentValue_v6 = 0.28; 
+            const chartValue_v6 = currentValue_v6 * 100; 
+            const segmentData = [50,20,30];
+            const segmentColors = ["#63C2A0","#FCC54D","#F57D7C"];
+            const axisLabels = ['0', '50%', '70%', '100%'];
+
+
+            const gaugePluginObjectV6 = {
+                id: 'gaugePluginConfigV6',
+                afterDatasetsDraw(chart, args, options) {
+                    const { ctx, chartArea } = chart;
+                    if (!chartArea) return; 
+                    const { top, bottom, left, right, width, height } = chartArea;
+                    
+                    ctx.save();
+                    const pluginOptions = chart.options.plugins[this.id] || {};
+                    const needleValue = pluginOptions.needleValue !== undefined ? pluginOptions.needleValue : 0;
+                    const needleColor = pluginOptions.needleColor || '#A4ABC8';
+                    const valueTextColor = pluginOptions.valueTextColor || '#343A40';
+                    const axisLabelColor = pluginOptions.axisLabelColor || 'rgba(75, 85, 99, 0.9)';
+                    const fontFamily = pluginOptions.fontFamily || 'Poppins';
+
+                    const totalValue = 100; 
+                    const angle = Math.PI * (needleValue / totalValue - 0.5);
+                    
+                    const pivotX = left + width / 2;
+                    // Pivot Y higher, to match image, e.g. 75% from top, so it's inside the arc
+                    const pivotY = top + height * 0.75; 
+
+                    // Draw Needle
+                    ctx.translate(pivotX, pivotY);
+                    ctx.rotate(angle);
+                    ctx.beginPath();
+                    ctx.moveTo(0, -3); // Thinner needle base
+                    // Shorter needle, e.g., 45-50% of the chart area height (which is approx the outer radius)
+                    const needleLength = height * 0.25; 
+                    ctx.lineTo(needleLength, 0); 
+                    ctx.lineTo(0, 3);  
+                    ctx.fillStyle = needleColor;
+                    ctx.fill();
+                    ctx.closePath();
+                    
+                    ctx.rotate(-angle); 
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 6, 0, Math.PI * 2); // Slightly smaller pivot 
+                    ctx.fillStyle = needleColor;
+                    ctx.fill();
+                    ctx.beginPath(); 
+                    ctx.arc(0, 0, 2.5, 0, Math.PI * 2); // Smaller inner dot
+                    ctx.fillStyle = '#fff';
+                    ctx.fill();
+                    ctx.translate(-pivotX, -pivotY); 
+
+                    // Draw Center Text (Value) - Now at the base
+                    const text = Math.round(needleValue) + '%';
+                    ctx.font = `bold 28px ${fontFamily}`; // Size from original image
+                    ctx.fillStyle = valueTextColor;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    // Position text below the pivot, more towards the bottom of the clear space
+                    ctx.fillText(text, pivotX, pivotY + height * 0.25); // Adjust Y offset as needed
+                    
+                    // Draw Axis Labels on Arc
+                    ctx.font = `500 10px ${fontFamily}`; // Font for axis labels
+                    ctx.fillStyle = axisLabelColor;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    const labelRadius = height * 0.95; // Radius to position labels just outside the arc
+                    const labels = pluginOptions.axisLabels || [];
+                    const segmentValues = chart.data.datasets[0].data;
+                    let cumulativePercentage = 0;
+                    
+                    // Label for 0
+                    let angle0 = Math.PI * (-0.5); // -90 degrees
+                    let x0 = pivotX + Math.cos(angle0) * labelRadius;
+                    let y0 = pivotY + Math.sin(angle0) * labelRadius;
+                    ctx.fillText(labels[0], x0 - 5, y0 + 5); // Offset slightly for better placement
+
+                    for (let i = 0; i < segmentValues.length; i++) {
+                        cumulativePercentage += segmentValues[i];
+                        let segmentAngle = Math.PI * (cumulativePercentage / totalValue - 0.5);
+                        let x = pivotX + Math.cos(segmentAngle) * labelRadius;
+                        let y = pivotY + Math.sin(segmentAngle) * labelRadius;
+                        
+                        // Adjustments for label placement to avoid overlap with arc
+                        if (cumulativePercentage === 50) { // 50% label
+                            y += 5; // Push down a bit
+                        } else if (cumulativePercentage === 70) { // 70% label
+                             y += 5; x -=2;
+                        } else if (cumulativePercentage >= 100) { // 100% label
+                             x += 5; y += 5; // Push right and down
+                        }
+                        ctx.fillText(labels[i+1], x, y);
+                    }
+                    ctx.restore();
+                }
+            };
+
+            const gaugeChartV6 = new Chart(ctxGaugeV6, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [50,20,30],
+                        backgroundColor: ["#63C2A0","#FCC54D","#F57D7C"],
+                        borderWidth: 3, 
+                        borderColor: '#fff' 
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    rotation: -90,      
+                    circumference: 180, 
+                    cutout: '60%', 
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false },
+                        [gaugePluginObjectV6.id]: { // Pass options using the plugin's ID
+                            needleValue: chartValue_v6,
+                            axisLabels: ["0","50%","70%","100%"], // Pass axis labels
+                            // needleColor, valueTextColor, axisLabelColor, fontFamily are now in pluginOptions
+                        }
+                    },
+                    animation: { animateRotate: false, animateScale: false } // Keep false for static example
+                },
+                plugins: [gaugePluginObjectV6] 
+            });
+        });
+    </script>
+</body>
+</html>

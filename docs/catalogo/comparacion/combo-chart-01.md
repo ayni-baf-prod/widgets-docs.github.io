@@ -89,7 +89,6 @@
 
 
 ## 8. Requerimientos Técnicos
-- **Dependencias**: Chart.js con extensión de gráficos combinados, D3.js.
 - **Formato de salida**: SVG para escalabilidad.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo.
 

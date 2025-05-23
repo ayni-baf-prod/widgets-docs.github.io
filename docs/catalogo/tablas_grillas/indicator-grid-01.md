@@ -72,7 +72,7 @@
   <iframe src="../../../assets/widgets_html/INDICATOR_GRID_01/indicator_grid_01_interactive.html" 
           style="width: 100%; height: 350px; border: none; overflow: auto;"
           loading="lazy"
-          title="Ejemplo Interactivo de Gráfico Combinado">
+          title="Ejemplo Interactivo de la grilla">
   </iframe>
 </div>
 
@@ -84,7 +84,6 @@
 </style>
 
 ## 8. Requerimientos Técnicos
-- **Dependencias**: Librerías de tablas como AG Grid o DataTables.
 - **Formato de salida**: HTML/CSS.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo.
 
