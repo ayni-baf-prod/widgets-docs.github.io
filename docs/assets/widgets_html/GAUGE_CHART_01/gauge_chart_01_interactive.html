@@ -3,174 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico de Tacómetro (v6)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Gauge Chart Widget</title>
+    <!-- Use Chart.js v4.x UMD build -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-gauge@0.3.0/dist/chartjs-chart-gauge.min.js"></script>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #FFFFFF; 
-            display: flex; justify-content: center; align-items: center; 
-            padding: 20px; box-sizing: border-box; min-height: 350px; 
+            margin: 0;
+            padding: 20px; /* Added some padding to body for better centering view */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        .gauge-widget-container {
-            background-color: #fff; padding: 20px 25px 20px 25px; border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; max-width: 300px; text-align: center;
+        .widget-container {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 380px; 
         }
-        .gauge-title {
-            font-size: 16px; font-weight: 700; color: rgba(50, 50, 50, 1);
-            margin-bottom: 10px; text-align: left;
+        #chart-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #303F9F; 
+            margin-bottom: 0px;
+            text-align: center;
         }
-        .chart-area-wrapper {
-            position: relative; width: 100%; max-width: 230px; /* Slightly increased from 220 for labels */
-            margin: 0 auto; aspect-ratio: 2 / 1.1; /* Adjusted to give bit more height for labels */
+        #gauge-chart-canvas-container {
+            width: 320px; 
+            height: 200px; 
+            position: relative;
+            margin-top: 10px;
         }
-        #gaugeChartCanvasV6 { /* Unique ID */ }
-        /* .gauge-axis-labels-container removed as labels will be drawn on canvas */
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
     </style>
 </head>
 <body>
-    <div class="gauge-widget-container">
-        <div class="gauge-title">% of Expenses Budget</div>
-        <div class="chart-area-wrapper">
-            <canvas id="gaugeChartCanvasV6"></canvas>
+    <div class="widget-container">
+        <h2 id="chart-title"></h2>
+        <div id="gauge-chart-canvas-container">
+            <canvas id="gaugeChart"></canvas>
         </div>
-        
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctxGaugeV6 = document.getElementById('gaugeChartCanvasV6').getContext('2d');
+        const CSV_DATA = `﻿ Indicador , Valor , Rango Mínimo , Rango Máximo , Rango 1 (Verde) , Rango 2 (Amarillo) , Rango 3 (Rojo) 
+  Budget Compliance  ,0.27,0%,100%, 0%-33% , 34%-66% , 67%-100% 
+  Executed Budget  ,0.60,0%,100%, 0%-30% , 31%-70% , 71%-100% 
+  Status  ,0.60,0%,100%, 0%-30% , 31%-70% , 71%-100% 
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,`;
+
+        // --- Data Parsing Functions ---
+        function parsePercentageValue(valueStr) {
+            if (typeof valueStr === 'string') {
+                return parseFloat(valueStr.replace('%', ''));
+            }
+            return valueStr;
+        }
+
+        function parseRangeString(rangeStr) {
+            if (typeof rangeStr !== 'string') return [0,0];
+            const parts = rangeStr.replace(/%/g, "").split('-').map(s => parseFloat(s.trim()));
+            return parts.length === 2 ? parts : [0,0];
+        }
+
+        function parseCSV(csvString) {
+            const lines = csvString.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^\ufeff/, ''));
+            const dataRows = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const currentLine = lines[i].trim();
+                if (currentLine === "" || currentLine.split(',').every(cell => cell.trim() === "")) continue;
+
+                const values = currentLine.split(',');
+                if (values.length < headers.length && values.some(v => v.trim() !== '')) continue; // Skip malformed but not entirely empty
+
+                const row = {};
+                headers.forEach((header, index) => {
+                    row[header] = values[index] ? values[index].trim() : '';
+                });
+                dataRows.push(row);
+            }
+            return dataRows;
+        }
+
+        // --- Chart Drawing ---
+        function drawGaugeChart() {
+            const parsedData = parseCSV(CSV_DATA);
+            if (parsedData.length === 0) {
+                console.error("No data found in CSV to draw chart.");
+                document.getElementById('chart-title').innerText = "Error: No Data";
+                return;
+            }
+
+            const data = parsedData[0]; 
+
+            const indicador = data['Indicador'] || "Gauge Chart";
+            const valor = parseFloat(data['Valor']) * 100; 
+            const rangoMin = parsePercentageValue(data['Rango Mínimo']);
+            const rangoMax = parsePercentageValue(data['Rango Máximo']);
             
-            const currentValue_v6 = 0.28; 
-            const chartValue_v6 = currentValue_v6 * 100; 
-            const segmentData = [50,20,30];
-            const segmentColors = ["#63C2A0","#FCC54D","#F57D7C"];
-            const axisLabels = ['0', '50%', '70%', '100%'];
+            const range1Parts = parseRangeString(data['Rango 1 (Verde)']);
+            const range2Parts = parseRangeString(data['Rango 2 (Amarillo)']);
+            const range3Parts = parseRangeString(data['Rango 3 (Rojo)']);
 
+            document.getElementById('chart-title').innerText = indicador;
 
-            const gaugePluginObjectV6 = {
-                id: 'gaugePluginConfigV6',
-                afterDatasetsDraw(chart, args, options) {
-                    const { ctx, chartArea } = chart;
-                    if (!chartArea) return; 
-                    const { top, bottom, left, right, width, height } = chartArea;
-                    
-                    ctx.save();
-                    const pluginOptions = chart.options.plugins[this.id] || {};
-                    const needleValue = pluginOptions.needleValue !== undefined ? pluginOptions.needleValue : 0;
-                    const needleColor = pluginOptions.needleColor || '#A4ABC8';
-                    const valueTextColor = pluginOptions.valueTextColor || '#343A40';
-                    const axisLabelColor = pluginOptions.axisLabelColor || 'rgba(75, 85, 99, 0.9)';
-                    const fontFamily = pluginOptions.fontFamily || 'Poppins';
-
-                    const totalValue = 100; 
-                    const angle = Math.PI * (needleValue / totalValue - 0.5);
-                    
-                    const pivotX = left + width / 2;
-                    // Pivot Y higher, to match image, e.g. 75% from top, so it's inside the arc
-                    const pivotY = top + height * 0.75; 
-
-                    // Draw Needle
-                    ctx.translate(pivotX, pivotY);
-                    ctx.rotate(angle);
-                    ctx.beginPath();
-                    ctx.moveTo(0, -3); // Thinner needle base
-                    // Shorter needle, e.g., 45-50% of the chart area height (which is approx the outer radius)
-                    const needleLength = height * 0.25; 
-                    ctx.lineTo(needleLength, 0); 
-                    ctx.lineTo(0, 3);  
-                    ctx.fillStyle = needleColor;
-                    ctx.fill();
-                    ctx.closePath();
-                    
-                    ctx.rotate(-angle); 
-                    ctx.beginPath();
-                    ctx.arc(0, 0, 6, 0, Math.PI * 2); // Slightly smaller pivot 
-                    ctx.fillStyle = needleColor;
-                    ctx.fill();
-                    ctx.beginPath(); 
-                    ctx.arc(0, 0, 2.5, 0, Math.PI * 2); // Smaller inner dot
-                    ctx.fillStyle = '#fff';
-                    ctx.fill();
-                    ctx.translate(-pivotX, -pivotY); 
-
-                    // Draw Center Text (Value) - Now at the base
-                    const text = Math.round(needleValue) + '%';
-                    ctx.font = `bold 28px ${fontFamily}`; // Size from original image
-                    ctx.fillStyle = valueTextColor;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    // Position text below the pivot, more towards the bottom of the clear space
-                    ctx.fillText(text, pivotX, pivotY + height * 0.25); // Adjust Y offset as needed
-                    
-                    // Draw Axis Labels on Arc
-                    ctx.font = `500 10px ${fontFamily}`; // Font for axis labels
-                    ctx.fillStyle = axisLabelColor;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-
-                    const labelRadius = height * 0.95; // Radius to position labels just outside the arc
-                    const labels = pluginOptions.axisLabels || [];
-                    const segmentValues = chart.data.datasets[0].data;
-                    let cumulativePercentage = 0;
-                    
-                    // Label for 0
-                    let angle0 = Math.PI * (-0.5); // -90 degrees
-                    let x0 = pivotX + Math.cos(angle0) * labelRadius;
-                    let y0 = pivotY + Math.sin(angle0) * labelRadius;
-                    ctx.fillText(labels[0], x0 - 5, y0 + 5); // Offset slightly for better placement
-
-                    for (let i = 0; i < segmentValues.length; i++) {
-                        cumulativePercentage += segmentValues[i];
-                        let segmentAngle = Math.PI * (cumulativePercentage / totalValue - 0.5);
-                        let x = pivotX + Math.cos(segmentAngle) * labelRadius;
-                        let y = pivotY + Math.sin(segmentAngle) * labelRadius;
-                        
-                        // Adjustments for label placement to avoid overlap with arc
-                        if (cumulativePercentage === 50) { // 50% label
-                            y += 5; // Push down a bit
-                        } else if (cumulativePercentage === 70) { // 70% label
-                             y += 5; x -=2;
-                        } else if (cumulativePercentage >= 100) { // 100% label
-                             x += 5; y += 5; // Push right and down
-                        }
-                        ctx.fillText(labels[i+1], x, y);
-                    }
-                    ctx.restore();
-                }
+            const UI_COLORS = {
+                green: 'rgb(94, 226, 160)',   // #5EE2A0
+                yellow: 'rgb(253, 216, 53)',  // #FDD835
+                red: 'rgb(255, 110, 110)',    // #FF6E6E
+                text: 'rgb(48, 63, 159)',     // #303F9F
+                needle: 'rgb(123, 130, 184)', 
+                ticks: 'rgb(100, 100, 100)',  
+                background: '#FFFFFF'
             };
 
-            const gaugeChartV6 = new Chart(ctxGaugeV6, {
-                type: 'doughnut',
+            const segmentData = [];
+            const segmentColors = [];
+
+            // Ensure segments start from rangoMin and cover up to rangoMax
+            let currentEnd = rangoMin;
+            if (range1Parts[0] === rangoMin && range1Parts[1] > currentEnd) {
+                segmentData.push(range1Parts[1] - currentEnd);
+                segmentColors.push(UI_COLORS.green);
+                currentEnd = range1Parts[1];
+            }
+             if (range2Parts[0] === currentEnd && range2Parts[1] > currentEnd) {
+                segmentData.push(range2Parts[1] - currentEnd);
+                segmentColors.push(UI_COLORS.yellow);
+                currentEnd = range2Parts[1];
+            }
+            if (range3Parts[0] === currentEnd && range3Parts[1] === rangoMax && range3Parts[1] > currentEnd) {
+                segmentData.push(range3Parts[1] - currentEnd);
+                segmentColors.push(UI_COLORS.red);
+                currentEnd = range3Parts[1];
+            }
+            
+            // Fallback if segments are not perfectly contiguous or cover the whole range
+            if (currentEnd < rangoMax && segmentData.length === 0) {
+                // If no segments defined properly, create a default gray one
+                console.warn("Gauge segments not defined properly from CSV data. Creating a default full segment.");
+                segmentData.push(rangoMax - rangoMin);
+                segmentColors.push('#CCCCCC'); // Default grey color
+            }
+
+
+            // Set Chart.js global defaults BEFORE chart instantiation
+            Chart.defaults.font.family = 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif';
+            Chart.defaults.color = UI_COLORS.ticks; // Default text color for Chart.js elements like ticks
+            Chart.defaults.font.size = 12;      // Default font size for ticks etc.
+
+            const ctx = document.getElementById('gaugeChart').getContext('2d');
+            
+            // --- Debugging Chart.js and plugin registration ---
+            console.log('Chart.js version:', Chart.version);
+            if (Chart.registry && Chart.registry.controllers) {
+                console.log('Available controllers in Chart.registry:', Chart.registry.controllers.keys());
+                console.log('Is gauge controller registered in Chart.registry?', Chart.registry.controllers.has('gauge'));
+            } else {
+                // Fallback for older Chart.js versions (pre v3) if Chart.registry is not standard
+                console.log('Chart.registry.controllers not found. Available legacy Chart.controllers:', Chart.controllers);
+            }
+            // --- End Debugging ---
+
+            new Chart(ctx, {
+                type: 'gauge',
                 data: {
                     datasets: [{
-                        data: [50,20,30],
-                        backgroundColor: ["#63C2A0","#FCC54D","#F57D7C"],
-                        borderWidth: 3, 
-                        borderColor: '#fff' 
+                        data: segmentData, // e.g., [33, 33, 34] for 0-33, 33-66, 66-100
+                        value: valor,
+                        backgroundColor: segmentColors,
+                        borderColor: UI_COLORS.background, 
+                        borderWidth: 2 
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
-                    rotation: -90,      
-                    circumference: 180, 
-                    cutout: '60%', 
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false },
-                        [gaugePluginObjectV6.id]: { // Pass options using the plugin's ID
-                            needleValue: chartValue_v6,
-                            axisLabels: ["0","50%","70%","100%"], // Pass axis labels
-                            // needleColor, valueTextColor, axisLabelColor, fontFamily are now in pluginOptions
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            bottom: 35 // Increased padding for value label
                         }
                     },
-                    animation: { animateRotate: false, animateScale: false } // Keep false for static example
-                },
-                plugins: [gaugePluginObjectV6] 
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true, 
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.chart.data.datasets[0].value.toFixed(0)}%`;
+                                }
+                            }
+                        },
+                        gauge: { 
+                            needle: {
+                                radiusPercentage: 1.5, 
+                                widthPercentage: 4, 
+                                lengthPercentage: 75, 
+                                color: UI_COLORS.needle
+                            },
+                            valueLabel: {
+                                display: true,
+                                formatter: (value) => Math.round(value) + '%',
+                                color: UI_COLORS.text,
+                                backgroundColor: 'transparent', 
+                                borderRadius: 0,
+                                font: { 
+                                    size: 30, 
+                                    weight: 'bold',
+                                    family: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' // Ensure family is explicitly set
+                                },
+                                padding: { top: 0, bottom: 0 },
+                                yOffset: 40 // Adjusted yOffset slightly for better centering with 30px font
+                            },
+                            backgroundColor: UI_COLORS.background, // Color of the gauge track if not covered by segments
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuint'
+                            },
+                            startAngle: -90, 
+                            endAngle: 90,    
+                            paddingAngle: 0, 
+                            cutout: '75%',   
+                            
+                            valueformatter: (tickValue) => { // For tick labels like 0, 33%, 66%, 100
+                                const roundedValue = Math.round(tickValue);
+                                if (roundedValue === rangoMin || roundedValue === rangoMax) {
+                                    return String(roundedValue); // No % for min and max
+                                }
+                                return roundedValue + '%';
+                            }
+                        }
+                    }
+                }
             });
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', drawGaugeChart);
     </script>
 </body>
 </html>
