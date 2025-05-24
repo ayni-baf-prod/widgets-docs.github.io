@@ -78,6 +78,7 @@ nav:
     - Gráficos de Comparación:
       - catalogo/comparacion/index.md
       - Gráfico Combinado: catalogo/comparacion/combo-chart-01.md
+      - Gráfico de Butterfly: catalogo/comparacion/butterfly-chart-01.md
       # - Horizontal Bar Chart: catalogo/comparacion/horizontal-bar-chart.md
     - Gráficos de Distribución y Densidad:
       - catalogo/distribucion_densidad/index.md

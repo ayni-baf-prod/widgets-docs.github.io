@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Mariposa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> <!-- Datalabels plugin -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFFFF; 
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            box-sizing: border-box;
+            min-height: 500px; /* Ensure space for the chart */
+        }
+        .butterfly-widget-container {
+            background-color: #fff; 
+            padding: 20px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 700px; /* Butterfly charts can be wide */
+        }
+        .butterfly-title {
+            font-size: 20px; /* Title size from image */
+            font-weight: 700; 
+            color: rgba(50, 50, 50, 1);
+            margin-bottom: 25px; 
+            text-align: left; /* Title aligned left */
+            display: flex;
+            align-items: center;
+        }
+        .butterfly-title .info-icon {
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            fill: #A0A0A0; /* Light grey for icon */
+            cursor: pointer;
+        }
+        .chart-wrapper { /* Needed for responsive aspect ratio */
+            position: relative;
+            height: 400px; /* Or set via aspect-ratio in JS */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="butterfly-widget-container">
+        <div class="butterfly-title">
+            <span>Análisis de Clientes por Región</span>
+            <svg class="info-icon" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-13a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1zm1 7a1 1 0 10-2 0v1a1 1 0 102 0v-1z"></path></svg>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="butterflyChartCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Register the datalabels plugin globally
+        Chart.register(ChartDataLabels);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxButterfly = document.getElementById('butterflyChartCanvas').getContext('2d');
+            
+            const butterflyChart = new Chart(ctxButterfly, {
+                type: 'bar',
+                data: {
+                    labels: ["Central","Mid-Atlantic","Northeast","Northwest","South","Southeast"],
+                    datasets: [
+                        {
+                            label: 'Clientes Perdidos', // Perdidos (rendered as negative)
+                            data: [-685,-576,-442,-90,-335,-158],
+                            backgroundColor: '#F57D7C',
+                            borderColor: '#F57D7C',
+                            borderWidth: 1,
+                            borderRadius: 5, // Rounded bars
+                            barPercentage: 0.7, // Thickness of bar
+                            categoryPercentage: 0.8, // Space between bars of different categories
+                        },
+                        {
+                            label: 'Clientes Activos', // Activos (positive)
+                            data: [1651,1488,1202,229,559,405],
+                            backgroundColor: '#63C2A0',
+                            borderColor: '#63C2A0',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.8,
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y', // This makes it a horizontal bar chart
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { // Categories axis (Regions)
+                            stacked: false, // Not stacked for butterfly
+                            grid: {
+                                display: false, // No grid lines for y-axis
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: "rgba(75, 85, 99, 0.9)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 13, // Font size for region labels
+                                    weight: '500',
+                                },
+                                mirror: false, // Puts labels on the left (default)
+                                // To put labels in center, would need custom drawing or complex config
+                            },
+                            position: 'left', // Explicitly position category labels
+                        },
+                        x: { // Values axis
+                            stacked: false,
+                            grid: {
+                                display: true, // Show vertical grid lines
+                                color: 'rgba(200, 200, 200, 0.2)', // Light grid lines
+                                drawBorder: false,
+                                // drawOnChartArea: false, // Only draw behind bars
+                                // offset: true
+                            },
+                            ticks: {
+                                display: false, // No labels on x-axis itself
+                                // callback: function(value) { return Math.abs(value); } // Show absolute values if ticks were visible
+                            },
+                            // Suggest min/max to ensure symmetry if data isn't perfectly balanced
+                            // This needs to be calculated based on max absolute value in data
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Legend is not shown in the reference image
+                        },
+                        tooltip: {
+                            enabled: true, // Default tooltips
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    // Show absolute value for "Perdidos"
+                                    label += Math.abs(context.raw).toLocaleString();
+                                    return label;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            color: "rgba(50, 50, 50, 1)",
+                            anchor: function(context) {
+                                // 'start' for negative, 'end' for positive to place outside bar end
+                                return context.dataset.data[context.dataIndex] < 0 ? 'start' : 'end';
+                            },
+                            align: function(context) {
+                                // 'start' for negative, 'end' for positive
+                                return context.dataset.data[context.dataIndex] < 0 ? 'start' : 'end';
+                            },
+                            formatter: function(value, context) {
+                                // Display absolute value, formatted (e.g. no decimals for counts)
+                                return Math.abs(value).toLocaleString(undefined, {maximumFractionDigits: 1});
+                            },
+                            font: {
+                                family: 'Poppins',
+                                size: 11, // Size of data labels on bars
+                                weight: '500'
+                            },
+                            offset: 4 // Distance from the end of the bar
+                        }
+                    }
+                }
+            });
+
+            // Dynamically set symmetric x-axis
+            const allData = [1651,1488,1202,229,559,405].concat([685,576,442,90,335,158]);
+            const maxAbsValue = Math.max(...allData.map(val => Math.abs(val)));
+            const suggestedMax = Math.ceil(maxAbsValue / 100) * 100; // Round up to next 100 for nice scale
+            
+            butterflyChart.options.scales.x.min = -suggestedMax;
+            butterflyChart.options.scales.x.max = suggestedMax;
+            butterflyChart.update();
+
+        });
+    </script>
+</body>
+</html>
