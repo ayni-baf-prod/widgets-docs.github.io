@@ -68,7 +68,7 @@ nav:
     - Introducción: catalogo/index.md
     - Indicadores de Desempeño (KPIs):
       - catalogo/kpis/index.md # Página de introducción a la categoría KPIs
-      # - KPI Card: catalogo/kpis/kpi-card.md (Ejemplo, lo añadiremos luego)
+      - KPI Card: catalogo/kpis/kpi-card-01.md
       # - Circular Progress: catalogo/kpis/circular-progress.md
       # - Gauge Chart: catalogo/kpis/gauge-chart.md
     - Gráficos de Progreso y Proporción:

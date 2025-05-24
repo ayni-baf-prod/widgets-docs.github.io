@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjeta de KPI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            box-sizing: border-box;
+            min-height: 200px; 
+        }
+        .kpi-card {
+            background-color: #FFFFFF;
+            padding: 20px 24px; /* Padding from image */
+            border-radius: 12px; /* More rounded corners from image */
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06); /* Softer, slightly larger shadow */
+            width: 100%;
+            max-width: 220px; /* Max width of the card */
+            display: flex;
+            flex-direction: column; /* Stack title and content vertically */
+            gap: 4px; /* Small gap between title and main content row */
+        }
+        .kpi-title {
+            font-size: 15px; /* Slightly smaller title */
+            font-weight: 600; /* Semi-bold */
+            color: rgba(43, 57, 80, 1);
+            margin: 0; /* Remove default margin */
+            text-align: left;
+        }
+        .kpi-content-row {
+            display: flex;
+            justify-content: space-between; /* Main value left, secondary info right */
+            align-items: flex-end; /* Align to bottom for varied text sizes */
+            margin-top: 2px; /* Small space below title */
+        }
+        .kpi-main-value-container {
+            display: flex;
+            align-items: baseline; /* Align currency symbol with number baseline */
+            line-height: 1;
+        }
+        .kpi-main-value-currency {
+            font-size: 24px; /* Smaller currency symbol */
+            font-weight: 600;
+            color: rgba(43, 57, 80, 1);
+            margin-right: 2px; /* Tiny space after $ */
+            align-self: flex-start; /* Align $ to top of number */
+            padding-top: 4px; /* Fine-tune $ position */
+        }
+        .kpi-main-value-number {
+            font-size: 40px; /* Large number */
+            font-weight: 700; /* Bold */
+            color: rgba(43, 57, 80, 1);
+            letter-spacing: -0.5px; /* Slightly tighter letter spacing */
+        }
+        .kpi-main-value-unit {
+            font-size: 32px; /* Large unit, slightly smaller than number */
+            font-weight: 700;
+            color: rgba(43, 57, 80, 1);
+            margin-left: 2px; /* Tiny space before M/B/K */
+        }
+
+        .kpi-secondary-info {
+            display: flex;
+            align-items: center;
+            font-size: 13px; /* Smaller text for secondary info */
+            font-weight: 500; /* Medium weight */
+            color: rgba(107, 114, 128, 1);
+            white-space: nowrap; /* Prevent wrapping */
+        }
+        .kpi-secondary-info .trend-arrow svg { /* SVG directly inside */
+            /* Styles are inline on the SVG for fill */
+        }
+
+        /* Responsive adjustments could be added if needed for very small screens */
+        @media (max-width: 320px) {
+            .kpi-card { padding: 16px; }
+            .kpi-title { font-size: 14px; }
+            .kpi-main-value-currency { font-size: 20px; padding-top: 3px;}
+            .kpi-main-value-number { font-size: 32px; }
+            .kpi-main-value-unit { font-size: 26px; }
+            .kpi-secondary-info { font-size: 12px; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="kpi-card">
+        <p class="kpi-title">Total Purchase</p>
+        <div class="kpi-content-row">
+            <div class="kpi-main-value-container">
+                <span class="kpi-main-value-currency">$</span>
+                <span class="kpi-main-value-number">100</span>
+                <span class="kpi-main-value-unit">M</span>
+            </div>
+            <div class="kpi-secondary-info">
+                <span>15K</span>
+                <span class="trend-arrow"><svg style="width:0.7em; height:0.7em; margin:0 3px; vertical-align:-0.0em;" fill="rgba(16, 185, 129, 1)" viewBox="0 0 20 20"><path d="M10 3L2 17h16L10 3z"></path></svg></span>
+                <span>Budget</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
