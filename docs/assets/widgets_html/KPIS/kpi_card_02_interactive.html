@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjeta de KPI con Tendencia (Datos CSV)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; min-height: 250px; 
+        }
+        .kpi-trend-card {
+            background-color: #FFFFFF;
+            padding: 20px 24px; border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+            width: 100%; max-width: 280px; 
+            display: flex; flex-direction: column; align-items: center; 
+        }
+        .kpi-title {
+            font-size: 16px; font-weight: 600;
+            color: rgba(43, 57, 80, 1);
+            margin: 0 0 2px 0; 
+        }
+        .kpi-main-value-container {
+            display: flex; align-items: baseline;
+            line-height: 1; margin-bottom: 2px; 
+        }
+        .kpi-main-value-currency {
+            font-size: 28px; font-weight: 700; 
+            color: rgba(43, 57, 80, 1);
+            margin-right: 1px; align-self: center; 
+        }
+        .kpi-main-value-number {
+            font-size: 36px; font-weight: 700;
+            color: rgba(43, 57, 80, 1);
+            letter-spacing: -0.5px;
+        }
+        .kpi-main-value-unit { /* For K, M, B */
+            font-size: 28px; /* Slightly smaller than number */
+            font-weight: 700;
+            color: rgba(43, 57, 80, 1);
+            margin-left: 2px;
+            align-self: baseline; /* Align with number */
+        }
+        .kpi-secondary-info {
+            display: flex; align-items: center; font-size: 13px;
+            font-weight: 500; color: rgba(107, 114, 128, 1);
+            margin-bottom: 10px; 
+        }
+        .kpi-secondary-info .trend-indicator-svg { 
+            display: inline-flex; align-items: center;
+        }
+        .trend-chart-container {
+            width: 100%; height: 50px; margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="kpi-trend-card">
+        <div class="kpi-title">Revenue</div>
+        <div class="kpi-main-value-container">
+            <span class="kpi-main-value-currency">$</span>
+            <span class="kpi-main-value-number">919</span>
+            <span class="kpi-main-value-unit">K</span>
+        </div>
+        <div class="kpi-secondary-info">
+            <span>3.7%</span>
+            <span class="trend-indicator-svg"><svg style="width:0.7em; height:0.7em; margin-left: 4px; vertical-align: -0.0em;" fill="rgba(16, 185, 129, 1)" viewBox="0 0 20 20"><path d="M10 3L2 17h16L10 3z"></path></svg></span>
+        </div>
+        <div class="trend-chart-container">
+            <canvas id="kpiTrendChartCsvData"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctxTrendCsv = document.getElementById('kpiTrendChartCsvData').getContext('2d');
+            const trendDataCsv = [910082.0,882187.0,815091.0,968083.0,954673.0,890519.0,893508.0,918822.0,817864.0,938681.0,886332.0,919019.0];
+            const trendLabelsCsv = ["Jan-25","Feb-25","Mar-25","Apr-25","May-25","Jun-25","Jul-25","Aug-25","Sep-25","Oct-25","Nov-25","Dec-25"]; // These are "Jan-25", "Feb-25", etc.
+
+            const chartHeightCsv = 50; 
+            const gradientFillCsv = ctxTrendCsv.createLinearGradient(0, 0, 0, chartHeightCsv);
+            const trendLineColorCsv = 'rgba(90, 129, 251, 1)';
+            
+            function colorToRgba(colorString, alpha) {
+                if (colorString.startsWith('#')) { 
+                    let r = parseInt(colorString.slice(1, 3), 16), g = parseInt(colorString.slice(3, 5), 16), b = parseInt(colorString.slice(5, 7), 16);
+                    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                } else if (colorString.startsWith('rgb(')) { 
+                    let parts = colorString.substring(4, colorString.length - 1).split(',');
+                    return `rgba(${parts[0].trim()}, ${parts[1].trim()}, ${parts[2].trim()}, ${alpha})`;
+                } else if (colorString.startsWith('rgba(')) { 
+                     let parts = colorString.substring(5, colorString.length - 1).split(',');
+                     return `rgba(${parts[0].trim()}, ${parts[1].trim()}, ${parts[2].trim()}, ${alpha})`;
+                }
+                return colorString; 
+            }
+
+            gradientFillCsv.addColorStop(0, colorToRgba(trendLineColorCsv, 0.25));
+            gradientFillCsv.addColorStop(0.8, colorToRgba(trendLineColorCsv, 0.05));
+            gradientFillCsv.addColorStop(1, colorToRgba(trendLineColorCsv, 0));    
+
+            const kpiTrendChartCsvData = new Chart(ctxTrendCsv, {
+                type: 'line',
+                data: {
+                    labels: trendLabelsCsv, 
+                    datasets: [{
+                        data: trendDataCsv,
+                        borderColor: trendLineColorCsv,
+                        borderWidth: 2.5, pointRadius: 0, tension: 0.4, 
+                        fill: true, backgroundColor: gradientFillCsv,
+                        pointHoverRadius: 5, pointHoverBackgroundColor: trendLineColorCsv,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { x: { display: false }, y: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { 
+                            enabled: true, 
+                            mode: 'index', intersect: false, displayColors: false,
+                            backgroundColor: 'rgba(0,0,0,0.7)',
+                            titleFont: { size: 10, family: 'Poppins' },
+                            bodyFont: { size: 10, family: 'Poppins' },
+                            padding: 6,
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    return tooltipItems[0].label; // Shows "Jan-25", etc.
+                                },
+                                label: function(tooltipItem) {
+                                    let val = parseFloat(tooltipItem.raw);
+                                    if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M';
+                                    if (val >= 1000) return (val / 1000).toFixed(0) + 'K';
+                                    return val.toLocaleString();
+                                }
+                            }
+                        } 
+                    },
+                    layout: { padding: { top: 5, bottom: 1, left: -2, right: -2 } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

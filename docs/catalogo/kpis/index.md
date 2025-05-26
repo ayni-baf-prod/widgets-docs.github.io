@@ -1,4 +1,4 @@
-# Indicadores de Desempeño (KPIs)
+# :material-chart-line: Indicadores de Desempeño (KPIs)
 
 ## ¿Qué son los Indicadores de Desempeño?
 

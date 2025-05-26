@@ -15,6 +15,7 @@ theme:
     - navigation.sections # Para expandir secciones en la barra lateral
     - navigation.expand # Para expandir todas las secciones en la barra lateral por defecto
     - navigation.indexes # Para que las páginas 'index.md' de cada sección aparezcan como la página principal de esa sección.
+    - navigation.icons
     - toc.integrate # Para integrar la tabla de contenidos en la barra lateral
     - search.suggest # Sugerencias de búsqueda
     - search.highlight # Resaltar términos de búsqueda
@@ -47,6 +48,10 @@ repo_name: widgets-docs # El nombre de tu repo en GitHub
 extra:
   generator: false
 
+# CSS personalizado
+extra_css:
+  - stylesheets/extra.css
+
 # Extensions
 markdown_extensions:
   - pymdownx.highlight: # Para resaltado de sintaxis en bloques de código
@@ -60,35 +65,40 @@ markdown_extensions:
   - md_in_html # Para procesar Markdown dentro de bloques HTML
   - toc:
       permalink: true # Añade enlaces permanentes a los encabezados
+  # ← NUEVA EXTENSIÓN PARA ICONOS
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 # Navigation Structure (Aquí definiremos tu estructura)
 nav:
   - Inicio: index.md
   - Catálogo de Widgets:
     - Introducción: catalogo/index.md
-    - Indicadores de Desempeño (KPIs):
-      - catalogo/kpis/index.md # Página de introducción a la categoría KPIs
-      - KPI Card: catalogo/kpis/kpi-card-01.md
+    - Indicadores (KPIs):
+        - catalogo/kpis/index.md
+        - KPI Card: catalogo/kpis/kpi-card-01.md
+        - KPI Card Tendencia: catalogo/kpis/kpi-card-02.md
       # - Circular Progress: catalogo/kpis/circular-progress.md
       # - Gauge Chart: catalogo/kpis/gauge-chart.md
-    - Gráficos de Progreso y Proporción:
-      - catalogo/progreso_proporcion/index.md
-      - Gauge Chart: catalogo/progreso_proporcion/gauge-chart-01.md
+    - Progreso y Proporción: 
+        - catalogo/progreso_proporcion/index.md
+        - Gauge Chart: catalogo/progreso_proporcion/gauge-chart-01.md
       # - Donut Chart: catalogo/progreso_proporcion/donut-chart.md
     - Gráficos de Comparación:
-      - catalogo/comparacion/index.md
-      - Gráfico Combinado: catalogo/comparacion/combo-chart-01.md
-      - Gráfico de Butterfly: catalogo/comparacion/butterfly-chart-01.md
-      # - Horizontal Bar Chart: catalogo/comparacion/horizontal-bar-chart.md
-    - Gráficos de Distribución y Densidad:
-      - catalogo/distribucion_densidad/index.md
-      - Heatmap: catalogo/distribucion_densidad/heatmap-01.md
-    - Tablas y Grillas Avanzadas:
-      - catalogo/tablas_grillas/index.md
-      - Indicators Grid: catalogo/tablas_grillas/indicator-grid-01.md
+        - catalogo/comparacion/index.md
+        - Gráfico Combinado: catalogo/comparacion/combo-chart-01.md
+        - Gráfico de Butterfly: catalogo/comparacion/butterfly-chart-01.md
+        # - Horizontal Bar Chart: catalogo/comparacion/horizontal-bar-chart.md
+    - Distribución y Densidad:
+        - catalogo/distribucion_densidad/index.md
+        - Heatmap: catalogo/distribucion_densidad/heatmap-01.md
+    - Grillas Avanzadas:
+        - catalogo/tablas_grillas/index.md
+        - Indicators Grid: catalogo/tablas_grillas/indicator-grid-01.md
     - Más Widgets:
-      - catalogo/mas_widgets/index.md
-      - Filtro Desplegable: catalogo/mas_widgets/filter-dropdown-01.md
-      - Selector rango de fechas: catalogo/mas_widgets/date-range-picker-01.md
-      - Sankey: catalogo/mas_widgets/sankey-chart-01.md
+        - catalogo/mas_widgets/index.md
+        - Filtro Desplegable: catalogo/mas_widgets/filter-dropdown-01.md
+        - Selector rango de fechas: catalogo/mas_widgets/date-range-picker-01.md
+        - Sankey: catalogo/mas_widgets/sankey-chart-01.md
   - Changelog: changelog.md

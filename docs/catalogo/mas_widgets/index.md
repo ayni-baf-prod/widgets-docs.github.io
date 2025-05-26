@@ -1,4 +1,4 @@
-# Más
+# :material-widgets: Más Widgets
 
 ## ¿Qué son los Widgets de la Categoría "Más"?
 

@@ -1,4 +1,4 @@
-# Tarjeta de KPI
+# :material-chart-box: Tarjeta de KPI
 
 ## 1. Nombre del Widget/Gráfico
 - **Descripción breve**: Widget que muestra un indicador clave de rendimiento (KPI) con un valor principal y una variación comparativa.

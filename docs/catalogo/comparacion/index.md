@@ -1,4 +1,4 @@
-# Gráficos de Comparación
+# :material-chart-bar: Gráficos de Comparación
 
 ## ¿Qué son los Gráficos de Comparación?
 

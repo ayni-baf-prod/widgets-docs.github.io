@@ -1,4 +1,4 @@
-# Gráficos de Distribución y Densidad
+# :material-chart-scatter-plot: Gráficos de Distribución y Densidad
 
 ## ¿Qué son los Gráficos de Distribución y Densidad?
 

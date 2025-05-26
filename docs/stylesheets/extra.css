@@ -1,0 +1,77 @@
+/* Archivo: docs/stylesheets/extra.css */
+
+/* Importar Material Design Icons */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* Estilos base para iconos en navegación */
+.md-nav__item .md-nav__link {
+  position: relative;
+}
+
+/* Iconos específicos para cada categoría */
+
+
+.md-nav__link.md-nav__container > .md-nav__link[href*="kpis"]:before{
+  font-family: 'Material Icons';
+  content: 'trending_up';
+
+  font-size: 18px;
+  vertical-align: middle;
+  color: #4285f4;
+}
+
+
+.md-nav__link.md-nav__container > .md-nav__link[href*="progreso_proporcion"]:before {
+  font-family: 'Material Icons';
+  content: 'donut_small';
+
+  font-size: 18px;
+  vertical-align: middle;
+  color: #34a853;
+}
+
+
+
+.md-nav__link.md-nav__container > .md-nav__link[href*="comparacion"]:before {
+  font-family: 'Material Icons';
+  content: 'bar_chart';
+
+  font-size: 18px;
+  vertical-align: middle;
+  color: #ea4335;
+}
+
+
+.md-nav__link.md-nav__container > .md-nav__link[href*="distribucion_densidad"]:before {
+  font-family: 'Material Icons';
+  content: 'grid_view';
+
+  font-size: 18px;
+  vertical-align: middle;
+  color: #fbbc04;
+}
+
+
+.md-nav__link.md-nav__container > .md-nav__link[href*="tablas_grillas"]:before {
+  font-family: 'Material Icons';
+  content: 'table_chart';
+
+  font-size: 18px;
+  vertical-align: middle;
+  color: #9c27b0;
+}
+
+                                                                      
+.md-nav__link.md-nav__container > .md-nav__link[href*="mas_widgets"]:before {
+  font-family: 'Material Icons';
+  content: 'widgets';
+
+  font-size: 18px;
+  vertical-align: middle;
+  color: #607d8b;
+}
+
+
+.md-nav__toggle.md-toggle--indeterminate~.md-nav{
+    padding-left: 26px !important ;  /* Increase this value to indent further (e.g., 20px, 30px) */
+}

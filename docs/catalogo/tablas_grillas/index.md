@@ -1,4 +1,4 @@
-# Tablas y Grillas Avanzadas
+# :material-table: Tablas y Grillas Avanzadas
 
 ## ¿Qué son las Tablas y Grillas Avanzadas?
 

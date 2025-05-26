@@ -1,4 +1,4 @@
-# Gráficos de Progreso y Proporción
+# :material-chart-donut: Gráficos de Progreso y Proporción
 
 ## ¿Qué son los Gráficos de Progreso y Proporción?
 
