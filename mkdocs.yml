@@ -96,6 +96,7 @@ nav:
     - Grillas Avanzadas:
         - catalogo/tablas_grillas/index.md
         - Indicators Grid: catalogo/tablas_grillas/indicator-grid-01.md
+        - Texto / Tablas: catalogo/tablas_grillas/text-table-01.md
     - Más Widgets:
         - catalogo/mas_widgets/index.md
         - Filtro Desplegable: catalogo/mas_widgets/filter-dropdown-01.md
