@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Área</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script> <!-- If using time scale -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1); 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; box-sizing: border-box; min-height: 450px; 
+        }
+        .area-chart-widget-container {
+            background-color: #FFFFFF;
+            padding: 20px 24px; border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            width: 100%; max-width: 600px; /* Area charts can be wider */
+        }
+        .area-chart-title {
+            font-size: 18px; font-weight: 700; 
+            color: rgba(43, 57, 80, 1);
+            margin-bottom: 20px; text-align: left;
+        }
+        .chart-wrapper {
+            position: relative; height: 300px; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="area-chart-widget-container">
+        <div class="area-chart-title">Free Cash Flow</div>
+        <div class="chart-wrapper">
+            <canvas id="areaChartCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxArea = document.getElementById('areaChartCanvas').getContext('2d');
+            
+            const areaChart = new Chart(ctxArea, {
+                type: 'line', // Line chart type, fill will make it an area chart
+                data: {
+                    labels: ["Ene","Feb","Mar","Abr","May","Jun"], // ['Ene', 'Feb', ...]
+                    datasets: [{
+                        label: 'Free Cash Flow', // Used for tooltip, can be hidden
+                        data: [250.0,300.0,280.0,320.0,310.0,340.0], // [250, 300, ...]
+                        borderColor: "rgba(251, 191, 36, 1)",
+                        backgroundColor: "rgba(254, 243, 199, 0.7)",
+                        borderWidth: 2.5, // Thickness of the line
+                        fill: true,       // Fill the area under the line
+                        tension: 0.4,     // Makes the line curved (cubic interpolation)
+                        pointRadius: 0,   // No points on the line
+                        pointHoverRadius: 5, // Show point on hover for tooltip
+                        pointHoverBackgroundColor: "rgba(251, 191, 36, 1)",
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { // Value axis
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: "rgba(229, 231, 235, 0.5)",
+                                drawBorder: false, // No Y axis line
+                                drawTicks: true, // Show tick marks on Y axis if labels are shown
+                            },
+                            ticks: {
+                                color: "rgba(107, 114, 128, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 11,
+                                    weight: '500'
+                                },
+                                padding: 8,
+                                // Suggested min/max/step can be dynamic based on data
+                                // e.g. min:0, max:1000, stepSize: 250 based on image
+                                // Chart.js will auto-calculate if not specified
+                                callback: function(value, index, values) {
+                                    if (value === 0) return '0$';
+                                    return value + '$'; // Add $ suffix
+                                }
+                                // For the image, ticks are [0, 250, 500, 750, 1000]
+                                // We can try to force this if data allows
+                                // suggestedMax: 1000,
+                                // suggestedMin: 0,
+                                // stepSize: 250, // This may not work perfectly, Chart.js might override
+                            },
+                            // Dynamically set max based on data to get nice ticks like 0, 250, 500, 750, 1000
+                            afterDataLimits: (scale) => {
+                                const maxDataVal = Math.max(...[250.0,300.0,280.0,320.0,310.0,340.0]);
+                                scale.max = Math.ceil(maxDataVal / 250) * 250;
+                                if (scale.max < 1000 && maxDataVal > 750) scale.max = 1000; // Ensure 1000 is top if data is close
+                                if (scale.max === 0) scale.max = 250; // Handle case of all zero data
+                            }
+                        },
+                        x: { // Category axis (Months)
+                            grid: {
+                                display: false, // No vertical grid lines
+                                drawBorder: false, // No X axis line
+                            },
+                            ticks: {
+                                color: "rgba(107, 114, 128, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 11,
+                                    weight: '500'
+                                },
+                                padding: 10, // Space between labels and chart bottom
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // No legend in the image
+                        },
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0,0,0,0.7)',
+                            titleFont: { size: 12, family: 'Poppins' },
+                            bodyFont: { size: 12, family: 'Poppins' },
+                            padding: 8,
+                            displayColors: false, // No color box in tooltip
+                            callbacks: {
+                                label: function(context) {
+                                    // For area chart, usually one dataset. Show its label or fallback.
+                                    let label = context.dataset.label || 'Valor';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        // Format with K if it was original format, or just number
+                                        label += context.parsed.y.toLocaleString() + 'K $'; // Assuming values are in K
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
