@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progreso Circular</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; min-height: 250px;
+        }
+        .cp-widget-container {
+            background-color: #FFFFFF; /* White card as in image */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 200px; /* Circular progress usually small */
+            position: relative; /* For absolute positioning of text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cp-chart-wrapper {
+            width: 120px; /* Control size of canvas container */
+            height: 120px;
+            position: relative; /* For text overlay */
+        }
+        #circularProgressCanvas {
+            /* canvas will fill wrapper */
+        }
+        .cp-text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            line-height: 1.2;
+        }
+        .cp-percentage {
+            font-size: 24px; /* From image */
+            font-weight: 700; /* Bold */
+            color: rgba(31, 41, 55, 1);
+        }
+        .cp-label {
+            font-size: 12px; /* From image */
+            font-weight: 400; /* Normal */
+            color: rgba(107, 114, 128, 1);
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cp-widget-container">
+        <div class="cp-chart-wrapper">
+            <canvas id="circularProgressCanvas"></canvas>
+            <div class="cp-text-overlay">
+                <div class="cp-percentage">90%</div>
+                <div class="cp-label">Paid</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctxCp = document.getElementById('circularProgressCanvas').getContext('2d');
+        const percentage = 90; // e.g., 90
+
+        // Data for the doughnut chart
+        // First part is progress, second part is the remainder to show the track
+        const dataValues = [percentage, 100 - percentage];
+        const trackColor = 'rgba(229, 231, 235, 1)';
+        const progressColor = 'rgba(79, 70, 229, 1)';
+
+        // The "gap" in the image is achieved by rotating the start.
+        // A doughnut chart starts at 3 o'clock (0 radians or 0 degrees).
+        // To have the gap at the top, we can rotate it.
+        // The image has a gap of approx 60-70 degrees at the top.
+        // If 0 degrees is right, 90 is bottom, 180 is left, 270 is top.
+        // Let's say the arc starts at -60 degrees and ends at 240 degrees (total 300 deg arc)
+        // Or simpler: use `circumference` and `rotation` on the doughnut.
+        // Total arc span (e.g., 300 degrees for a large opening at top)
+        const arcSpanDegrees = 360; // Visual guess from image
+        const emptySpaceDegrees = 360 - arcSpanDegrees;
+        
+        // Rotation: if gap is at top, and arc starts to the right of gap,
+        // then starting angle is (emptySpaceDegrees / 2) degrees past 270 (-90 deg).
+        // Let's make it start at -225 deg (0.75PI, or -135deg if starting from 0)
+        // Chart.js rotation is in degrees. 0 is top. -90 is left.
+        // If 0 is top, then gap starts at -35deg, ends at +35deg.
+        // So chart data starts at 35deg, circumference is 360-70 = 290deg.
+        
+        new Chart(ctxCp, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: dataValues,
+                    backgroundColor: [progressColor, trackColor],
+                    borderWidth: 0, // No borders between segments
+                    // borderRadius: 10, // Makes ends of arcs rounded
+                    circumference: arcSpanDegrees, // Makes it an open circle
+                    rotation: 270 + (emptySpaceDegrees / 2), // Rotates the start point
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '75%', // Thickness of the doughnut ring, adjust % for thickness
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                animation: { animateRotate: false, animateScale: false }
+            }
+        });
+    });
+    </script>
+</body>
+</html>
