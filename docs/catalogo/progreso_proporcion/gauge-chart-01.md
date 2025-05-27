@@ -68,7 +68,7 @@
 
 <div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 350px; position: relative;">
   <iframe src="../../../assets/widgets_html/GAUGE_CHART_01/gauge_chart_01_interactive.html" 
-          style="width: 100%; height: 350px; border: none; overflow: hidden;"
+          style="width: 100%; height: 350px; border: none; overflow: hidden; "
           loading="lazy"
           title="Ejemplo Interactivo del Filtro">
   </iframe>
