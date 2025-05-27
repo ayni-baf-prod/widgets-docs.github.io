@@ -60,9 +60,8 @@
   | Indicador       | Valor | Rango Mínimo | Rango Máximo | Rango 1 (Verde) | Rango 2 (Amarillo) | Rango 3 (Rojo) |
   |-----------------|-------|--------------|--------------|-----------------|--------------------|----------------|
   | Budget Compliance (Cliente 1) | 27%   | 0%           | 100%         | 0%-33%          | 34%-66%            | 67%-100%       |
-  | Budget Compliance (Cliente 2) | 27%   | 0%           | 100%         | 0%-10%          | 11%-50%            | 51%-100%       |
   ```
-- **Resultado visual**: Tacómetro con aguja en 27%, rangos configurados según cliente (Cliente 1: verde 0%-33%, amarillo 34%-66%, rojo 67%-100%; Cliente 2: verde 0%-10%, amarillo 11%-50%, rojo 51%-100%). Imagen: [Placeholder para imagen de tacómetro].
+- **Resultado visual**: Tacómetro con aguja en 27%, rangos configurados según: verde 0%-33%, amarillo 34%-66%, rojo 67%-100%;. Imagen: [Placeholder para imagen de tacómetro].
 - **Configuración aplicada**: Formato %, rangos verde/amarillo/rojo personalizados.
 
 ## Ejemplo Interactivo
