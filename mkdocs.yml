@@ -92,7 +92,7 @@ nav:
         - Gráfico Combinado: catalogo/comparacion/combo-chart-01.md
         - Gráfico de Butterfly: catalogo/comparacion/butterfly-chart-01.md
         - Gráfico de Area: catalogo/comparacion/area-chart-01.md
-        # - Horizontal Bar Chart: catalogo/comparacion/horizontal-bar-chart.md
+        - Horizontal Bar Chart: catalogo/comparacion/horizontal-bar-chart-01.md
     - Distribución y Densidad:
         - catalogo/distribucion_densidad/index.md
         - Heatmap: catalogo/distribucion_densidad/heatmap-01.md
