@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Barras Horizontal (Prototipo v4)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(249, 250, 251, 1); 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; box-sizing: border-box; min-height: 450px;
+        }
+        .h-bar-widget-container {
+            background-color: #FFFFFF;
+            padding: 24px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07); 
+            width: 100%; max-width: 500px; 
+        }
+        .h-bar-title {
+            font-size: 18px; font-weight: 700; 
+            color: rgba(31, 41, 55, 1);
+            margin-bottom: 24px; 
+            text-align: left;
+        }
+        .chart-scroll-wrapper {
+            max-height: 250px; 
+            overflow-y: auto;
+            padding-right: 5px; 
+            scrollbar-width: thin; 
+            scrollbar-color: #4F46FB rgba(238, 242, 255, 0.8);
+        }
+        .chart-scroll-wrapper::-webkit-scrollbar { width: 6px; }
+        .chart-scroll-wrapper::-webkit-scrollbar-track { background: rgba(238, 242, 255, 0.8); border-radius: 3px; }
+        .chart-scroll-wrapper::-webkit-scrollbar-thumb { background-color: #4F46FB; border-radius: 3px; }
+        .chart-canvas-container {
+             height: 500px; 
+             position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="h-bar-widget-container">
+        <div class="h-bar-title">Top 10 - Worst payers (Average days)</div>
+        <div class="chart-scroll-wrapper">
+            <div class="chart-canvas-container">
+                <canvas id="hBarChartCanvasV4"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Chart.register(ChartDataLabels);
+
+        const alternatingBarTrackPluginV4 = {
+            id: 'alternatingBarTrackV4',
+            beforeDatasetsDraw: (chart, args, options) => {
+                const { ctx, chartArea: { top, bottom, left, right }, scales: {x, y} } = chart;
+                if (!x || !y || !y.ticks || y.ticks.length === 0) return;
+
+                let actualBarHeight;
+                if (chart.getDatasetMeta(0).data.length > 0 && chart.getDatasetMeta(0).data[0]) { // Check if bars exist
+                     actualBarHeight = chart.getDatasetMeta(0).data[0].height;
+                } else { 
+                    const barThicknessAttempt = Math.abs(y.getPixelForTick(0) - y.getPixelForTick(1));
+                    if (y.ticks.length > 1 && !isNaN(barThicknessAttempt) && barThicknessAttempt > 0) {
+                         actualBarHeight = barThicknessAttempt * (chart.data.datasets[0].barPercentage || 0.8) * (chart.data.datasets[0].categoryPercentage || 0.9);
+                    } else { // Fallback if only one tick or issue with calculation
+                         actualBarHeight = (y.maxHeight / y.ticks.length) * (chart.data.datasets[0].barPercentage || 0.8) * (chart.data.datasets[0].categoryPercentage || 0.9);
+                    }
+                }
+                if (actualBarHeight <= 0) return;
+
+                ctx.save();
+                ctx.fillStyle = options.trackColor || 'rgba(238, 242, 255, 0.8)';
+                const chartRightEdge = x.getPixelForValue(x.max);
+
+                for (let i = 0; i < y.ticks.length; i++) {
+                    if (i % 2 !== 0) { 
+                        const yPos = y.getPixelForTick(i);
+                        const barY = yPos - (actualBarHeight / 2);
+                        ctx.fillRect(left, barY, chartRightEdge - left, actualBarHeight);
+                    }
+                }
+                ctx.restore();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxHBarV4 = document.getElementById('hBarChartCanvasV4').getContext('2d');
+            
+            const hBarChartV4 = new Chart(ctxHBarV4, {
+                type: 'bar',
+                data: {
+                    labels: ["Client 1","Client 2","Client 3","Client 4","Client 5","Client 6","Client 7","Client 8","Client 9","Client 10"],
+                    datasets: [{
+                        data: [178,150,141,120,115,110,100,80,70,50],
+                        backgroundColor: '#4F46FB', // FEEDBACK: Updated color
+                        borderWidth: 0,
+                        borderRadius: 0,  // FEEDBACK: No rounded corners
+                        barPercentage: 0.5, 
+                        categoryPercentage: 0.65, 
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false, 
+                    layout: {
+                        padding: { left: 0, right: 5, top: 0, bottom: 0 } 
+                    },
+                    scales: {
+                        y: { 
+                            grid: { display: false, drawBorder: false },
+                            ticks: {
+                                color: "rgba(55, 65, 81, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 12, 
+                                    weight: '500',
+                                },
+                                padding: 10, 
+                            }
+                        },
+                        x: { 
+                            display: false, 
+                            min: 0, 
+                        }
+                    },
+                    plugins: {
+                        [alternatingBarTrackPluginV4.id]: { 
+                            trackColor: 'rgba(238, 242, 255, 0.8)'
+                        },
+                        legend: { display: false }, // FEEDBACK: Legend already removed
+                        tooltip: { enabled: true }, 
+                        datalabels: {
+                            color: "#FFFFFF", // FEEDBACK: White text
+                            anchor: 'end',   
+                            align: 'end',    
+                            formatter: function(value) { return value.toLocaleString(); },
+                            font: {
+                                family: 'Poppins',
+                                size: 11, 
+                                weight: '600' // Bolder as per prototype
+                            },
+                            offset: -30, // Adjusted offset to ensure inside and right
+                            padding: { right: 0 } // No extra padding for datalabel itself
+                        }
+                    }
+                },
+                plugins: [alternatingBarTrackPluginV4]
+            });
+            
+            const maxValueV4 = Math.max(...[178,150,141,120,115,110,100,80,70,50]);
+            // Ensure scale max accommodates labels inside the bar.
+            // The actual data range will determine bar length.
+            // X-axis max should be slightly larger than the max data value.
+            hBarChartV4.options.scales.x.max = maxValueV4 * 1.02; // Small padding on scale
+            hBarChartV4.update();
+        });
+    </script>
+</body>
+</html>
