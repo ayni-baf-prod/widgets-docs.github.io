@@ -82,7 +82,6 @@
 </style>
 
 ## 8. Requerimientos Técnicos
-- **Dependencias**: Chart.js con gauge, Gauge.js.
 - **Formato de salida**: SVG.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo.
 
