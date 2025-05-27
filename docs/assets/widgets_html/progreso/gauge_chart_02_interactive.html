@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tacómetro (GAUGE_CHART_02)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; min-height: 350px;
+        }
+        .gauge-widget-g02 {
+            background-color: #FFFFFF;
+            padding: 16px 20px 12px 20px; /* Reducido padding vertical */
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            width: 100%; max-width: 320px;
+            text-align: center;
+        }
+        .gauge-title-g02 {
+            font-size: 16px; font-weight: 600;
+            color: rgba(43, 57, 80, 1);
+            margin-bottom: 8px; /* Reducido de 20px a 8px */
+            text-align: left;
+        }
+        .chart-wrapper-g02 {
+            position: relative;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            aspect-ratio: 2 / 1; /* Más compacto, reducido de 1.1 a 1 */
+        }
+        #gaugeChartCanvasG02 { 
+            display: block;
+        }
+
+        .gauge-center-text-g02 {
+            position: absolute;
+            top: 70%; /* Ajustado para la nueva proporción */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(31, 41, 55, 1);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .gauge-axis-label-g02 {
+            position: absolute;
+            bottom: 5px; /* Más cerca del arco, cambiado de -5px a 5px */
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(107, 114, 128, 1);
+            white-space: nowrap;
+        }
+        .gauge-label-min { left: 8px; } /* Ajustado para mejor posicionamiento */
+        .gauge-label-max { right: 8px; } /* Ajustado para mejor posicionamiento */
+
+    </style>
+</head>
+<body>
+    <div class="gauge-widget-g02">
+        <div class="gauge-title-g02">Days Receivable Outstanding</div>
+        <div class="chart-wrapper-g02">
+            <canvas id="gaugeChartCanvasG02"></canvas>
+            <div class="gauge-center-text-g02">
+                17 Days
+            </div>
+            <span class="gauge-axis-label-g02 gauge-label-min">0 Days</span>
+            <span class="gauge-axis-label-g02 gauge-label-max">180 Days</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxGaugeG02 = document.getElementById('gaugeChartCanvasG02').getContext('2d');
+            
+            const gaugeChartG02 = new Chart(ctxGaugeG02, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [9.444444444444445, 90.55555555555556],
+                        backgroundColor: ["rgba(59, 130, 246, 1)","rgba(219, 234, 254, 1)"],
+                        borderWidth: 0,
+                        circumference: 180, // Semicircle
+                        rotation: -90,      // Starts at the left
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '70%', // Thickness of the doughnut ring
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    animation: { animateRotate: false, animateScale: false }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
