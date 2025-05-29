@@ -26,6 +26,9 @@
     | Customer 40548 | $175,634   | -          | -        |
     | Customer 40549 | $33,567    | -          | $5,460   |
     | Customer 40550 | $10,234    | $10,234    | $10,234  |
+    | Customer 40551 | $7,634     | $42,294    | $22,294  |
+    | Customer 40552 | $55,567    | $9         | -        |
+    | Customer 40553 | $13,567    | -          | -        |
 
 - **Fuente de datos**: Tablas SQL desde un datawarehouse.
 - **Volumen de datos**: Hasta 25 celdas; recomendado 15.
@@ -66,6 +69,9 @@
   | Customer 40548 | $175,634   | -          | -        |
   | Customer 40549 | $33,567    | -          | $5,460   |
   | Customer 40550 | $10,234    | $10,234    | $10,234  |
+  | Customer 40551 | $7,634     | $42,294    | $22,294  |
+  | Customer 40552 | $55,567    | $9         | -        |
+  | Customer 40553 | $13,567    | -          | -        |
   ```
 - **Resultado visual**: Tabla con gradiente azul (bajo: claro, alto: oscuro), valores en USD, celdas vacías como "-". El valor máximo ($318,294) se muestra en azul oscuro, y el valor mínimo ($5,460) en azul claro.
 - **Configuración aplicada**: Gradiente azul, formato moneda (USD), orden alfabético.
