@@ -97,6 +97,7 @@ nav:
     - Distribución y Densidad:
         - catalogo/distribucion_densidad/index.md
         - Heatmap: catalogo/distribucion_densidad/heatmap-01.md
+        - Heatmap Table: catalogo/distribucion_densidad/heatmap-table-01.md
     - Grillas Avanzadas:
         - catalogo/tablas_grillas/index.md
         - Indicators Grid: catalogo/tablas_grillas/indicator-grid-01.md

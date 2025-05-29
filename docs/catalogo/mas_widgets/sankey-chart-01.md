@@ -17,7 +17,7 @@
     - Máximo: 5 variables categóricas (origenes/destinos), 2 variables numéricas (valor, variación % contra período anterior).
     - Niveles: Soporta de 2 a 7 niveles de flujo, definidos a nivel de datos.
   - **Estructura de datos** (grilla):
-  ```
+
   | Origen             | Destino            | Valor (USD) | Variación % | Nivel Origen | Nivel Destino |
   |--------------------|--------------------|-------------|-------------|--------------|---------------|
   | Design             | Revenue            | 5,200M      | 8.2%        | 1            | 2             |
@@ -33,7 +33,7 @@
   | Operating Expenses | G & A              | 1,300M      | 5.1%        | 4            | 5             |
   | Operating Expenses | R & D              | 1,700M      | 2.4%        | 4            | 5             |
   | Operating Expenses | S & M              | 1,100M      | 0.9%        | 4            | 5             |
-  ```
+
 - **Fuente de datos**: Tablas SQL desde un datawarehouse.
 - **Volumen de datos**: Hasta 5 nodos por nivel (total máximo 35 nodos para 7 niveles); agrupar excedentes en "OTROS".
 
