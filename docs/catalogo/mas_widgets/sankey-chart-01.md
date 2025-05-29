@@ -18,17 +18,21 @@
     - Niveles: Soporta de 2 a 7 niveles de flujo, definidos a nivel de datos.
   - **Estructura de datos** (grilla):
   ```
-  | Origen             | Destino          | Valor (USD) | Variación % | Nivel Origen | Nivel Destino |
-  |--------------------|------------------|-------------|-------------|--------------|---------------|
-  | Design             | Revenue          | 8,200M      | 5.2%        | 1            | 2             |
-  | Constr             | Revenue          | 7,300M      | 8.1%        | 1            | 2             |
-  | Tech               | Revenue          | 1,100M      | -2.3%       | 1            | 2             |
-  | Revenue            | Gross Profit     | 16,600M     | 6.7%        | 2            | 3             |
-  | Gross Profit       | Operating Profit | 9,400M      | 4.5%        | 3            | 4             |
-  | Operating Profit   | Net Profit       | 6,800M      | 0.0%        | 4            | 5             |
-  | Operating Expenses | Net Profit       | -2,300M     | 0.0%        | 4            | 5             |
-  | Other              | Net Profit       | 150M        | 0.0%        | 4            | 5             |
-  | Tax                | Net Profit       | -1,600M     | 0.0%        | 4            | 5             |
+  | Origen             | Destino            | Valor (USD) | Variación % | Nivel Origen | Nivel Destino |
+  |--------------------|--------------------|-------------|-------------|--------------|---------------|
+  | Design             | Revenue            | 5,200M      | 8.2%        | 1            | 2             |
+  | Constr             | Revenue            | 5,100M      | 3.1%        | 1            | 2             |
+  | Tech               | Revenue            | 5,200M      | 0.0%        | 1            | 2             |
+  | Revenue            | Gross Profit       | 11,000M     | 6.7%        | 2            | 3             |
+  | Revenue            | Cost of Revenue    | 4,100M      | 8.3%        | 2            | 3             |
+  | Gross Profit       | Operating Profit   | 7,300M      | 4.0%        | 3            | 4             |
+  | Gross Profit       | Operating Expenses | 4,100M      | 0.5%        | 3            | 4             |
+  | Operating Profit   | Net Profit         | 5,800M      | 0.3%        | 4            | 5             |
+  | Operating Profit   | Tax                | 1,500M      | 7.4%        | 4            | 5             |
+  | Operating Profit   | Other              | 1,800M      | 3.8%        | 4            | 5             |
+  | Operating Expenses | G & A              | 1,300M      | 5.1%        | 4            | 5             |
+  | Operating Expenses | R & D              | 1,700M      | 2.4%        | 4            | 5             |
+  | Operating Expenses | S & M              | 1,100M      | 0.9%        | 4            | 5             |
   ```
 - **Fuente de datos**: Tablas SQL desde un datawarehouse.
 - **Volumen de datos**: Hasta 5 nodos por nivel (total máximo 35 nodos para 7 niveles); agrupar excedentes en "OTROS".
@@ -63,20 +67,38 @@
 - **Descripción**: Mostrar el flujo de ingresos y gastos en el estado de resultados de 2022 con variaciones.
 - **Datos de entrada**:
   ```
-  | Origen             | Destino          | Valor (USD) | Variación % | Nivel Origen | Nivel Destino |
-  |--------------------|------------------|-------------|-------------|--------------|---------------|
-  | Design             | Revenue          | 8,200M      | 5.2%        | 1            | 2             |
-  | Constr             | Revenue          | 7,300M      | 8.1%        | 1            | 2             |
-  | Tech               | Revenue          | 1,100M      | -2.3%       | 1            | 2             |
-  | Revenue            | Gross Profit     | 16,600M     | 6.7%        | 2            | 3             |
-  | Gross Profit       | Operating Profit | 9,400M      | 4.5%        | 3            | 4             |
-  | Operating Profit   | Net Profit       | 6,800M      | 0.0%        | 4            | 5             |
-  | Operating Expenses | Net Profit       | -2,300M     | 0.0%        | 4            | 5             |
-  | Other              | Net Profit       | 150M        | 0.0%        | 4            | 5             |
-  | Tax                | Net Profit       | -1,600M     | 0.0%        | 4            | 5             |
+  | Origen             | Destino            | Valor (USD) | Variación % | Nivel Origen | Nivel Destino |
+  |--------------------|--------------------|-------------|-------------|--------------|---------------|
+  | Design             | Revenue            | 5,200M      | 8.2%        | 1            | 2             |
+  | Constr             | Revenue            | 5,100M      | 3.1%        | 1            | 2             |
+  | Tech               | Revenue            | 5,200M      | 0.0%        | 1            | 2             |
+  | Revenue            | Gross Profit       | 11,000M     | 6.7%        | 2            | 3             |
+  | Revenue            | Cost of Revenue    | 4,100M      | 8.3%        | 2            | 3             |
+  | Gross Profit       | Operating Profit   | 7,300M      | 4.0%        | 3            | 4             |
+  | Gross Profit       | Operating Expenses | 4,100M      | 0.5%        | 3            | 4             |
+  | Operating Profit   | Net Profit         | 5,800M      | 0.3%        | 4            | 5             |
+  | Operating Profit   | Tax                | 1,500M      | 7.4%        | 4            | 5             |
+  | Operating Profit   | Other              | 1,800M      | 3.8%        | 4            | 5             |
+  | Operating Expenses | G & A              | 1,300M      | 5.1%        | 4            | 5             |
+  | Operating Expenses | R & D              | 1,700M      | 2.4%        | 4            | 5             |
+  | Operating Expenses | S & M              | 1,100M      | 0.9%        | 4            | 5             |
   ```
 - **Resultado visual**: Gráfico de Sankey con 5 niveles, máximo 5 nodos por nivel, nodos "Revenue", "Gross Profit", "Operating Profit", "Net Profit", enlaces azules (ingresos), verdes (ganancias), rojos (gastos), valores en USD, variaciones en % para niveles 1 y 2.
 - **Configuración aplicada**: Colores por nivel (nivel 1 azul, nivel 2 verde, etc.), formato moneda (USD), etiquetas con valores y variaciones visibles.
+
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; height: 765px; position: relative; overflow: hidden;">
+  <iframe src="../../../assets/widgets_html/SANKEY_CHART_01/sankey_chart_01_interactive.html" 
+          style="width: 100%; height: 675px; border: none; overflow: hidden; "
+          loading="lazy"
+          title="Ejemplo Interactivo del Diagrama Sankey">
+  </iframe>
+</div>
+
+<style>
+.widget-interactive-container iframe { min-height: 750px; }
+</style>
 
 ## 8. Requerimientos Técnicos
 - **Formato de salida**: SVG.

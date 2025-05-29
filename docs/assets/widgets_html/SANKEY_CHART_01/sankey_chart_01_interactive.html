@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gauge Chart Widget</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /*min-height: 85vh;*/
+        }
+        .widget-container {
+            background-color: #FFFFFF;
+            padding: 20px; 
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 45px;
+
+        }
+        #chart-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #303F9F; 
+            margin-bottom: 0px;
+            text-align: center;
+        }
+        #gauge-chart-canvas-container {
+            width: 95%; 
+            height: 95%; 
+            position: relative;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <h2 id="chart-title">Budget Compliance</h2>
+        <div id="gauge-chart-canvas-container">
+            <svg width="100%" viewBox="0 0 1565 894">
+                <g transform="translate(100,80)"><path class="link" d="M375.25,330.4487393608824C530.875,330.4487393608824,530.875,283.37015877551244,686.5,283.37015877551244" stroke="#9FD895" stroke-width="284.7793548387097"></path><path class="link" d="M375.25,524.0487393608825C530.875,524.0487393608825,530.875,625.3701587755124,686.5,625.3701587755124" stroke="#FF7E7E" stroke-width="102.42064516129032"></path><path class="link" d="M718.5,232.1598361948673C874.125,232.1598361948673,874.125,175.78064516129032,1029.75,175.78064516129032" stroke="#9FD895" stroke-width="182.35870967741937"></path><path class="link" d="M718.5,374.5495136142221C874.125,374.5495136142221,874.125,485.49084588667404,1029.75,485.49084588667404" stroke="#FF7E7E" stroke-width="102.42064516129032"></path><path class="link" d="M1061.75,157.0451612903226C1217.375,157.0451612903226,1217.375,106.71612903225805,1373,106.71612903225805" stroke="#9FD895" stroke-width="144.8877419354839"></path><path class="link" d="M1061.75,248.22451612903228C1217.375,248.22451612903228,1217.375,327.49677419354833,1373,327.49677419354833" stroke="#FF7E7E" stroke-width="37.47096774193548"></path><path class="link" d="M1061.75,450.5179426608676C1217.375,450.5179426608676,1217.375,421.083870967742,1373,421.083870967742" stroke="#FF7E7E" stroke-width="32.47483870967742"></path><path class="link" d="M1061.75,487.9889104028031C1217.375,487.9889104028031,1217.375,519.2129032258066,1373,519.2129032258066" stroke="#FF7E7E" stroke-width="42.46709677419356"></path><path class="link" d="M1061.75,522.9618136286095C1217.375,522.9618136286095,1217.375,612.8000000000003,1373,612.8000000000003" stroke="#FF7E7E" stroke-width="27.478709677419356"></path><path class="link" d="M32,125.81935483870969C187.625,125.81935483870969,187.625,251.75970710281794,343.25,251.75970710281794" stroke="#3D6CFF" stroke-width="127.40129032258066"></path><path class="link" d="M32,379.72903225806454C187.625,379.72903225806454,187.625,380.4100296834631,343.25,380.4100296834631" stroke="#F9DB79" stroke-width="129.89935483870968"></path><path class="link" d="M32,645.909677419355C187.625,645.909677419355,187.625,510.3093845221728,343.25,510.3093845221728" stroke="#A7ACD0" stroke-width="129.89935483870968"></path>
+                <rect class="node" x="343.25" y="188.0590619415276" height="387.20000000000005" width="32" style="fill: rgb(77, 82, 126);"></rect><rect class="node" x="686.5" y="140.9804813561576" height="284.77935483870965" width="32" style="fill: rgb(110, 172, 99);"></rect><rect class="node" x="686.5" y="574.1598361948672" height="102.4206451612904" width="32" style="fill: rgb(202, 70, 70);"></rect><rect class="node" x="1029.75" y="84.60129032258064" height="182.3587096774194" width="32" style="fill: rgb(110, 172, 99);"></rect><rect class="node" x="1029.75" y="434.2805233060289" height="102.42064516129022" width="32" style="fill: rgb(202, 70, 70);"></rect><rect class="node" x="1373" y="34.27225806451611" height="144.88774193548386" width="32" style="fill: rgb(110, 172, 99);"></rect><rect class="node" x="1373" y="308.7612903225806" height="37.47096774193557" width="32" style="fill: rgb(202, 70, 70);"></rect><rect class="node" x="1373" y="404.84645161290325" height="32.47483870967744" width="32" style="fill: rgb(202, 70, 70);"></rect><rect class="node" x="1373" y="497.9793548387098" height="42.46709677419369" width="32" style="fill: rgb(202, 70, 70);"></rect><rect class="node" x="1373" y="599.0606451612906" height="27.478709677419374" width="32" style="fill: rgb(202, 70, 70);"></rect><rect class="node" x="0" y="62.11870967741935" height="127.40129032258065" width="32" style="fill: rgb(67, 107, 232);"></rect><rect class="node" x="0" y="314.7793548387097" height="129.8993548387097" width="32" style="fill: rgb(255, 187, 0);"></rect><rect class="node" x="0" y="580.9600000000002" height="129.89935483870977" width="32" style="fill: rgb(132, 137, 171);"></rect>
+                <text class="node-label" x="359.25" y="173.0590619415276" text-anchor="start"><tspan class="sankey_lineaBold" dx="-1.2em" dy="-1.6em" font-size="1.2em" font-weight="bold" fill="#4672FB" style="font-size: 14.4592px;">Revenue</tspan>
+                <tspan class="sankey_lineaNormal" dx="-5.2em" dy="1.1em" font-size="1.1em" fill="#4D527E" style="font-size: 12.7582px;">$15.5B</tspan>
+                <tspan class="sankey_lineaNormal" dx="-3.25em" dy="1em" font-size="1.1em" fill="#4D527E" style="font-size: 12.7582px;">+5% Y/Y</tspan></text><text class="node-label" x="702.5" y="125.98048135615761" text-anchor="start"><tspan class="sankey_lineaBold" dx="-1.2em" dy="-1.9em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">Gross Profit</tspan><tspan class="sankey_lineaBold" dx="-5.9em" dy="1.2em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">$11B</tspan><tspan class="sankey_lineaNormal" dx="-2.4em" dy="1.1em" font-size="1.1em" fill="#4D527E" text-anchor="middle" style="font-size: 12.7582px;">7% margin</tspan></text><text class="node-label" x="702.5" y="693.5804813561576" text-anchor="end"><tspan class="sankey_lineaBold sankey_lineabottomy" dx="1.5em" font-weight="bold" font-size="1.2em" fill="#CA4646" style="font-size: 14.4592px;">Cost of Revenue</tspan>
+                <tspan class="sankey_lineaNormal" dy="1em" dx="-3.5em" font-size="1.1em" fill="#CA4646" style="font-size: 12.7582px;">($4.1B)</tspan></text><text class="node-label" x="1045.75" y="69.60129032258064" text-anchor="start"><tspan class="sankey_lineaBold" dx="-1.4em" dy="-1.9em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">Operating Profit</tspan><tspan class="sankey_lineaBold" dx="-8.1em" dy="1.2em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">$7.3B</tspan><tspan class="sankey_lineaNormal" dx="-3em" dy="1.1em" font-size="1.1em" fill="#4D527E" text-anchor="middle" style="font-size: 12.7582px;">4% margin</tspan></text><text class="node-label" x="1045.75" y="553.7011684673191" text-anchor="end"><tspan class="sankey_lineaBold sankey_lineabottomy" dx="1.5em" font-weight="bold" font-size="1.2em" fill="#CA4646" style="font-size: 14.4592px;">Operating Expenses</tspan>
+                <tspan class="sankey_lineaNormal" dy="1em" dx="-3.5em" font-size="1.1em" fill="#CA4646" style="font-size: 12.7582px;">($4.1B)</tspan></text><text class="node-label" x="1389" y="19.27225806451611" text-anchor="start"><tspan class="sankey_lineaBold" dx="-1.2em" dy="-1.9em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">Net Profit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tspan><tspan class="sankey_lineaBold" dx="-5.9em" dy="1.2em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">$5.8B</tspan><tspan class="sankey_lineaNormal" dx="-3.4em" dy="1.1em" font-size="1.1em" fill="#4D527E" text-anchor="middle" style="font-size: 12.7582px;">9% margin</tspan></text><text class="node-label" x="1389" y="239.27225806451611" text-anchor="start"><tspan class="sankey_lineaBold" dx="-1.3em" dy="-1.9em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">Other&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tspan><tspan class="sankey_lineaBold" dx="-4.1em" dy="1.2em" font-size="1.2em" font-weight="bold" fill="#6EAC63" style="font-size: 14.4592px;">$1.8B</tspan></text><text class="node-label" x="1420" y="327.4967741935484" text-anchor="start"><tspan class="sankey_lineaBold" font-weight="bold" dx="-0.4em" font-size="1.2em" fill="#CA4646" style="font-size: 14.4592px;">Tax</tspan>
+                <tspan class="sankey_lineaNormal" dy="1em" font-size="1.1em" dx="-2.3em" fill="#CA4646" style="font-size: 12.7582px;">($1.5B)</tspan></text><text class="node-label" x="1420" y="421.083870967742" text-anchor="start"><tspan class="sankey_lineaBold" font-weight="bold" dx="-0.4em" font-size="1.2em" fill="#CA4646" style="font-size: 14.4592px;">G&amp;A</tspan>
+                <tspan class="sankey_lineaNormal" dy="1em" font-size="1.1em" dx="-2.8em" fill="#CA4646" style="font-size: 12.7582px;">($1.3B)</tspan></text><text class="node-label" x="1420" y="519.2129032258067" text-anchor="start"><tspan class="sankey_lineaBold" font-weight="bold" dx="-0.4em" font-size="1.2em" fill="#CA4646" style="font-size: 14.4592px;">R&amp;D</tspan>
+                <tspan class="sankey_lineaNormal" dy="1em" font-size="1.1em" dx="-2.6em" fill="#CA4646" style="font-size: 12.7582px;">($1.7B)</tspan></text><text class="node-label" x="1420" y="612.8000000000003" text-anchor="start"><tspan class="sankey_lineaBold" font-weight="bold" dx="-0.4em" font-size="1.2em" fill="#CA4646" style="font-size: 14.4592px;">S&amp;M</tspan>
+                <tspan class="sankey_lineaNormal" dy="1em" font-size="1.1em" dx="-2.6em" fill="#CA4646" style="font-size: 12.7582px;">($1.1B)</tspan></text><text class="node-label" x="16" y="47.11870967741935" text-anchor="start"><tspan class="sankey_lineaBold sankey_lineatopy" x="0" dy="-5.103260869565218px" font-weight="bold" font-size="1.2em" fill="#4D527E" style="font-size: 14.4592px;">$5.1B</tspan>
+                <tspan class="sankey_lineaNormal" x="0" dy="1em" font-size="1.1em" fill="#4D527E" style="font-size: 12.7582px;">+3% Y/Y</tspan><tspan class="sankey_lineaProd" font-weight="bold" font-size="1.3em" fill="#373458" dy="2em" x="-85.05434782608695px" style="font-size: 16.1603px;">CONSTR</tspan>
+                </text><text class="node-label" x="16" y="299.7793548387097" text-anchor="start"><tspan class="sankey_lineaBold sankey_lineatopy" x="0" dy="-5.103260869565218px" font-weight="bold" font-size="1.2em" fill="#4D527E" style="font-size: 14.4592px;">$5.2B</tspan>
+                <tspan class="sankey_lineaNormal" x="0" dy="1em" font-size="1.1em" fill="#4D527E" style="font-size: 12.7582px;">+8% Y/Y</tspan><tspan class="sankey_lineaProd" font-weight="bold" font-size="1.3em" fill="#373458" dy="2em" x="-85.05434782608695px" style="font-size: 16.1603px;">DISEÑO</tspan>
+                </text><text class="node-label" x="16" y="565.9600000000002" text-anchor="start"><tspan class="sankey_lineaBold sankey_lineatopy" x="0" dy="-5.103260869565218px" font-weight="bold" font-size="1.2em" fill="#4D527E" style="font-size: 14.4592px;">$5.2B</tspan>
+                <tspan class="sankey_lineaNormal" x="0" dy="1em" font-size="1.1em" fill="#4D527E" style="font-size: 12.7582px;">Flat Y/Y</tspan><tspan class="sankey_lineaProd" font-weight="bold" font-size="1.3em" fill="#373458" dy="2em" x="-85.05434782608695px" style="font-size: 16.1603px;">TEC</tspan>
+                </text>
+                </g>
+                </svg>
+        </div>
+    </div>
+</body>
+</html>
