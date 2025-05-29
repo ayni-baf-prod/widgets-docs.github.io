@@ -18,13 +18,13 @@
   - Máximo: 1 variable numérica (valor), 2 variables numéricas (rango mínimo, máximo), 3 rangos predefinidos (inicio-fin).
   - Tipos de datos: Numérico (valor, rango).
   - **Estructura de datos** (grilla):
-    ```
+
     | Indicador       | Valor | Rango Mínimo | Rango Máximo | Rango 1 (Verde) | Rango 2 (Amarillo) | Rango 3 (Rojo) |
     |-----------------|-------|--------------|--------------|-----------------|--------------------|----------------|
     | Budget Compliance | 27%   | 0%           | 100%         | 0%-33%          | 34%-66%            | 67%-100%       |
     | Executed Budget | 60%   | 0%           | 100%         | 0%-30%          | 31%-70%            | 71%-100%       |
     | Status          | 60%   | 0%           | 100%         | 0%-30%          | 31%-70%            | 71%-100%       |
-    ```
+
 - **Fuente de datos**: Tablas SQL desde un datawarehouse. Los rangos deben venir preconfigurados desde el datawarehouse, ya que cada indicador puede tener diferentes rangos según el contexto (ej. cliente, área). Por ejemplo, "Budget Compliance" para Cliente 1 puede tener rangos verde 0%-33%, amarillo 34%-66%, rojo 67%-100%, mientras que para Cliente 2 puede ser verde 0%-10%, amarillo 11%-50%, rojo 51%-100%.
 - **Volumen de datos**: Hasta 1 valor por instancia; recomendado único.
 
@@ -57,11 +57,11 @@
 - **Descripción**: Mostrar el cumplimiento presupuestario para diferentes clientes.
 - **Datos de entrada**:
   ```
-  | Indicador       | Valor | Rango Mínimo | Rango Máximo | Rango 1 (Verde) | Rango 2 (Amarillo) | Rango 3 (Rojo) |
-  |-----------------|-------|--------------|--------------|-----------------|--------------------|----------------|
-  | Budget Compliance (Cliente 1) | 27%   | 0%           | 100%         | 0%-33%          | 34%-66%            | 67%-100%       |
+  | Indicador         | Valor | Rango Min | Rango Max | Ran1 (Verde) | Ran2 (Amarillo) | Ran3 (Rojo) |
+  |-------------------|-------|-----------|-----------|--------------|-----------------|-------------|
+  | Budget Compliance | 27%   | 0%        | 100%      | 0%-33%       | 34%-66%         | 67%-100%    |
   ```
-- **Resultado visual**: Tacómetro con aguja en 27%, rangos configurados según: verde 0%-33%, amarillo 34%-66%, rojo 67%-100%;. Imagen: [Placeholder para imagen de tacómetro].
+- **Resultado visual**: Tacómetro con aguja en 27%, rangos configurados según: verde 0%-33%, amarillo 34%-66%, rojo 67%-100%. 
 - **Configuración aplicada**: Formato %, rangos verde/amarillo/rojo personalizados.
 
 ## Ejemplo Interactivo

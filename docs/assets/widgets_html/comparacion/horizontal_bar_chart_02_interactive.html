@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Barras de Progreso Horizontal (v3)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet"> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1); 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; box-sizing: border-box; min-height: 350px; 
+        }
+        .hpb-widget-container {
+            background-color: #FFFFFF;
+            padding: 20px 24px; border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            width: 100%; max-width: 450px; 
+        }
+        .chart-scroll-wrapper {
+            max-height: 240px; 
+            overflow-y: auto;
+            padding-right: 3px; 
+            scrollbar-width: thin; 
+            scrollbar-color: #4672FB rgba(238, 242, 255, 0.9);
+        }
+        .chart-scroll-wrapper::-webkit-scrollbar { width: 5px; }
+        .chart-scroll-wrapper::-webkit-scrollbar-track { background: rgba(238, 242, 255, 0.9); border-radius: 2.5px; }
+        .chart-scroll-wrapper::-webkit-scrollbar-thumb { background-color: #4672FB; border-radius: 2.5px; }
+        .chart-canvas-container {
+             height: 480px; 
+             position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="hpb-widget-container">
+        <div class="chart-scroll-wrapper">
+            <div class="chart-canvas-container">
+                <canvas id="hProgressBarChartCanvasV3"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Chart.register(ChartDataLabels);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxHPBV3 = document.getElementById('hProgressBarChartCanvasV3').getContext('2d');
+            
+            const hProgressBarChartV3 = new Chart(ctxHPBV3, {
+                type: 'bar',
+                data: {
+                    labels: ["Customer 1","Customer 2","Customer 3","Customer 4","Customer 5","Customer 6","Customer 7","Customer 8","Customer 9","Customer 10"],
+                    datasets: [
+                        {
+                            label: 'Progreso', 
+                            data: [90.0,80.0,70.0,70.0,60.0,50.0,40.0,30.0,20.0,10.0],
+                            backgroundColor: '#4672FB',
+                            stack: 'Stack 0',
+                            borderRadius: 0, // Straight corners as per prototype
+                        },
+                        {
+                            label: 'Restante',
+                            data: [10.0,20.0,30.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0],
+                            backgroundColor: 'rgba(238, 242, 255, 0.9)',
+                            stack: 'Stack 0',
+                            borderRadius: 0, // Straight corners
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false, 
+                    barPercentage: 0.5, // Adjust for bar thickness
+                    categoryPercentage: 0.7, // Adjust for spacing between categories
+                    layout: {
+                        padding: { left: 0, right: 35, top: 5, bottom: 5 } 
+                    },
+                    scales: {
+                        y: { 
+                            stacked: true, 
+                            grid: { display: false, drawBorder: false },
+                            ticks: {
+                                color: "rgba(55, 65, 81, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 13, 
+                                    weight: '400', // FEEDBACK: Not bold
+                                },
+                                padding: 10, 
+                            }
+                        },
+                        x: { 
+                            stacked: true, 
+                            display: false, 
+                            min: 0, 
+                            max: 100, 
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }, 
+                        datalabels: {
+                            display: function(context) {
+                                return context.datasetIndex === 0; 
+                            },
+                            color: "rgba(75, 85, 99, 1)",
+                            anchor: 'end',   
+                            align: 'right', 
+                            formatter: function(value, context) {
+                                return value.toFixed(0) + '%'; 
+                            },
+                            font: {
+                                family: 'Poppins',
+                                size: 12, // Size from prototype image 
+                                weight: '500' // Semi-bold for percentage
+                            },
+                            offset: 8 // Distance from the end of the progress bar segment
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
