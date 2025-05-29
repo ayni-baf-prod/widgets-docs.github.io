@@ -93,7 +93,8 @@ nav:
         - Gráfico de Butterfly: catalogo/comparacion/butterfly-chart-01.md
         - Gráfico de Area: catalogo/comparacion/area-chart-01.md
         - Gráfico de Barra Horizontal: catalogo/comparacion/horizontal-bar-chart-01.md
-        - Gráfico de Barra Horizontal %: catalogo/comparacion/horizontal-bar-chart-02.md
+        - Gráfico de Barra Horiz. %: catalogo/comparacion/horizontal-bar-chart-02.md
+        - Gráfico de Barra Horiz. % v2: catalogo/comparacion/horizontal-bar-chart-03.md
     - Distribución y Densidad:
         - catalogo/distribucion_densidad/index.md
         - Heatmap: catalogo/distribucion_densidad/heatmap-01.md
@@ -101,6 +102,7 @@ nav:
     - Grillas Avanzadas:
         - catalogo/tablas_grillas/index.md
         - Indicators Grid: catalogo/tablas_grillas/indicator-grid-01.md
+        - Indicators Grid 2: catalogo/tablas_grillas/table-with-indicators-01.md
         - Texto / Tablas: catalogo/tablas_grillas/text-table-01.md
     - Más Widgets:
         - catalogo/mas_widgets/index.md
