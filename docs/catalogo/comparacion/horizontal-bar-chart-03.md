@@ -75,6 +75,16 @@
 - **Resultado visual**: Gráfico de barras horizontales: "Sales" (82%, verde), "Expenses" (71%, amarillo), "Marketing" (45%, rojo), "Logistics" (92%, rojo). 
 - **Configuración aplicada**: Colores según umbrales y tipo (incremental/decremental), formato porcentaje, orden descendente.
 
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 370px; position: relative;">
+  <iframe src="../../../assets/widgets_html/comparacion/horizontal_bar_chart_03_interactive.html" 
+          style="width: 100%; height: 370px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo de Heatmap">
+  </iframe>
+</div>
+
 ## 8. Requerimientos Técnicos
 - **Dependencias**: Chart.js, D3.js.
 - **Formato de salida**: SVG.
