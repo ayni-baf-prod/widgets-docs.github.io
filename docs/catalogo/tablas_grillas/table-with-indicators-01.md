@@ -74,6 +74,16 @@
 - **Resultado visual**: Tabla con ítems padres "Sales" y "Marketing" colapsables; al expandir "Sales", se muestran "Product A" (✓ verde, mini-gráfico butterfly con barra verde hacia la derecha para 1100) y "Product B" (+ rojo, barra roja hacia la izquierda para -50). 
 - **Configuración aplicada**: Verde para aumento, rojo para disminución, formato numérico, mini-gráfico butterfly en "Cambio", orden alfabético.
 
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 430px; position: relative;">
+  <iframe src="../../../assets/widgets_html/INDICATOR_GRID_01/table-with-indicators-01.html" 
+          style="width: 100%; height: 830px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo de la grilla">
+  </iframe>
+</div>
+
 ## 8. Requerimientos Técnicos
 - **Dependencias**: HTML/CSS, Chart.js.
 - **Formato de salida**: HTML.

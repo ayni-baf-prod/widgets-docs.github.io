@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expandable Data Table</title>
+  <!-- Load Poppins font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif; /* Changed to Poppins with fallback */
+      font-size: 12px; /* Reduced font size */
+      background-color: #f0f4f8;
+    }
+    .table-container {
+      width: 80%; /* Controls the overall width of the table container */
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%; /* Makes the table take the full width of its container */
+      border-collapse: collapse; /* Ensures cells are tightly packed with no gaps */
+      table-layout: fixed; /* Fix the table layout to prevent resizing when expanding rows */
+    }
+    th, td {
+      padding: 12px; /* Adds padding inside each cell for spacing */
+      text-align: left; /* Default text alignment for cells */
+      border-bottom: 1px solid #ddd; /* Adds a divider line between rows */
+      box-sizing: border-box; /* Ensures padding doesn't affect width */
+    }
+    /* Adjust the width of each column to 20 10 10 10 10 40 */
+    th:nth-child(1) {
+      width: 20%; /* Width for the "CONCEPT" column */
+    }
+    th:nth-child(2) {
+      width: 10%; /* Width for the "ACTUAL" column */
+    }
+    th:nth-child(3) {
+      width: 10%; /* Width for the "PPT0." column */
+    }
+    th:nth-child(4) {
+      width: 10%; /* Width for the "CUMP." column */
+    }
+    th:nth-child(5) {
+      width: 10%; /* Width for the "VAR." column */
+    }
+    th:nth-child(6) {
+      width: 40%; /* Width for the "0 BN." column */
+    }
+    th {
+      background-color: #e6ecf4; /* Background color for header row */
+      font-weight: normal; /* Removes bold from header text */
+    }
+    tr:hover {
+      background-color: #f5f7fa; /* Hover effect for rows */
+    }
+    .expandable {
+      cursor: pointer; /* Makes expandable rows clickable */
+    }
+    .expandable td:first-child::before {
+      content: '⌄'; /* Arrow down for expand */
+      margin-right: 8px;
+      font-size: 18px; /* Reduced font size for arrows */
+      font-weight: bold; /* Bold arrows */
+      color: #333;
+    }
+    .expanded td:first-child::before {
+      content: '⌃'; /* Arrow up for collapse */
+      font-size: 18px; /* Reduced font size for arrows */
+      font-weight: bold; /* Bold arrows */
+      color: #333;
+    }
+    .sub-row {
+      display: none; /* Hides sub-rows by default */
+      background-color: #fff; /* Changed to white to match the rest of the table */
+      border-bottom: none; /* Removes divider line for sub-rows */
+    }
+    .expanded + .sub-rows .sub-row {
+      display: table-row; /* Shows sub-rows when expanded */
+    }
+    .sub-rows table {
+      width: 100%; /* Ensures sub-table takes full width */
+      border-collapse: collapse; /* Tight packing for sub-table cells */
+      table-layout: fixed; /* Fix the sub-table layout to match the main table */
+      box-sizing: border-box; /* Ensures padding doesn't affect width */
+    }
+    /* Ensure sub-table columns match the main table's column widths */
+    .sub-rows td:nth-child(1) {
+      width: 20%; /* Match "CONCEPT" column width */
+    }
+    .sub-rows td:nth-child(2) {
+      width: 10%; /* Match "ACTUAL" column width */
+    }
+    .sub-rows td:nth-child(3) {
+      width: 10%; /* Match "PPT0." column width */
+    }
+    .sub-rows td:nth-child(4) {
+      width: 10%; /* Match "CUMP." column width */
+    }
+    .sub-rows td:nth-child(5) {
+      width: 10%; /* Match "VAR." column width */
+    }
+    .sub-rows td:nth-child(6) {
+      width: 40%; /* Match "0 BN." column width */
+    }
+    .sub-rows td {
+      padding: 12px; /* Padding for sub-row cells */
+      text-align: left; /* Text alignment for sub-row cells */
+      border-bottom: none; /* No divider line in sub-rows */
+      box-sizing: border-box; /* Ensures padding doesn't affect width */
+    }
+    .var-up {
+      color: green; /* Green color for positive variance */
+    }
+    .var-down {
+      color: red; /* Red color for negative variance */
+    }
+    .var-neutral {
+      color: gray; /* Gray color for neutral variance */
+    }
+    .amount {
+      text-align: center; /* Centers content for bars */
+      position: relative; /* Allows absolute positioning of bars */
+    }
+    .amount span {
+      position: relative;
+      z-index: 1; /* Ensures text is above the bar */
+      display: inline-block;
+      padding: 0 10px; /* Adds padding around text */
+    }
+    /* Align text in the last column (0 BN.) */
+    td:nth-child(6) .amount.var-up span {
+      text-align: right; /* Right align for green text in the last column */
+    }
+    td:nth-child(6) .amount.var-down span {
+      text-align: left; /* Left align for red text in the last column */
+    }
+    .amount.var-up span {
+      text-align: right; /* Right align for green (profit) in other columns */
+    }
+    .amount.var-down span {
+      text-align: left; /* Left align for red (loss) in other columns */
+    }
+    .amount .bar {
+      position: absolute;
+      top: 5px; /* Reduces 5px from top */
+      bottom: 5px; /* Reduces 5px from bottom */
+      height: calc(100% - 10px); /* Adjusts height accordingly */
+      z-index: 0; /* Places bar behind text */
+    }
+    .amount .bar.var-up {
+      background-color: rgba(0, 128, 0, 0.2); /* Light green for profits */
+      left: 50%; /* Starts from center for green bars */
+    }
+    .amount .bar.var-down {
+      background-color: rgba(255, 0, 0, 0.2); /* Light red for losses */
+      right: 50%; /* Starts from center for red bars */
+    }
+    /* Color the up arrow green in VAR column */
+    td.var-neutral span.var-up {
+      color: green;
+    }
+    td.var-neutral {
+      color: gray;
+    }
+    td.var-up span.var-up {
+      color: green;
+    }
+    td.var-down span.var-up {
+      color: red;
+    }
+    td.var-up{ text-align: right !important;}
+    td.var-down{ text-align: left !important;}
+    .sub-rows {
+      display: none; /* Hides sub-rows container by default */
+    }
+    /* Force the colspan td to take full width */
+    .sub-rows td[colspan="6"] {
+      padding: 0; /* Remove padding from the colspan td */
+      width: 100%; /* Ensure it takes full width */
+    }
+  </style>
+</head>
+<body>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>     CONCEPT</th>
+          <th>ACTUAL</th>
+          <th>PPT0.</th>
+          <th>CUMP.</th>
+          <th>VAR.</th>
+          <th style="text-align: center;">0 BN.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="expandable" onclick="toggleRow(this)">
+          <td>     Assets</td>
+          <td>100 M</td>
+          <td>100 M</td>
+          <td>80%</td>
+          <td class="var-neutral">3% <span class="var-up">▲</span></td>
+          <td class="amount var-down" style="text-align: left !important;">
+            <span class="var-down" style="text-align: left;">-13.0bn</span>
+            <div class="bar var-down" style="width: 28%;"></div> <!-- 35% * 0.8 -->
+          </td>
+        </tr>
+        <tr class="sub-rows">
+          <td colspan="6">
+            <table>
+              <tr class="sub-row">
+                <td>     Cash</td>
+                <td>100 M</td>
+                <td>100 M</td>
+                <td>80%</td>
+                <td class="var-neutral">3% <span class="var-up">▲</span></td>
+                <td class="amount var-down">
+                  <span class="var-down">-4.5bn</span>
+                  <div class="bar var-down" style="width: 9.688%;"></div> <!-- 12.11% * 0.8 -->
+                </td>
+              </tr>
+              <tr class="sub-row">
+                <td>     Accounts receipts</td>
+                <td>100 M</td>
+                <td>100 M</td>
+                <td>80%</td>
+                <td class="var-neutral">3% <span class="var-up">▲</span></td>
+                <td class="amount var-down">
+                  <span>-2.5bn</span>
+                  <div class="bar var-down" style="width: 5.376%;"></div> <!-- 6.72% * 0.8 -->
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="expandable" onclick="toggleRow(this)">
+          <td>     Equity</td>
+          <td>140 M</td>
+          <td>140 M</td>
+          <td>45%</td>
+          <td class="var-neutral">4% <span class="var-up">▲</span></td>
+          <td class="amount var-down">
+            <span>-7.5bn</span>
+            <div class="bar var-down" style="width: 16.156%;"></div> <!-- 20.195% * 0.8 -->
+          </td>
+        </tr>
+        <tr class="sub-rows">
+          <td colspan="6">
+            <table>
+              <tr class="sub-row">
+                <td>     Cash</td>
+                <td>140 M</td>
+                <td>140 M</td>
+                <td>45%</td>
+                <td class="var-neutral">4% <span class="var-up">▲</span></td>
+                <td class="amount var-down">
+                  <span>-4.5bn</span>
+                  <div class="bar var-down" style="width: 9.688%;"></div> <!-- 12.11% * 0.8 -->
+                </td>
+              </tr>
+              <tr class="sub-row">
+                <td>     Accounts receipts</td>
+                <td>140 M</td>
+                <td>140 M</td>
+                <td>45%</td>
+                <td class="var-neutral">4% <span class="var-up">▲</span></td>
+                <td class="amount var-down">
+                  <span>-2.5bn</span>
+                  <div class="bar var-down" style="width: 5.376%;"></div> <!-- 6.72% * 0.8 -->
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="expandable" onclick="toggleRow(this)">
+          <td>     Liabilities</td>
+          <td>230 M</td>
+          <td>230 M</td>
+          <td>46%</td>
+          <td class="var-neutral">6% <span class="var-up">▲</span></td>
+          <td class="amount var-up">
+            <span>10.3bn</span>
+            <div class="bar var-up" style="width: 22.176%;"></div> <!-- 27.72% * 0.8 -->
+          </td>
+        </tr>
+        <tr class="sub-rows">
+          <td colspan="6">
+            <table>
+              <tr class="sub-row">
+                <td>     Cash</td>
+                <td>230 M</td>
+                <td>230 M</td>
+                <td>46%</td>
+                <td class="var-neutral">6% <span class="var-up">▲</span></td>
+                <td class="amount var-up">
+                  <span>5.0bn</span>
+                  <div class="bar var-up" style="width: 10.78%;"></div> <!-- 13.475% * 0.8 -->
+                </td>
+              </tr>
+              <tr class="sub-row">
+                <td>     Accounts receipts</td>
+                <td>230 M</td>
+                <td>230 M</td>
+                <td>46%</td>
+                <td class="var-neutral">6% <span class="var-up">▲</span></td>
+                <td class="amount var-up">
+                  <span>5.0bn</span>
+                  <div class="bar var-up" style="width: 10.78%;"></div> <!-- 13.475% * 0.8 -->
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="expandable" onclick="toggleRow(this)">
+          <td>     Lorem ipsum</td>
+          <td>150 M</td>
+          <td>150 M</td>
+          <td>80%</td>
+          <td class="var-neutral">3% <span class="var-up">▲</span></td>
+          <td class="amount var-up">
+            <span>6.0bn</span>
+            <div class="bar var-up" style="width: 12.936%;"></div> <!-- 16.17% * 0.8 -->
+          </td>
+        </tr>
+        <tr class="sub-rows">
+          <td colspan="6">
+            <table>
+              <tr class="sub-row">
+                <td>     Cash</td>
+                <td>150 M</td>
+                <td>150 M</td>
+                <td>80%</td>
+                <td class="var-neutral">3% <span class="var-up">▲</span></td>
+                <td class="amount var-up">
+                  <span>3.0bn</span>
+                  <div class="bar var-up" style="width: 6.468%;"></div> <!-- 8.085% * 0.8 -->
+                </td>
+              </tr>
+              <tr class="sub-row">
+                <td>     Accounts receipts</td>
+                <td>150 M</td>
+                <td>150 M</td>
+                <td>80%</td>
+                <td class="var-neutral">3% <span class="var-up">▲</span></td>
+                <td class="amount var-up">
+                  <span>3.0bn</span>
+                  <div class="bar var-up" style="width: 6.468%;"></div> <!-- 8.085% * 0.8 -->
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="expandable" onclick="toggleRow(this)">
+          <td>     Lorem ipsum</td>
+          <td>150 M</td>
+          <td>150 M</td>
+          <td>70%</td>
+          <td class="var-neutral">3% <span class="var-up">▲</span></td>
+          <td class="amount var-up">
+            <span>2.0bn</span>
+            <div class="bar var-up" style="width: 4.312%;"></div> <!-- 5.39% * 0.8 -->
+          </td>
+        </tr>
+        <tr class="sub-rows">
+          <td colspan="6">
+            <table>
+              <tr class="sub-row">
+                <td>     Cash</td>
+                <td>150 M</td>
+                <td>150 M</td>
+                <td>70%</td>
+                <td class="var-neutral">3% <span class="var-up">▲</span></td>
+                <td class="amount var-up">
+                  <span>1.0bn</span>
+                  <div class="bar var-up" style="width: 2.156%;"></div> <!-- 2.695% * 0.8 -->
+                </td>
+              </tr>
+              <tr class="sub-row">
+                <td>     Accounts receipts</td>
+                <td>150 M</td>
+                <td>150 M</td>
+                <td>70%</td>
+                <td class="var-neutral">3% <span class="var-up">▲</span></td>
+                <td class="amount var-up">
+                  <span>1.0bn</span>
+                  <div class="bar var-up" style="width: 2.156%;"></div> <!-- 2.695% * 0.8 -->
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function toggleRow(element) {
+      element.classList.toggle('expanded');
+      const subRows = element.nextElementSibling;
+      if (subRows && subRows.classList.contains('sub-rows')) {
+        subRows.style.display = element.classList.contains('expanded') ? 'table-row' : 'none';
+      }
+    }
+  </script>
+</body>
+</html>
