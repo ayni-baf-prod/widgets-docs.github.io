@@ -8,178 +8,168 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Poppins', sans-serif; /* Changed to Poppins with fallback */
-      font-size: 12px; /* Reduced font size */
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
       background-color: #f0f4f8;
     }
     .table-container {
-      width: 80%; /* Controls the overall width of the table container */
+      width: 900px; /* Cambiado a 900px */
       margin: 20px auto;
       background: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     table {
-      width: 100%; /* Makes the table take the full width of its container */
-      border-collapse: collapse; /* Ensures cells are tightly packed with no gaps */
-      table-layout: fixed; /* Fix the table layout to prevent resizing when expanding rows */
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
     }
     th, td {
-      padding: 12px; /* Adds padding inside each cell for spacing */
-      text-align: left; /* Default text alignment for cells */
-      border-bottom: 1px solid #ddd; /* Adds a divider line between rows */
-      box-sizing: border-box; /* Ensures padding doesn't affect width */
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      border-top: 1px solid #ddd;
+      box-sizing: border-box;
     }
-    /* Adjust the width of each column to 20 10 10 10 10 40 */
-    th:nth-child(1) {
-      width: 20%; /* Width for the "CONCEPT" column */
+    td:nth-child(2), td:nth-child(3), td:nth-child(4), td:nth-child(5),
+    th:nth-child(2), th:nth-child(3), th:nth-child(4), th:nth-child(5),
+    .sub-rows td:nth-child(2), .sub-rows td:nth-child(3), .sub-rows td:nth-child(4), .sub-rows td:nth-child(5),
+    .nonexpandable td:nth-child(2), .nonexpandable td:nth-child(3), .nonexpandable td:nth-child(4), .nonexpandable td:nth-child(5) {
+      text-align: center;
     }
-    th:nth-child(2) {
-      width: 10%; /* Width for the "ACTUAL" column */
-    }
-    th:nth-child(3) {
-      width: 10%; /* Width for the "PPT0." column */
-    }
-    th:nth-child(4) {
-      width: 10%; /* Width for the "CUMP." column */
-    }
-    th:nth-child(5) {
-      width: 10%; /* Width for the "VAR." column */
-    }
-    th:nth-child(6) {
-      width: 40%; /* Width for the "0 BN." column */
-    }
+    th:nth-child(1) { width: 25%; }
+    th:nth-child(2) { width: 12%; }
+    th:nth-child(3) { width: 12%; }
+    th:nth-child(4) { width: 12%; }
+    th:nth-child(5) { width: 12%; }
+    th:nth-child(6) { width: 27%; }
     th {
-      background-color: #e6ecf4; /* Background color for header row */
-      font-weight: normal; /* Removes bold from header text */
+      background-color: #e6ecf4;
+      font-weight: normal;
     }
-    tr:hover {
-      background-color: #f5f7fa; /* Hover effect for rows */
+    tr:hover { background-color: #f5f7fa; }
+    tr.expandable:not(.sub-row) { background-color: #e6e6e6; }
+    .sub-row.expandable { background-color: #f0f0f0; }
+    .nonexpandable {
+      background-color: #f0f0f0;
+      display: none;
+      border-bottom: none;
     }
-    .expandable {
-      cursor: pointer; /* Makes expandable rows clickable */
+    .expanded + .sub-rows .nonexpandable { display: table-row; }
+    .sub-row:not(.expandable) { background-color: #ffffff; }
+    tr.expandable:not(.sub-row),
+    .sub-row.expandable,
+    .nonexpandable,
+    .sub-row:not(.expandable) {
+      height: 52px;
     }
+    .sub-row.expandable td:first-child,
+    .nonexpandable td:first-child { padding-left: 25px; }
+    .sub-row:not(.expandable) td:first-child { padding-left: 50px; }
+    .expandable { cursor: pointer; }
     .expandable td:first-child::before {
-      content: '⌄'; /* Arrow down for expand */
-      margin-right: 8px;
-      font-size: 18px; /* Reduced font size for arrows */
-      font-weight: bold; /* Bold arrows */
+      content: '+';
+      margin-right: 0px;
+      font-size: 18px;
+      font-weight: bold;
       color: #333;
     }
     .expanded td:first-child::before {
-      content: '⌃'; /* Arrow up for collapse */
-      font-size: 18px; /* Reduced font size for arrows */
-      font-weight: bold; /* Bold arrows */
+      content: '-';
+      font-size: 18px;
+      font-weight: bold;
       color: #333;
+      margin-right: 1.5px;
     }
-    .sub-row {
-      display: none; /* Hides sub-rows by default */
-      background-color: #fff; /* Changed to white to match the rest of the table */
-      border-bottom: none; /* Removes divider line for sub-rows */
-    }
-    .expanded + .sub-rows .sub-row {
-      display: table-row; /* Shows sub-rows when expanded */
-    }
+    .sub-row { display: none; border-bottom: none; }
+    .expanded + .sub-rows .sub-row { display: table-row; }
     .sub-rows table {
-      width: 100%; /* Ensures sub-table takes full width */
-      border-collapse: collapse; /* Tight packing for sub-table cells */
-      table-layout: fixed; /* Fix the sub-table layout to match the main table */
-      box-sizing: border-box; /* Ensures padding doesn't affect width */
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      box-sizing: border-box;
     }
-    /* Ensure sub-table columns match the main table's column widths */
-    .sub-rows td:nth-child(1) {
-      width: 20%; /* Match "CONCEPT" column width */
-    }
-    .sub-rows td:nth-child(2) {
-      width: 10%; /* Match "ACTUAL" column width */
-    }
-    .sub-rows td:nth-child(3) {
-      width: 10%; /* Match "PPT0." column width */
-    }
-    .sub-rows td:nth-child(4) {
-      width: 10%; /* Match "CUMP." column width */
-    }
-    .sub-rows td:nth-child(5) {
-      width: 10%; /* Match "VAR." column width */
-    }
-    .sub-rows td:nth-child(6) {
-      width: 40%; /* Match "0 BN." column width */
-    }
+    .sub-rows td:nth-child(1) { width: 25%; }
+    .sub-rows td:nth-child(2) { width: 12%; }
+    .sub-rows td:nth-child(3) { width: 12%; }
+    .sub-rows td:nth-child(4) { width: 12%; }
+    .sub-rows td:nth-child(5) { width: 12%; }
+    .sub-rows td:nth-child(6) { width: 27%; }
     .sub-rows td {
-      padding: 12px; /* Padding for sub-row cells */
-      text-align: left; /* Text alignment for sub-row cells */
-      border-bottom: none; /* No divider line in sub-rows */
-      box-sizing: border-box; /* Ensures padding doesn't affect width */
+      padding: 12px;
+      text-align: left;
+      border-bottom: none;
+      box-sizing: border-box;
     }
-    .var-up {
-      color: green; /* Green color for positive variance */
-    }
-    .var-down {
-      color: red; /* Red color for negative variance */
-    }
-    .var-neutral {
-      color: gray; /* Gray color for neutral variance */
-    }
+    .var-up { color: green; }
+    .var-down { color: red; }
+    .var-neutral { color: gray; }
     .amount {
-      text-align: center; /* Centers content for bars */
-      position: relative; /* Allows absolute positioning of bars */
+      text-align: center;
+      position: relative;
     }
     .amount span {
       position: relative;
-      z-index: 1; /* Ensures text is above the bar */
+      z-index: 1;
       display: inline-block;
-      padding: 0 10px; /* Adds padding around text */
     }
-    /* Align text in the last column (0 BN.) */
-    td:nth-child(6) .amount.var-up span {
-      text-align: right; /* Right align for green text in the last column */
-    }
-    td:nth-child(6) .amount.var-down span {
-      text-align: left; /* Left align for red text in the last column */
-    }
-    .amount.var-up span {
-      text-align: right; /* Right align for green (profit) in other columns */
-    }
-    .amount.var-down span {
-      text-align: left; /* Left align for red (loss) in other columns */
-    }
+    td:nth-child(6) .amount.var-up span { text-align: right; }
+    td:nth-child(6) .amount.var-down span { text-align: left; }
+    .amount.var-up span { text-align: right; }
+    .amount.var-down span { text-align: left; }
     .amount .bar {
       position: absolute;
-      top: 5px; /* Reduces 5px from top */
-      bottom: 5px; /* Reduces 5px from bottom */
-      height: calc(100% - 10px); /* Adjusts height accordingly */
-      z-index: 0; /* Places bar behind text */
+      top: 12px;
+      bottom: 12px;
+      height: calc(100% - 24px);
+      z-index: 0;
     }
     .amount .bar.var-up {
-      background-color: rgba(0, 128, 0, 0.2); /* Light green for profits */
-      left: 50%; /* Starts from center for green bars */
+      background-color: rgba(0, 128, 0, 0.5);
+      left: 50%;
+      width: 50%;
+      border-radius: 0 5px 5px 0;
+      border-left: 1px solid gray;
     }
     .amount .bar.var-down {
-      background-color: rgba(255, 0, 0, 0.2); /* Light red for losses */
-      right: 50%; /* Starts from center for red bars */
+      background-color: rgba(255, 0, 0, 0.5);
+      right: 50%;
+      width: 50%;
+      border-radius: 5px 0 0 5px;
+      border-right: 1px solid gray;
     }
-    /* Color the up arrow green in VAR column */
-    td.var-neutral span.var-up {
-      color: green;
-    }
-    td.var-neutral {
-      color: gray;
-    }
-    td.var-up span.var-up {
-      color: green;
-    }
-    td.var-down span.var-up {
-      color: red;
-    }
-    td.var-up{ text-align: right !important;}
-    td.var-down{ text-align: left !important;}
-    .sub-rows {
-      display: none; /* Hides sub-rows container by default */
-    }
-    /* Force the colspan td to take full width */
+    td.var-neutral span.var-up, .verde { color: green; }
+    td.var-neutral { color: gray; }
+    td.var-up span.var-up { color: green; }
+    td.var-down span.var-up { color: red; }
+    td.var-up{ text-align: center !important;}
+    td.var-down{ text-align: center !important;}
+    .amarillo { color:orange; }
+    .asd{ font-weight: bold; }
+    .sub-rows { display: none; }
     .sub-rows td[colspan="6"] {
-      padding: 0; /* Remove padding from the colspan td */
-      width: 100%; /* Ensure it takes full width */
+      padding: 0;
+      width: 100%;
+    }
+    .eye-icon {
+        width: 16px;
+        height: 16px;
+        opacity: 0.5;
+        cursor: pointer;
+        margin-left: 8px;
+    }
+    /* Estilo para el SVG con ::after */
+    tr.expandable:not(.sub-row) td:first-child::after,
+    tr.sub-row.expandable td:first-child::after {
+      content: url('data:image/svg+xml;utf8,<svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.99414 2.83398C7.05859 2.83398 7.12305 2.8125 7.1875 2.8125C8.32617 2.8125 9.25 3.73633 9.25 4.875C9.25 6.01367 8.32617 6.9375 7.1875 6.9375C6.02734 6.9375 5.125 6.01367 5.125 4.875C5.125 4.83203 5.125 4.76758 5.125 4.70312C5.31836 4.81055 5.55469 4.875 5.8125 4.875C6.56445 4.875 7.1875 4.27344 7.1875 3.5C7.1875 3.26367 7.10156 3.02734 6.99414 2.83398ZM11.3125 1.80273C12.3223 2.72656 12.9883 3.84375 13.3105 4.61719C13.375 4.78906 13.375 4.98242 13.3105 5.1543C12.9883 5.90625 12.3223 7.02344 11.3125 7.96875C10.3027 8.91406 8.90625 9.6875 7.1875 9.6875C5.44727 9.6875 4.05078 8.91406 3.04102 7.96875C2.03125 7.02344 1.36523 5.90625 1.04297 5.1543C0.978516 4.98242 0.978516 4.78906 1.04297 4.61719C1.36523 3.84375 2.03125 2.72656 3.04102 1.80273C4.05078 0.857422 5.44727 0.0625 7.1875 0.0625C8.90625 0.0625 10.3027 0.857422 11.3125 1.80273ZM7.1875 1.78125C5.46875 1.78125 4.09375 3.17773 4.09375 4.875C4.09375 6.59375 5.46875 7.96875 7.1875 7.96875C8.88477 7.96875 10.2812 6.59375 10.2812 4.875C10.2812 3.17773 8.88477 1.78125 7.1875 1.78125Z" fill="%23373458"/></svg>');
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    tr.expandable:not(.sub-row) td:first-child,
+    tr.sub-row.expandable td:first-child {
+      position: relative;
+      padding-right: 20px;
     }
   </style>
 </head>
@@ -188,7 +178,7 @@
     <table>
       <thead>
         <tr>
-          <th>     CONCEPT</th>
+          <th style="text-align: center;">     CONCEPT</th>
           <th>ACTUAL</th>
           <th>PPT0.</th>
           <th>CUMP.</th>
@@ -198,195 +188,356 @@
       </thead>
       <tbody>
         <tr class="expandable" onclick="toggleRow(this)">
-          <td>     Assets</td>
-          <td>100 M</td>
-          <td>100 M</td>
-          <td>80%</td>
-          <td class="var-neutral">3% <span class="var-up">▲</span></td>
-          <td class="amount var-down" style="text-align: left !important;">
-            <span class="var-down" style="text-align: left;">-13.0bn</span>
-            <div class="bar var-down" style="width: 28%;"></div> <!-- 35% * 0.8 -->
+          <td>     Total Activo</td>
+          <td>1,037 M</td>
+          <td>1,044 M</td>
+          <td>99%</td>
+          <td class="var-neutral">0.7% <span class="var-down">▼</span></td>
+          <td class="amount var-up">
+            <span style="padding-right:60px">12.2K</span>
+            <div class="bar var-up" style="width: 27.30%;"></div>
           </td>
         </tr>
         <tr class="sub-rows">
           <td colspan="6">
             <table>
-              <tr class="sub-row">
-                <td>     Cash</td>
-                <td>100 M</td>
-                <td>100 M</td>
-                <td>80%</td>
-                <td class="var-neutral">3% <span class="var-up">▲</span></td>
-                <td class="amount var-down">
-                  <span class="var-down">-4.5bn</span>
-                  <div class="bar var-down" style="width: 9.688%;"></div> <!-- 12.11% * 0.8 -->
+              <tr class="expandable sub-row" onclick="toggleRow(this)">
+                <td>     Activo Corriente</td>
+                <td>711 M</td>
+                <td>725 M</td>
+                <td class="verde">98%</td>
+                <td class="var-neutral">2.0% <span class="var-down">▼</span></td>
+                <td class="amount var-up">
+                  <span style="padding-right:60px">8.1K</span>
+                  <div class="bar var-up" style="width: 18.18%;"></div>
                 </td>
               </tr>
-              <tr class="sub-row">
-                <td>     Accounts receipts</td>
-                <td>100 M</td>
-                <td>100 M</td>
-                <td>80%</td>
-                <td class="var-neutral">3% <span class="var-up">▲</span></td>
-                <td class="amount var-down">
-                  <span>-2.5bn</span>
-                  <div class="bar var-down" style="width: 5.376%;"></div> <!-- 6.72% * 0.8 -->
+              <tr class="sub-rows">
+                <td colspan="6">
+                  <table>
+                    <tr class="sub-row">
+                      <td>     Caja y Bancos</td>
+                      <td>104 K</td>
+                      <td>101 K</td>
+                      <td class="verde">103%</td>
+                      <td class="var-neutral">3.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(2.7K)</span>
+                        <div class="bar var-down" style="width: 6.05%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Com. Relacionadas</td>
+                      <td>109 K</td>
+                      <td>102 K</td>
+                      <td class="verde">106%</td>
+                      <td class="var-neutral">6.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">6.9K</span>
+                        <div class="bar var-up" style="width: 15.37%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Com. Terceros</td>
+                      <td>96 K</td>
+                      <td>101 K</td>
+                      <td class="verde">95%</td>
+                      <td class="var-neutral">4.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(3.7K)</span>
+                        <div class="bar var-down" style="width: 8.34%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Acc. y personal</td>
+                      <td>81 K</td>
+                      <td>103 K</td>
+                      <td>78%</td>
+                      <td class="var-neutral">2.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(2.5K)</span>
+                        <div class="bar var-down" style="width: 5.61%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Ctas. Relacionadas</td>
+                      <td>100 K</td>
+                      <td>108 K</td>
+                      <td class="verde">93%</td>
+                      <td class="var-neutral">7.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">7.7K</span>
+                        <div class="bar var-up" style="width: 17.31%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Cuentas Terceros</td>
+                      <td>110 K</td>
+                      <td>105 K</td>
+                      <td class="verde">105%</td>
+                      <td class="var-neutral">1.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">1.0K</span>
+                        <div class="bar var-up" style="width: 2.30%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Otros Activos</td>
+                      <td>110 K</td>
+                      <td>104 K</td>
+                      <td class="verde">106%</td>
+                      <td class="var-neutral">1.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">1.4K</span>
+                        <div class="bar var-up" style="width: 3.20%;"></div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr class="expandable sub-row" onclick="toggleRow(this)">
+                <td>     Act. No Corriente</td>
+                <td>327 M</td>
+                <td>319 M</td>
+                <td class="verde">102%</td>
+                <td class="var-neutral">2.3% <span class="var-up">▲</span></td>
+                <td class="amount var-up">
+                  <span style="padding-right:60px">4.1K</span>
+                  <div class="bar var-up" style="width: 9.12%;"></div>
+                </td>
+              </tr>
+              <tr class="sub-rows">
+                <td colspan="6">
+                  <table>
+                    <tr class="sub-row">
+                      <td>     Inv. financieras</td>
+                      <td>115 K</td>
+                      <td>104 K</td>
+                      <td class="verde">110%</td>
+                      <td class="var-neutral">5.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">6.2K</span>
+                        <div class="bar var-up" style="width: 13.87%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Intangibles</td>
+                      <td>106 K</td>
+                      <td>107 K</td>
+                      <td class="verde">99%</td>
+                      <td class="var-neutral">6.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(5.9K)</span>
+                        <div class="bar var-down" style="width: 13.20%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Propied. y equipo</td>
+                      <td>105 K</td>
+                      <td>108 K</td>
+                      <td class="verde">98%</td>
+                      <td class="var-neutral">4.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">3.8K</span>
+                        <div class="bar var-up" style="width: 8.45%;"></div>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
         <tr class="expandable" onclick="toggleRow(this)">
-          <td>     Equity</td>
-          <td>140 M</td>
-          <td>140 M</td>
-          <td>45%</td>
-          <td class="var-neutral">4% <span class="var-up">▲</span></td>
+          <td>     Total Pasivo</td>
+          <td>632 M</td>
+          <td>635 M</td>
+          <td>99%</td>
+          <td class="var-neutral">0.6% <span class="var-down">▼</span></td>
           <td class="amount var-down">
-            <span>-7.5bn</span>
-            <div class="bar var-down" style="width: 16.156%;"></div> <!-- 20.195% * 0.8 -->
+            <span style="padding-left:70px">(16.0K)</span>
+            <div class="bar var-down" style="width: 35.94%;"></div>
           </td>
         </tr>
         <tr class="sub-rows">
           <td colspan="6">
             <table>
-              <tr class="sub-row">
-                <td>     Cash</td>
-                <td>140 M</td>
-                <td>140 M</td>
-                <td>45%</td>
-                <td class="var-neutral">4% <span class="var-up">▲</span></td>
+              <tr class="expandable sub-row" onclick="toggleRow(this)">
+                <td>     Pas. Corriente</td>
+                <td>529 M</td>
+                <td>525 M</td>
+                <td class="verde">101%</td>
+                <td class="var-neutral">0.6% <span class="var-up">▲</span></td>
                 <td class="amount var-down">
-                  <span>-4.5bn</span>
-                  <div class="bar var-down" style="width: 9.688%;"></div> <!-- 12.11% * 0.8 -->
+                  <span style="padding-left:70px">(20.1K)</span>
+                  <div class="bar var-down" style="width: 45.00%;"></div>
                 </td>
               </tr>
-              <tr class="sub-row">
-                <td>     Accounts receipts</td>
-                <td>140 M</td>
-                <td>140 M</td>
-                <td>45%</td>
-                <td class="var-neutral">4% <span class="var-up">▲</span></td>
-                <td class="amount var-down">
-                  <span>-2.5bn</span>
-                  <div class="bar var-down" style="width: 5.376%;"></div> <!-- 6.72% * 0.8 -->
+              <tr class="sub-rows">
+                <td colspan="6">
+                  <table>
+                    <tr class="sub-row">
+                      <td>     Sobreg. bancarios</td>
+                      <td>107 K</td>
+                      <td>108 K</td>
+                      <td class="verde">98%</td>
+                      <td class="var-neutral">3.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(2.8K)</span>
+                        <div class="bar var-down" style="width: 6.28%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Tributos por pagar</td>
+                      <td>108 K</td>
+                      <td>97 K</td>
+                      <td class="verde">112%</td>
+                      <td class="var-neutral">3.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(3.2K)</span>
+                        <div class="bar var-down" style="width: 7.09%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Remuner. por pagar</td>
+                      <td>109 K</td>
+                      <td>108 K</td>
+                      <td class="verde">101%</td>
+                      <td class="var-neutral">2.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">2.5K</span>
+                        <div class="bar var-up" style="width: 5.59%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Ctas. comerciales</td>
+                      <td>101 K</td>
+                      <td>114 K</td>
+                      <td class="verde">89%</td>
+                      <td class="var-neutral">6.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(5.9K)</span>
+                        <div class="bar var-down" style="width: 13.27%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Obligac. financieras</td>
+                      <td>104 K</td>
+                      <td>99 K</td>
+                      <td class="verde">105%</td>
+                      <td class="var-neutral">10.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(10.7K)</span>
+                        <div class="bar var-down" style="width: 23.93%;"></div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr class="expandable sub-row" onclick="toggleRow(this)">
+                <td>     Pas. no Corriente</td>
+                <td>103 M</td>
+                <td>110 M</td>
+                <td class="verde">94%</td>
+                <td class="var-neutral">6.2% <span class="var-down">▼</span></td>
+                <td class="amount var-up">
+                  <span style="padding-right:60px">4.0K</span>
+                  <div class="bar var-up" style="width: 9.04%;"></div>
+                </td>
+              </tr>
+              <tr class="sub-rows">
+                <td colspan="6">
+                  <table>
+                    <tr class="sub-row">
+                      <td>     Ganancia Diferida</td>
+                      <td>103 K</td>
+                      <td>110 K</td>
+                      <td class="verde">94%</td>
+                      <td class="var-neutral">4.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">4.0K</span>
+                        <div class="bar var-up" style="width: 9.04%;"></div>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
         <tr class="expandable" onclick="toggleRow(this)">
-          <td>     Liabilities</td>
-          <td>230 M</td>
-          <td>230 M</td>
-          <td>46%</td>
-          <td class="var-neutral">6% <span class="var-up">▲</span></td>
+          <td>     Total Patrimonio</td>
+          <td>425 M</td>
+          <td>427 M</td>
+          <td>99%</td>
+          <td class="var-neutral">0.7% <span class="var-down">▼</span></td>
           <td class="amount var-up">
-            <span>10.3bn</span>
-            <div class="bar var-up" style="width: 22.176%;"></div> <!-- 27.72% * 0.8 -->
+            <span style="padding-right:60px">1.5K</span>
+            <div class="bar var-up" style="width: 3.44%;"></div>
           </td>
         </tr>
         <tr class="sub-rows">
           <td colspan="6">
             <table>
-              <tr class="sub-row">
-                <td>     Cash</td>
-                <td>230 M</td>
-                <td>230 M</td>
-                <td>46%</td>
-                <td class="var-neutral">6% <span class="var-up">▲</span></td>
+              <tr class="expandable sub-row" onclick="toggleRow(this)">
+                <td>     Patrimonio</td>
+                <td>425 M</td>
+                <td>427 M</td>
+                <td class="verde">99%</td>
+                <td class="var-neutral">0.7% <span class="var-down">▼</span></td>
                 <td class="amount var-up">
-                  <span>5.0bn</span>
-                  <div class="bar var-up" style="width: 10.78%;"></div> <!-- 13.475% * 0.8 -->
+                  <span style="padding-right:60px">1.5K</span>
+                  <div class="bar var-up" style="width: 3.44%;"></div>
                 </td>
               </tr>
-              <tr class="sub-row">
-                <td>     Accounts receipts</td>
-                <td>230 M</td>
-                <td>230 M</td>
-                <td>46%</td>
-                <td class="var-neutral">6% <span class="var-up">▲</span></td>
-                <td class="amount var-up">
-                  <span>5.0bn</span>
-                  <div class="bar var-up" style="width: 10.78%;"></div> <!-- 13.475% * 0.8 -->
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr class="expandable" onclick="toggleRow(this)">
-          <td>     Lorem ipsum</td>
-          <td>150 M</td>
-          <td>150 M</td>
-          <td>80%</td>
-          <td class="var-neutral">3% <span class="var-up">▲</span></td>
-          <td class="amount var-up">
-            <span>6.0bn</span>
-            <div class="bar var-up" style="width: 12.936%;"></div> <!-- 16.17% * 0.8 -->
-          </td>
-        </tr>
-        <tr class="sub-rows">
-          <td colspan="6">
-            <table>
-              <tr class="sub-row">
-                <td>     Cash</td>
-                <td>150 M</td>
-                <td>150 M</td>
-                <td>80%</td>
-                <td class="var-neutral">3% <span class="var-up">▲</span></td>
-                <td class="amount var-up">
-                  <span>3.0bn</span>
-                  <div class="bar var-up" style="width: 6.468%;"></div> <!-- 8.085% * 0.8 -->
-                </td>
-              </tr>
-              <tr class="sub-row">
-                <td>     Accounts receipts</td>
-                <td>150 M</td>
-                <td>150 M</td>
-                <td>80%</td>
-                <td class="var-neutral">3% <span class="var-up">▲</span></td>
-                <td class="amount var-up">
-                  <span>3.0bn</span>
-                  <div class="bar var-up" style="width: 6.468%;"></div> <!-- 8.085% * 0.8 -->
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr class="expandable" onclick="toggleRow(this)">
-          <td>     Lorem ipsum</td>
-          <td>150 M</td>
-          <td>150 M</td>
-          <td>70%</td>
-          <td class="var-neutral">3% <span class="var-up">▲</span></td>
-          <td class="amount var-up">
-            <span>2.0bn</span>
-            <div class="bar var-up" style="width: 4.312%;"></div> <!-- 5.39% * 0.8 -->
-          </td>
-        </tr>
-        <tr class="sub-rows">
-          <td colspan="6">
-            <table>
-              <tr class="sub-row">
-                <td>     Cash</td>
-                <td>150 M</td>
-                <td>150 M</td>
-                <td>70%</td>
-                <td class="var-neutral">3% <span class="var-up">▲</span></td>
-                <td class="amount var-up">
-                  <span>1.0bn</span>
-                  <div class="bar var-up" style="width: 2.156%;"></div> <!-- 2.695% * 0.8 -->
-                </td>
-              </tr>
-              <tr class="sub-row">
-                <td>     Accounts receipts</td>
-                <td>150 M</td>
-                <td>150 M</td>
-                <td>70%</td>
-                <td class="var-neutral">3% <span class="var-up">▲</span></td>
-                <td class="amount var-up">
-                  <span>1.0bn</span>
-                  <div class="bar var-up" style="width: 2.156%;"></div> <!-- 2.695% * 0.8 -->
+              <tr class="sub-rows">
+                <td colspan="6">
+                  <table>
+                    <tr class="sub-row">
+                      <td>     Capital</td>
+                      <td>109 K</td>
+                      <td>103 K</td>
+                      <td class="verde">107%</td>
+                      <td class="var-neutral">4.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">4.2K</span>
+                        <div class="bar var-up" style="width: 9.32%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Reserva Legal</td>
+                      <td>100 K</td>
+                      <td>111 K</td>
+                      <td class="verde">90%</td>
+                      <td class="var-neutral">2.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(2.1K)</span>
+                        <div class="bar var-down" style="width: 4.63%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Result. Acumulados</td>
+                      <td>108 K</td>
+                      <td>108 K</td>
+                      <td class="verde">100%</td>
+                      <td class="var-neutral">2.0% <span class="var-up">▲</span></td>
+                      <td class="amount var-up">
+                        <span style="padding-right:60px">2.1K</span>
+                        <div class="bar var-up" style="width: 4.77%;"></div>
+                      </td>
+                    </tr>
+                    <tr class="sub-row">
+                      <td>     Result. Ejercicio</td>
+                      <td>108 K</td>
+                      <td>106 K</td>
+                      <td class="verde">101%</td>
+                      <td class="var-neutral">2.0% <span class="var-down">▼</span></td>
+                      <td class="amount var-down">
+                        <span style="padding-left:70px">(2.7K)</span>
+                        <div class="bar var-down" style="width: 6.01%;"></div>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
@@ -402,6 +553,15 @@
       const subRows = element.nextElementSibling;
       if (subRows && subRows.classList.contains('sub-rows')) {
         subRows.style.display = element.classList.contains('expanded') ? 'table-row' : 'none';
+        const beforeElement = element.querySelector('td:first-child');
+        if (beforeElement) {
+          const computedStyle = window.getComputedStyle(beforeElement, ':before');
+          if (element.classList.contains('expanded')) {
+            beforeElement.style.setProperty('content', '-', 'important');
+          } else {
+            beforeElement.style.setProperty('content', '+', 'important');
+          }
+        }
       }
     }
   </script>
