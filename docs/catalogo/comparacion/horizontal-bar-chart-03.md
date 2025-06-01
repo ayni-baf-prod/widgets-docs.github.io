@@ -1,79 +1,79 @@
-# Gráfico de Barras Horizontal con Progreso
+# Gráfico de Barras Horizontales de Progreso con Indicadores de Estado
 
 ## 1. Nombre del Widget/Gráfico
-- **Descripción breve**: Gráfico que muestra el progreso de indicadores mediante barras horizontales, con porcentajes respecto a un presupuesto y colores que reflejan umbrales segmentados adaptados a indicadores incrementales o decrementales.
+- **Descripción breve**: Gráfico de barras horizontales que compara un valor planificado (100%) con un valor ejecutado, mostrando el progreso en porcentaje y estados visuales (ej. On Track, Alert, Off Track) mediante colores indicadores.
 - **Identificador único**: `HORIZONAL_BAR_CHART_03`.
 
 ## 2. Propósito y Casos de Uso
-- **Objetivo**: Visualizar el avance de indicadores clave en relación con un presupuesto, destacando su desempeño mediante colores basados en umbrales específicos para indicadores incrementales (donde mayor es mejor) o decrementales (donde menor es mejor).
-- **Casos de uso**:
-    - Mostrar el progreso de ventas o ingresos respecto a su presupuesto (incremental).
-    - Analizar el cumplimiento de costos o gastos frente a su presupuesto (decremental).
-    - Evaluar el desempeño de proyectos con metas ajustadas a incrementos o reducciones.
-- **Tipos de análisis soportados**: Comparativo, de progreso.
+- **Objetivo**: Comparar un valor ejecutado contra un valor planificado, destacando el progreso y el estado de cumplimiento con indicadores visuales para facilitar la identificación de desviaciones.
+- **Casos de uso**: 
+  - Comparar el avance real frente al planificado en cualquier tipo de métrica (ej. ventas alcanzadas vs. meta, horas trabajadas vs. estimadas, ingresos vs. presupuesto).
+  - Identificar elementos que requieren atención (ej. métricas por debajo de lo esperado) en contextos como finanzas, proyectos, ventas o producción.
+  - Monitorear el desempeño general de un conjunto de ítems (ej. regiones, equipos, productos).
+- **Tipos de análisis soportados**: Descriptivo, comparativo.
 
 ## 3. Requerimientos de Datos
 - **Variables/Indicadores**:
-    - Mínimo: 1 variable categórica (ítem), 1 variable categórica (tipo de indicador: incremental/decremental), 1 variable numérica (porcentaje de progreso), 3 variables numéricas (umbrales para verde, amarillo, rojo).
-    - Máximo: 1 variable categórica (ítem), 1 variable categórica (tipo), 5 variables numéricas (porcentajes), 3 variables numéricas (umbrales por ítem).
-    - Tipos de datos: Categórico (ítems, tipo), numérico (porcentajes, umbrales).
-  - **Estructura de datos** (grilla):
+    - Número mínimo y máximo de variables: 1 variable categórica (ítem o categoría), 1 variable numérica (valor planificado), 1 variable numérica (valor ejecutado), 1 variable numérica (porcentaje de progreso), 1 variable categórica (estado).
+    - Tipos de datos soportados: Categórico (ítem, estado), numérico (valor planificado, valor ejecutado, porcentaje).
+    - Estructura de datos: Ejemplo en formato de grilla:
 
-    | Ítem       | Tipo Indicador | Progreso (%) | Umbral Verde (%) | Umbral Amarillo (%) | Umbral Rojo (%) |
-    |------------|----------------|--------------|------------------|---------------------|-----------------|
-    | Sales      | Incremental    | 82           | 80               | 60                  | 40              |
-    | Expenses   | Decremental    | 71           | 60               | 80                  | 100             |
-    | Marketing  | Incremental    | 45           | 80               | 60                  | 40              |
-    | Logistics  | Decremental    | 92           | 40               | 60                  | 80              |
+    | Ítem           | Valor Planificado | Valor Ejecutado | Progreso % | Estado       |
+    |----------------|-------------------|-----------------|------------|--------------|
+    | Ítem 1         | 100%              | 70%             | 70%        | Cumple       |
+    | Ítem 2         | 100%              | 30%             | 30%        | No Cumple    |
+    | Ítem 3         | 100%              | 60%             | 60%        | Alerta       |
+    | Ítem 4         | 100%              | 50%             | 50%        | No Cumple    |
+    | Ítem 5         | 100%              | 55%             | 55%        | Cumple       |
 
-  - **Notas sobre umbrales**:
-      - Para indicadores incrementales, el umbral verde debe ser el mayor (ej. ≥80%), amarillo intermedio (ej. 60-79%), y rojo el menor (ej. ≤40%).
-      - Para indicadores decrementales, el umbral verde debe ser el menor (ej. ≤40%), amarillo intermedio (ej. 41-60%), y rojo el mayor (ej. ≥80%).
-- **Fuente de datos**: Tablas SQL desde un datawarehouse.
-- **Volumen de datos**: Hasta 10 ítems; recomendado 5.
+- **Fuente de datos**: Tablas SQL desde un datawarehouse (ej. tabla de métricas con valores planificados y ejecutados).
+- **Volumen de datos**: Límite recomendado de 10 ítems; máximo de 20 ítems antes de requerir paginación.
 
 ## 4. Configuración Visual
 - **Estructura del gráfico**:
-    - Barras horizontales con longitudes proporcionales al porcentaje de progreso, alineadas a la izquierda.
-    - Dimensiones: Mínimo 300x200 px, adaptable.
+    - Barras horizontales que representan el valor planificado (100% como línea base) y el valor ejecutado (longitud variable) para cada ítem.
+    - Etiquetas de porcentaje de progreso junto a cada barra.
+    - Colores indicadores: Verde (Cumple), Naranja (Alerta), Rojo (No Cumple), configurables según estado.
+    - Dimensiones recomendadas: 400x300 px, adaptable.
 - **Categorías/Series**:
-    - Máximo 10 ítems.
-    - Exceso: Mostrar advertencia o truncar.
+    - Número máximo de categorías: 10 ítems.
+    - Comportamiento con exceso de categorías: Agrupar en "OTROS".
 - **Opciones de personalización**:
-    - Colores: Basados en umbrales y tipo de indicador (verde: dentro del rango óptimo, amarillo: rango de alerta, rojo: fuera de rango).
-    - Etiquetas: Mostrar nombres de ítems y porcentajes de progreso.
+    - Colores: Verde, naranja, rojo para estados; personalizable por usuario.
+    - Etiquetas: Mostrar/ocultar porcentaje de progreso.
     - Formato de valores: Porcentajes.
-    - Ordenamiento: Por porcentaje (descendente) o alfabético.
-    - Escalas: Lineal en eje X (0-100%).
-    - Umbrales: Colores asignados dinámicamente según el tipo de indicador y los rangos definidos en los datos (verde, amarillo, rojo).
-    - Casuísticas:
-        - **Incremental**: Progreso ≥ Umbral Verde (verde), Umbral Amarillo ≤ Progreso < Umbral Verde (amarillo), Progreso < Umbral Rojo (rojo).
-        - **Decremental**: Progreso ≤ Umbral Verde (verde), Umbral Verde < Progreso ≤ Umbral Amarillo (amarillo), Progreso > Umbral Rojo (rojo).
+    - Ordenamiento: Por progreso % (ascendente/descendente) o alfabético por ítem.
+    - Escalas: Lineal.
+    - Orientación: Horizontal.
 
 ## 5. Interactividad
 - **Funcionalidades interactivas**:
     - Filtros: Seleccionar ítems específicos.
-    - Tooltips: Mostrar porcentaje exacto, tipo de indicador y umbrales al pasar el cursor.
-    - Zoom: No aplica.
-- **Eventos soportados**: Clic en barra para detalle, exportar como PNG/CSV.
+    - Tooltips: Mostrar detalles de valor planificado, valor ejecutado y estado al pasar el cursor.
+    - Zoom o desplazamiento: No aplica.
+- **Eventos soportados**: Clic en barra para abrir detalle del ítem, exportar datos como CSV.
 
 ## 6. Limitaciones
-- **Restricciones técnicas**: Rendimiento disminuye con más de 10 ítems.
-- **Casos no recomendados**: No usar para tendencias temporales (usar gráfico de líneas).
+- **Restricciones técnicas**: Rendimiento puede disminuir con más de 10 ítems; no soporta datos en tiempo real.
+- **Casos no recomendados**: No usar para análisis de tendencias temporales (usar gráfico de líneas).
 
 ## 7. Ejemplo Práctico
-- **Descripción**: Mostrar el progreso de ítems con indicadores incrementales y decrementales.
+- **Descripción**: Comparar el avance de 5 ítems (ej. proyectos, regiones, productos) en términos de valor planificado vs ejecutado.
 - **Datos de entrada**:
   ```
-  | Ítem       | Tipo Indicador | Progreso (%) | Umbral Verde (%) | Umbral Amarillo (%) | Umbral Rojo (%) |
-  |------------|----------------|--------------|------------------|---------------------|-----------------|
-  | Sales      | Incremental    | 82           | 80               | 60                  | 40              |
-  | Expenses   | Decremental    | 71           | 60               | 80                  | 100             |
-  | Marketing  | Incremental    | 45           | 80               | 60                  | 40              |
-  | Logistics  | Decremental    | 92           | 40               | 60                  | 80              |
+  | Ítem           | Valor Planificado | Valor Ejecutado | Progreso % | Estado       |
+  |----------------|-------------------|-----------------|------------|--------------|
+  | Ítem 1         | 100%              | 70%             | 70%        | Cumple       |
+  | Ítem 2         | 100%              | 30%             | 30%        | No Cumple    |
+  | Ítem 3         | 100%              | 60%             | 60%        | Alerta       |
+  | Ítem 4         | 100%              | 50%             | 50%        | No Cumple    |
+  | Ítem 5         | 100%              | 55%             | 55%        | Cumple       |
   ```
-- **Resultado visual**: Gráfico de barras horizontales: "Sales" (82%, verde), "Expenses" (71%, amarillo), "Marketing" (45%, rojo), "Logistics" (92%, rojo). 
-- **Configuración aplicada**: Colores según umbrales y tipo (incremental/decremental), formato porcentaje, orden descendente.
+- **Resultado visual**: 
+    - Barras horizontales: Ítem 1 (verde, 70%), Ítem 2 (rojo, 30%), Ítem 3 (naranja, 60%), Ítem 4 (rojo, 50%), Ítem 5 (verde, 55%).
+    - Etiquetas: 70%, 30%, 60%, 50%, 55% junto a cada barra.
+    
+- **Configuración aplicada**: Colores verde, naranja, rojo; etiquetas de porcentaje visibles; ordenamiento por nombre de ítem.
 
 ## Ejemplo Interactivo
 
@@ -86,10 +86,9 @@
 </div>
 
 ## 8. Requerimientos Técnicos
-- **Dependencias**: Chart.js, D3.js.
-- **Formato de salida**: SVG.
-- **Compatibilidad**: Chrome, Firefox, Safari; responsivo.
+- **Formato de salida**: Canvas.
+- **Compatibilidad**: Chrome, Firefox, Safari; responsivo (móvil, desktop).
 
 ## 9. Notas Adicionales
-- Asegurar que las barras sean legibles y los colores diferenciables según el tipo de indicador.
-- Permitir ajuste de ancho de barras.
+- Considerar integración futura con alertas automáticas basadas en estados (Cumple, Alerta, No Cumple).
+- Optimizar rendimiento para dashboards con múltiples widgets.
