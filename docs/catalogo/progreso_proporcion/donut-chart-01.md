@@ -72,6 +72,21 @@
     - Leyenda: Cumple (azul), Retrasado (naranja), Adelantado (celeste).
 - **Configuración aplicada**: Colores azul, naranja, celeste; etiquetas de porcentaje visibles; ordenamiento por porcentaje descendente.
 
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 30 0px; position: relative;">
+  <iframe src="../../../assets/widgets_html/progreso/donut_chart_01_interactive.html" 
+          style="width: 100%; height: 300px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo del Filtro">
+  </iframe>
+</div>
+
+<style>
+/* Opcional: Para asegurar que el iframe se ajuste bien si el contenido es más alto */
+.widget-interactive-container iframe {
+    min-height: 280px; /* Ajusta según la altura típica de tus widgets */
+}
+</style>
+
 ## 8. Requerimientos Técnicos
 - **Formato de salida**: Canvas.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo (móvil, desktop).

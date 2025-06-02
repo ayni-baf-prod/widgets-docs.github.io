@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progreso Circular</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; min-height: 250px;
+        }
+        .cp-widget-container {
+            background-color: #FFFFFF; /* White card as in image */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 500px; /* Circular progress usually small */
+            position: relative; /* For absolute positioning of text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cp-chart-wrapper {
+            width: 520px; /* Control size of canvas container */
+            height: 200px;
+            position: relative; /* For text overlay */
+        }
+        #circularProgressCanvas {
+            /* canvas will fill wrapper */
+        }
+        .cp-text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            line-height: 1.2;
+        }
+        .cp-percentage {
+            font-size: 24px; /* From image */
+            font-weight: 700; /* Bold */
+            color: rgba(31, 41, 55, 1);
+        }
+        .cp-label {
+            font-size: 12px; /* From image */
+            font-weight: 400; /* Normal */
+            color: rgba(107, 114, 128, 1);
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cp-widget-container">
+        <div class="cp-chart-wrapper">
+            <svg baseProfile="full" viewBox="0 0 1150 500" xmlns="http://www.w3.org/2000/svg" class="fullDonut-kW98D67711E32843E3B7FAA5F80740975B" style="width: 100%; overflow: visible;">
+                <g class="full-donut-graph-group" transform="translate(350, 220) rotate(-90 0 0)">
+                    <path id="half-donut-segment-selector" class="half-donut-fg-0" d="M 0,-133 A 133,133 0 0,1 78.17543855489895,107.599260251868" fill="transparent" stroke-width="40" stroke="#4672FB" unique-id="2A990CC2894FA4A6C67554838B5BA836-hAdvanced;2A990CC2894FA4A6C67554838B5BA836"></path>
+                    <text class="half-donut-text-fg-0" id="half-donut-text-selector" x="166.43489035165186" y="-54.0779740156158" font-family="Poppins" fill="#4D527E" cursor="pointer" font-size="1.8em" text-anchor="middle" transform="rotate(90 166.43489035165186 -54.0779740156158)" unique-id="2A990CC2894FA4A6C67554838B5BA836-hAdvanced;2A990CC2894FA4A6C67554838B5BA836">40%</text>
+                    <path id="half-donut-segment-selector" class="half-donut-fg-0" d="M 78.17543855489895,107.599260251868 A 133,133 0 0,1 -78.17543855489892,107.59926025186803" fill="transparent" stroke-width="40" stroke="#FFAD2C" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hDelayed;2A990CC2894FA4A6C67554838B5BA836"></path>
+                    <text class="half-donut-text-fg-0" id="half-donut-text-selector" x="2.1431318985078682e-14" y="175" font-family="Poppins" fill="#4D527E" cursor="pointer" font-size="1.8em" text-anchor="start" transform="rotate(90 2.1431318985078682e-14 175)" unique-id="2A990CC2894FA4A6C67554838B5BA836-hDelayed;2A990CC2894FA4A6C67554838B5BA836">20%</text>
+                    <path id="half-donut-segment-selector" class="half-donut-fg-0" d="M -78.17543855489892,107.59926025186803 A 133,133 0 0,1 -3.2575604857319594e-14,-133" fill="transparent" stroke-width="40" stroke="#00C6FC" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hOn track;2A990CC2894FA4A6C67554838B5BA836"></path>
+                    <text class="half-donut-text-fg-0" id="half-donut-text-selector" x="-166.4348903516519" y="-54.077974015615766" font-family="Poppins" fill="#4D527E" cursor="pointer" font-size="1.8em" text-anchor="middle" alignment-baseline="before-edge" transform="rotate(90 -166.4348903516519 -54.077974015615766)" unique-id="2A990CC2894FA4A6C67554838B5BA836-hOn track;2A990CC2894FA4A6C67554838B5BA836">40%</text>
+                </g>
+                <g class="legend-group" transform="translate(400, 111)">
+                    <g class="legend-item">
+                        <rect x="355" y="35" width="14" height="14" fill="#4672FB" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hAdvanced;2A990CC2894FA4A6C67554838B5BA836"></rect>
+                        <text x="380" y="50" font-size="1.8em" fill="#4D527E" font-family="Poppins" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hAdvanced;2A990CC2894FA4A6C67554838B5BA836">Advanced</text>
+                    </g>
+                    <g class="legend-item">
+                        <rect x="355" y="98" width="14" height="14" fill="#FFAD2C" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hDelayed;2A990CC2894FA4A6C67554838B5BA836"></rect>
+                        <text x="380" y="113" font-size="1.8em" fill="#4D527E" font-family="Poppins" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hDelayed;2A990CC2894FA4A6C67554838B5BA836">Delayed</text>
+                    </g>
+                    <g class="legend-item">
+                        <rect x="355" y="161" width="14" height="14" fill="#00C6FC" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hOn track;2A990CC2894FA4A6C67554838B5BA836"></rect>
+                        <text x="380" y="176" font-size="1.8em" fill="#4D527E" font-family="Poppins" cursor="pointer" unique-id="2A990CC2894FA4A6C67554838B5BA836-hOn track;2A990CC2894FA4A6C67554838B5BA836">On track</text>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    
+</body>
+</html>
