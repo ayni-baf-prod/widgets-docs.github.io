@@ -95,6 +95,8 @@ nav:
         - Gráfico de Barra Horizontal: catalogo/comparacion/horizontal-bar-chart-01.md
         - Gráfico de Barra Horiz. %: catalogo/comparacion/horizontal-bar-chart-02.md
         - Gráfico de Barra Horiz. % v2: catalogo/comparacion/horizontal-bar-chart-03.md
+        - Gráfico de Barra Vertical: catalogo/comparacion/vertical-bar-chart-01.md
+        - Gráfico de Barra Vertical v2: catalogo/comparacion/vertical-bar-chart-02.md
     - Distribución y Densidad:
         - catalogo/distribucion_densidad/index.md
         - Heatmap: catalogo/distribucion_densidad/heatmap-01.md
