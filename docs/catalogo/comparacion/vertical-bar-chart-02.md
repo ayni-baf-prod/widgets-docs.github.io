@@ -73,6 +73,23 @@
   - Imagen: [Placeholder para imagen de gráfico de barras verticales con dos series].
 - **Configuración aplicada**: Colores azul y verde, formato moneda (USD), orden por diferencia descendente.
 
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 480px; position: relative;">
+  <iframe src="../../../assets/widgets_html/comparacion/vertical_bar_chart_02_interactive.html" 
+          style="width: 100%; height: 480px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo de Gráfico de barras horizontal">
+  </iframe>
+</div>
+
+<style>
+/* Opcional: Para asegurar que el iframe se ajuste bien si el contenido es más alto */
+.widget-interactive-container iframe {
+    min-height: 480px; /* Ajusta según la altura típica de tus widgets */
+}
+</style>
+
 ## 8. Requerimientos Técnicos
 - **Formato de salida**: Canvas.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo (móvil, desktop).
