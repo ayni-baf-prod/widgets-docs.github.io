@@ -18,11 +18,13 @@
     - Tipos de datos: Numérico (valor), categórico (categoría), temporal (opcional).
   - **Estructura de datos** (grilla):
     ```
-    | Categoría | Valor  |
-    |-----------|--------|
-    | Región A  | 500    |
-    | Región B  | 300    |
-    | Región C  | 700    |
+  | Región    | Ventas (USD) |
+  |-----------|--------------|
+  | Norte     | 600,000      |
+  | Sur       | 900,000      |
+  | Este      | 550,000      |
+  | Oeste     | 650,000      |
+  | Centro    | 950,000      |
     ```
 - **Fuente de datos**: Tablas SQL desde un datawarehouse.
 - **Volumen de datos**: Hasta 10,000 registros; recomendado hasta 50 categorías para legibilidad.
@@ -60,13 +62,31 @@
   ```
   | Región    | Ventas (USD) |
   |-----------|--------------|
-  | Norte     | 500,000      |
-  | Sur       | 300,000      |
-  | Este      | 700,000      |
-  | Oeste     | 400,000      |
+  | Norte     | 600,000      |
+  | Sur       | 900,000      |
+  | Este      | 550,000      |
+  | Oeste     | 650,000      |
+  | Centro    | 950,000      |
   ```
-- **Resultado visual**: Gráfico de barras verticales con 4 barras (una por región), colores distintos por barra, etiquetas de valores en USD, ordenado descendentemente por ventas. Eje Y en formato moneda, eje X con nombres de regiones. Imagen: [Placeholder para imagen de gráfico de barras con 4 barras de colores, etiquetas en USD].
+- **Resultado visual**: Gráfico de barras verticales con 5 barras (una por región), colores distintos por barra, etiquetas de valores en USD, ordenado descendentemente por ventas. Eje Y en formato moneda, eje X con nombres de regiones. Imagen: [Placeholder para imagen de gráfico de barras con 4 barras de colores, etiquetas en USD].
 - **Configuración aplicada**: Formato moneda (USD), etiquetas visibles, orden descendente, paleta de colores azules.
+
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 480px; position: relative;">
+  <iframe src="../../../assets/widgets_html/comparacion/vertical_bar_chart_01_interactive.html" 
+          style="width: 100%; height: 480px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo de Gráfico de barras horizontal">
+  </iframe>
+</div>
+
+<style>
+/* Opcional: Para asegurar que el iframe se ajuste bien si el contenido es más alto */
+.widget-interactive-container iframe {
+    min-height: 480px; /* Ajusta según la altura típica de tus widgets */
+}
+</style>
 
 ## 8. Requerimientos Técnicos
 - **Formato de salida**: SVG para escalabilidad.
