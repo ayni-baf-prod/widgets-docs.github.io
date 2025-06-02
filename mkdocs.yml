@@ -112,4 +112,5 @@ nav:
         - Filtro Desplegable: catalogo/mas_widgets/filter-dropdown-01.md
         - Selector rango de fechas: catalogo/mas_widgets/date-range-picker-01.md
         - Sankey: catalogo/mas_widgets/sankey-chart-01.md
+        - Gantt Chart: catalogo/mas_widgets/critical-path-chart-01.md
   - Changelog: changelog.md
