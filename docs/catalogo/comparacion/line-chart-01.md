@@ -24,6 +24,10 @@
     | Q2 2022   | 15,500M              | 9,400M                   | 6,800M              |
     | Q3 2022   | 16,200M              | 9,800M                   | 7,100M              |
     | Q4 2022   | 16,900M              | 10,200M                  | 7,400M              |
+    | Q1 2023   | 17,200M              | 6,500M                   | 3,200M              |
+    | Q2 2023   | 16,500M              | 7,400M                   | 4,800M              |
+    | Q3 2023   | 14,200M              | 8,800M                   | 7,100M              |
+    | Q4 2023   | 16,100M              | 11,200M                  | 8,400M              |
     ```
 - **Fuente de datos**: Tablas SQL desde un datawarehouse.
 - **Volumen de datos**: Hasta 100 puntos temporales; recomendado 12 (mensual) o 4 (trimestral).
@@ -63,9 +67,30 @@
   | Q2 2022   | 15,500M              | 9,400M                   | 6,800M              |
   | Q3 2022   | 16,200M              | 9,800M                   | 7,100M              |
   | Q4 2022   | 16,900M              | 10,200M                  | 7,400M              |
+  | Q1 2023   | 17,200M              | 6,500M                   | 3,200M              |
+  | Q2 2023   | 16,500M              | 7,400M                   | 4,800M              |
+  | Q3 2023   | 14,200M              | 8,800M                   | 7,100M              |
+  | Q4 2023   | 16,100M              | 11,200M                  | 8,400M              |
   ```
 - **Resultado visual**: Gráfico con 3 líneas (azul para Ingresos Netos, verde para Utilidad Operativa, rojo para Utilidad Neta), eje X trimestral, valores en USD. Imagen: [Placeholder para imagen de gráfico de líneas].
 - **Configuración aplicada**: Colores azul/verde/rojo, formato moneda (USD), etiquetas visibles.
+
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 480px; position: relative;">
+  <iframe src="../../../assets/widgets_html/comparacion/line_chart_01_interactive.html" 
+          style="width: 100%; height: 480px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo de Gráfico de barras horizontal">
+  </iframe>
+</div>
+
+<style>
+/* Opcional: Para asegurar que el iframe se ajuste bien si el contenido es más alto */
+.widget-interactive-container iframe {
+    min-height: 480px; /* Ajusta según la altura típica de tus widgets */
+}
+</style>
 
 ## 8. Requerimientos Técnicos
 - **Formato de salida**: SVG.

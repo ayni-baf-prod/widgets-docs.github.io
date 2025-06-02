@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>S-Curve SVG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(249, 250, 251, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 450px;
+            overflow: hidden;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Poppins', sans-serif;
+            pointer-events: none;
+            display: none;
+            z-index: 10;
+        }
+        svg {
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<svg width="90%" viewBox="0 0 900 440" style="background: #ffffff; position: relative;">
+  <!-- Title -->
+  <text x="100" y="50" font-size="20" font-weight="bold" fill="#373458" font-family="Poppins, sans-serif">S-Curve</text>
+
+  <!-- Y-axis labels -->
+  <text x="80" y="100" font-size="14" fill="#373458" font-family="Poppins, sans-serif" text-anchor="end">18M</text>
+  <text x="80" y="180" font-size="14" fill="#373458" font-family="Poppins, sans-serif" text-anchor="end">12M</text>
+  <text x="80" y="260" font-size="14" fill="#373458" font-family="Poppins, sans-serif" text-anchor="end">6M</text>
+  <text x="80" y="340" font-size="14" fill="#373458" font-family="Poppins, sans-serif" text-anchor="end">0</text>
+
+  <!-- X-axis labels -->
+  <text x="100" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q1 '22</text>
+  <text x="200" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q2 '22</text>
+  <text x="300" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q3 '22</text>
+  <text x="400" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q4 '22</text>
+  <text x="500" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q1 '23</text>
+  <text x="600" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q2 '23</text>
+  <text x="700" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q3 '23</text>
+  <text x="800" y="370" font-size="16" fill="#373458" font-family="Poppins, sans-serif" font-weight="bold" text-anchor="middle">Q4 '23</text>
+
+  <!-- Grid lines -->
+  <line x1="100" y1="100" x2="800" y2="100" stroke="#F0F2F8" stroke-width="1"/>
+  <line x1="100" y1="180" x2="800" y2="180" stroke="#F0F2F8" stroke-width="1"/>
+  <line x1="100" y1="260" x2="800" y2="260" stroke="#F0F2F8" stroke-width="1"/>
+  <line x1="100" y1="340" x2="800" y2="340" stroke="#F0F2F8" stroke-width="1"/>
+
+  <!-- Data points and curved lines with tooltips -->
+  <!-- Ingresos Netos (Blue) -->
+  <path d="M 100,142.67 C 150,138 150,129.67 200,133.33 C 250,137 250,120.33 300,124 C 350,127.67 350,111 400,114.67 C 450,118.33 450,107 500,110.67 C 550,114.33 550,116.33 600,120 C 650,123.67 650,154.33 700,150.67 C 750,147 750,129 800,125.33" fill="none" stroke="#1e40af" stroke-width="2" id="line-ingresos"/>
+  <circle cx="100" cy="142.67" r="3" fill="#1e40af" data-value="14,800M"/>
+  <circle cx="200" cy="133.33" r="3" fill="#1e40af" data-value="15,500M"/>
+  <circle cx="300" cy="124" r="3" fill="#1e40af" data-value="16,200M"/>
+  <circle cx="400" cy="114.67" r="3" fill="#1e40af" data-value="16,900M"/>
+  <circle cx="500" cy="110.67" r="3" fill="#1e40af" data-value="17,200M"/>
+  <circle cx="600" cy="120" r="3" fill="#1e40af" data-value="16,500M"/>
+  <circle cx="700" cy="150.67" r="3" fill="#1e40af" data-value="14,200M"/>
+  <circle cx="800" cy="125.33" r="3" fill="#1e40af" data-value="16,100M"/>
+
+  <!-- Utilidad Operativa (Red) -->
+  <path d="M 100,226.67 C 150,220.67 150,208.67 200,214.67 C 250,220.67 250,207.33 300,209.33 C 350,211.33 350,202 400,204 C 450,206 450,228.67 500,253.33 C 550,278 550,216.67 600,241.33 C 650,266 650,198 700,222.67 C 750,247.33 750,166 800,190.67" fill="none" stroke="#dc2626" stroke-width="2" id="line-utilidad-op"/>
+  <circle cx="100" cy="226.67" r="3" fill="#dc2626" data-value="8,500M"/>
+  <circle cx="200" cy="214.67" r="3" fill="#dc2626" data-value="9,400M"/>
+  <circle cx="300" cy="209.33" r="3" fill="#dc2626" data-value="9,800M"/>
+  <circle cx="400" cy="204" r="3" fill="#dc2626" data-value="10,200M"/>
+  <circle cx="500" cy="253.33" r="3" fill="#dc2626" data-value="6,500M"/>
+  <circle cx="600" cy="241.33" r="3" fill="#dc2626" data-value="7,400M"/>
+  <circle cx="700" cy="222.67" r="3" fill="#dc2626" data-value="8,800M"/>
+  <circle cx="800" cy="190.67" r="3" fill="#dc2626" data-value="11,200M"/>
+
+  <!-- Utilidad Neta (Green) -->
+  <path d="M 100,257.33 C 150,253.33 150,247.33 200,249.33 C 250,251.33 250,243.33 300,245.33 C 350,247.33 350,239.33 400,241.33 C 450,243.33 450,270.67 500,297.33 C 550,324 550,249.33 600,276 C 650,302.67 650,218.67 700,245.33 C 750,272 750,201.33 800,228" fill="none" stroke="#16a34a" stroke-width="2" id="line-utilidad-neta"/>
+  <circle cx="100" cy="257.33" r="3" fill="#16a34a" data-value="6,200M"/>
+  <circle cx="200" cy="249.33" r="3" fill="#16a34a" data-value="6,800M"/>
+  <circle cx="300" cy="245.33" r="3" fill="#16a34a" data-value="7,100M"/>
+  <circle cx="400" cy="241.33" r="3" fill="#16a34a" data-value="7,400M"/>
+  <circle cx="500" cy="297.33" r="3" fill="#16a34a" data-value="3,200M"/>
+  <circle cx="600" cy="276" r="3" fill="#16a34a" data-value="4,800M"/>
+  <circle cx="700" cy="245.33" r="3" fill="#16a34a" data-value="7,100M"/>
+  <circle cx="800" cy="228" r="3" fill="#16a34a" data-value="8,400M"/>
+
+  <!-- Legend -->
+  <text x="800" y="405" font-size="16" fill="#1e40af" font-family="Poppins, sans-serif" text-anchor="end">■ Ingresos Netos</text>
+  <text x="650" y="405" font-size="16" fill="#dc2626" font-family="Poppins, sans-serif" text-anchor="end">■ Utilidad Operativa</text>
+  <text x="470" y="405" font-size="16" fill="#16a34a" font-family="Poppins, sans-serif" text-anchor="end">■ Utilidad Neta</text>
+
+  <!-- Tooltip -->
+  <div class="tooltip" id="tooltip"></div>
+</svg>
+
+<script>
+    const tooltip = document.getElementById('tooltip');
+    const circles = document.querySelectorAll('circle');
+
+    circles.forEach(circle => {
+        circle.addEventListener('mouseover', (e) => {
+            const value = circle.getAttribute('data-value');
+            tooltip.textContent = `Valor: ${value}`;
+            tooltip.style.display = 'block';
+            tooltip.style.left = (e.pageX + 10) + 'px';
+            tooltip.style.top = (e.pageY + 10) + 'px';
+        });
+
+        circle.addEventListener('mousemove', (e) => {
+            tooltip.style.left = (e.pageX + 10) + 'px';
+            tooltip.style.top = (e.pageY + 10) + 'px';
+        });
+
+        circle.addEventListener('mouseout', () => {
+            tooltip.style.display = 'none';
+        });
+    });
+</script>
+</body>
+</html>
