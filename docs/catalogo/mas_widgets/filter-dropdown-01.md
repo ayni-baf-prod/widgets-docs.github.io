@@ -58,7 +58,7 @@
   |------------|-----------------------|
   | Compare To | Budget, Forecast      |
   ```
-- **Resultado visual**: Dropdown con etiqueta "Compare To", opciones "Budget" y "Forecast", fondo blanco, texto negro. Imagen: [Placeholder para imagen de dropdown].
+- **Resultado visual**: Dropdown con etiqueta "Compare To", opciones "Budget" y "Forecast", fondo blanco, texto negro.
 - **Configuración aplicada**: Fondo blanco, texto negro, selección única.
 
 ## Ejemplo Interactivo
@@ -79,7 +79,6 @@
 </style>
 
 ## 8. Requerimientos Técnicos
-- **Dependencias**: HTML select, librerías como Select2 para mejor UX.
 - **Formato de salida**: HTML/CSS.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo.
 
