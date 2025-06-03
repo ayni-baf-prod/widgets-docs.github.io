@@ -99,6 +99,16 @@
 
 - **Configuración aplicada**: Rojo para crítico, azul para no crítico, escala en días.
 
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 370px; position: relative;">
+  <iframe src="../../../assets/widgets_html/CRITICAL_PATH CHART_01/critical_path_chart_01_interactive.html" 
+          style="width: 100%; height: 370px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo de Critical Path Chart">
+  </iframe>
+</div>
+
 ## 8. Requerimientos Técnicos
 - **Formato de salida**: Canvas.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo (móvil, desktop).
