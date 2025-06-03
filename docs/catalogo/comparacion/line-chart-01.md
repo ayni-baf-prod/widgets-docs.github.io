@@ -7,15 +7,15 @@
 ## 2. Propósito y Casos de Uso
 - **Objetivo**: Visualizar tendencias temporales de métricas clave.
 - **Casos de uso**:
-  - Mostrar la evolución de ingresos netos, utilidad operativa y utilidad neta por trimestre.
-  - Analizar tendencias de ventas o costos a lo largo del tiempo.
+    - Mostrar la evolución de ingresos netos, utilidad operativa y utilidad neta por trimestre.
+    - Analizar tendencias de ventas o costos a lo largo del tiempo.
 - **Tipos de análisis soportados**: Descriptivo, temporal.
 
 ## 3. Requerimientos de Datos
 - **Variables/Indicadores**:
     - Mínimo: 1 variable temporal (eje X), 1 variable numérica (eje Y).
-  - Máximo: 1 variable temporal, 5 variables numéricas (series).
-  - Tipos de datos: Temporal (fechas), numérico (valores).
+    - Máximo: 1 variable temporal, 5 variables numéricas (series).
+    - Tipos de datos: Temporal (fechas), numérico (valores).
   - **Estructura de datos** (grilla):
     ```
     | Fecha     | Ingresos Netos (USD) | Utilidad Operativa (USD) | Utilidad Neta (USD) |
@@ -34,23 +34,23 @@
 
 ## 4. Configuración Visual
 - **Estructura del gráfico**:
-  - Líneas conectando puntos temporales, con ejes X (tiempo) y Y (valores).
-  - Dimensiones: Mínimo 600x400 px, adaptable.
+    - Líneas conectando puntos temporales, con ejes X (tiempo) y Y (valores).
+    - Dimensiones: Mínimo 600x400 px, adaptable.
 - **Categorías/Series**:
-  - Máximo 5 series (líneas).
-  - Exceso: Mostrar advertencia o truncar.
+    - Máximo 5 series (líneas).
+    - Exceso: Mostrar advertencia o truncar.
 - **Opciones de personalización**:
-  - Colores: Líneas con paletas personalizables (ej. azul, verde, rojo por serie).
-  - Etiquetas: Mostrar/ocultar valores en puntos.
-  - Formato de valores: Moneda (USD), decimales.
-  - Ordenamiento: Cronológico en eje X.
-  - Escalas: Lineal o logarítmica en eje Y.
+    - Colores: Líneas con paletas personalizables (ej. azul, verde, rojo por serie).
+    - Etiquetas: Mostrar/ocultar valores en puntos.
+    - Formato de valores: Moneda (USD), decimales.
+    - Ordenamiento: Cronológico en eje X.
+    - Escalas: Lineal o logarítmica en eje Y.
 
 ## 5. Interactividad
 - **Funcionalidades interactivas**:
-  - Filtros: Seleccionar rango temporal o series.
-  - Tooltips: Mostrar valor exacto al pasar el cursor.
-  - Zoom: En eje X para rangos temporales.
+    - Filtros: Seleccionar rango temporal o series.
+    - Tooltips: Mostrar valor exacto al pasar el cursor.
+    - Zoom: En eje X para rangos temporales.
 - **Eventos soportados**: Clic en punto para detalle, exportar como PNG/CSV.
 
 ## 6. Limitaciones
@@ -72,7 +72,7 @@
   | Q3 2023   | 14,200M              | 8,800M                   | 7,100M              |
   | Q4 2023   | 16,100M              | 11,200M                  | 8,400M              |
   ```
-- **Resultado visual**: Gráfico con 3 líneas (azul para Ingresos Netos, verde para Utilidad Operativa, rojo para Utilidad Neta), eje X trimestral, valores en USD. Imagen: [Placeholder para imagen de gráfico de líneas].
+- **Resultado visual**: Gráfico con 3 líneas (azul para Ingresos Netos, verde para Utilidad Operativa, rojo para Utilidad Neta), eje X trimestral, valores en USD. 
 - **Configuración aplicada**: Colores azul/verde/rojo, formato moneda (USD), etiquetas visibles.
 
 ## Ejemplo Interactivo

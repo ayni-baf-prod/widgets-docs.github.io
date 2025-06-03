@@ -63,7 +63,7 @@
   | Cost of Goods    | 44,400,000  | 4.7%        |
   | Gross Profit     | 54,260,000  | 0.8%        |
   ```
-- **Resultado visual**: Grilla con 3 filas, columna de indicadores, valores en USD, variación % con flechas (verde para aumento), "Gross Profit" en negrita como total. Imagen: [Placeholder para imagen de grilla con "Gross Profit" en negrita].
+- **Resultado visual**: Grilla con 3 filas, columna de indicadores, valores en USD, variación % con flechas (verde para aumento), "Gross Profit" en negrita como total. 
 - **Configuración aplicada**: Formato moneda (USD), flechas verdes/rojas, "Gross Profit" en negrita.
 
 ## Ejemplo Interactivo

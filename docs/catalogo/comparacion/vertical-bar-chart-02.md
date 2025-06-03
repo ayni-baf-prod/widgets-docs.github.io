@@ -70,7 +70,6 @@
 - **Resultado visual**: 
   - Gráfico de barras verticales: Project 1 (azul $1000, verde $800), Project 2 (azul $800, verde $900), etc.
   - Etiquetas: Valores encima de cada barra (ej. $1000, $800).
-  - Imagen: [Placeholder para imagen de gráfico de barras verticales con dos series].
 - **Configuración aplicada**: Colores azul y verde, formato moneda (USD), orden por diferencia descendente.
 
 ## Ejemplo Interactivo

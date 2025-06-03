@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Butterfly Chart - Payroll by Age and Gender</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .widget-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .widget-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .department-filter {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .department-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .department-select {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 32px 8px 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #2d3748;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+        }
+
+        .chart-container {
+            position: relative;
+        }
+
+        .grid-lines {
+            position: absolute;
+            top: 50px;
+            left: 80px;
+            right: 0;
+            bottom: 44px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .grid-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #e2e8f0;
+        }
+
+        .grid-line-25 { left: 12.5%; }
+        .grid-line-50 { left: 25%; }
+        .grid-line-75 { left: 37.5%; }
+        .grid-line-center { left: 50%; width: 2px; background-color: #d1d5db; }
+        .grid-line-125 { left: 62.5%; }
+        .grid-line-150 { left: 75%; }
+        .grid-line-175 { left: 87.5%; }
+
+        .age-label-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .age-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            background: #cbd5e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #718096;
+            font-weight: 600;
+        }
+
+        .butterfly-chart {
+            position: relative;
+            margin-bottom: 24px;
+            z-index: 1;
+        }
+
+        .chart-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            height: 40px;
+        }
+
+        .age-group-label {
+            width: 80px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #4a5568;
+            text-align: left;
+            flex-shrink: 0;
+        }
+
+        .chart-bars {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            position: relative;
+            height: 32px;
+        }
+
+        .left-bar-container {
+            width: 50%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 1px;
+        }
+
+        .right-bar-container {
+            width: 50%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-left: 1px;
+        }
+
+        .male-bar {
+            background-color: #4672FB;
+        }
+
+        .female-bar {
+            background-color: #FF7E7E;
+        }
+
+        .bar {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .bar:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .male-bar {
+            background-color: #4672FB;
+        }
+
+        .female-bar {
+            background-color: #FF7E7E;
+        }
+
+
+
+        .scale-container {
+            display: flex;
+            align-items: center;
+            margin-top: 16px;
+            padding: 0 80px;
+            position: relative;
+            left: 41px;
+        }
+
+        .scale-labels {
+            flex: 1;
+            display: flex;
+            position: relative;
+            font-size: 12px;
+            color: #a0aec0;
+            font-weight: 400;
+            height: 20px;
+        }
+
+        .scale-label {
+            position: absolute;
+            transform: translateX(-50%);
+        }
+
+        .scale-label-100l { left: 0%; }
+        .scale-label-75l { left: 12.5%; }
+        .scale-label-50l { left: 25%; }
+        .scale-label-25l { left: 37.5%; }
+        .scale-label-0 { left: 50%; }
+        .scale-label-25r { left: 62.5%; }
+        .scale-label-50r { left: 75%; }
+        .scale-label-75r { left: 87.5%; }
+        .scale-label-100r { left: 100%; }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .legend-text {
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 400;
+        }
+
+        .male-color {
+            background-color: #4672FB;
+        }
+
+        .female-color {
+            background-color: #FF7E7E;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <div class="widget-header">
+            <h1 class="widget-title">Payroll by age and gender</h1>
+        </div>
+
+        <div class="chart-container">
+            <div class="grid-lines">
+                <div class="grid-line grid-line-25"></div>
+                <div class="grid-line grid-line-50"></div>
+                <div class="grid-line grid-line-75"></div>
+                <div class="grid-line grid-line-center"></div>
+                <div class="grid-line grid-line-125"></div>
+                <div class="grid-line grid-line-150"></div>
+                <div class="grid-line grid-line-175"></div>
+            </div>
+
+            <div class="age-label-container">
+                <span class="age-label">Age</span>
+                <div class="info-icon">i</div>
+            </div>
+
+            <div class="butterfly-chart" id="butterflyChart">
+                <!-- Chart rows will be generated by JavaScript -->
+            </div>
+
+            <div class="scale-container">
+                <div class="scale-labels">
+                    <span class="scale-label scale-label-100l">100%</span>
+                    <span class="scale-label scale-label-75l">75%</span>
+                    <span class="scale-label scale-label-50l">50%</span>
+                    <span class="scale-label scale-label-25l">25%</span>
+                    <span class="scale-label scale-label-0">0</span>
+                    <span class="scale-label scale-label-25r">25%</span>
+                    <span class="scale-label scale-label-50r">50%</span>
+                    <span class="scale-label scale-label-75r">75%</span>
+                    <span class="scale-label scale-label-100r">100%</span>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color male-color"></div>
+                    <span class="legend-text">Male</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color female-color"></div>
+                    <span class="legend-text">Female</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Data from CSV
+        const data = [
+            { grupo: '15 - 24', male: 60, female: 50 },
+            { grupo: '25 - 34', male: 76, female: 50 },
+            { grupo: '35 - 44', male: 50, female: 60 },
+            { grupo: '45 - 54', male: 60, female: 77 }
+        ];
+
+        // Function to create the butterfly chart
+        function createButterflyChart() {
+            const chartContainer = document.getElementById('butterflyChart');
+            
+            // Clear existing content
+            chartContainer.innerHTML = '';
+
+            data.forEach((row, index) => {
+                const chartRow = document.createElement('div');
+                chartRow.className = 'chart-row';
+
+                // Age group label
+                const ageLabel = document.createElement('div');
+                ageLabel.className = 'age-group-label';
+                ageLabel.textContent = row.grupo;
+
+                // Chart bars container
+                const barsContainer = document.createElement('div');
+                barsContainer.className = 'chart-bars';
+
+                // Left bar (Male)
+                const leftBarContainer = document.createElement('div');
+                leftBarContainer.className = 'left-bar-container';
+                
+                const maleBar = document.createElement('div');
+                maleBar.className = 'bar male-bar';
+                maleBar.style.width = `${row.male}%`;
+                maleBar.textContent = `${row.male}%`;
+                maleBar.setAttribute('data-tooltip', `Male: ${row.male}% (${row.grupo})`);
+                
+                leftBarContainer.appendChild(maleBar);
+
+                // Right bar (Female)
+                const rightBarContainer = document.createElement('div');
+                rightBarContainer.className = 'right-bar-container';
+                
+                const femaleBar = document.createElement('div');
+                femaleBar.className = 'bar female-bar';
+                femaleBar.style.width = `${row.female}%`;
+                femaleBar.textContent = `${row.female}%`;
+                femaleBar.setAttribute('data-tooltip', `Female: ${row.female}% (${row.grupo})`);
+                
+                rightBarContainer.appendChild(femaleBar);
+
+                // Assemble the row
+                barsContainer.appendChild(leftBarContainer);
+                barsContainer.appendChild(rightBarContainer);
+                
+                chartRow.appendChild(ageLabel);
+                chartRow.appendChild(barsContainer);
+                
+                chartContainer.appendChild(chartRow);
+            });
+        }
+
+        // Tooltip functionality
+        function initializeTooltips() {
+            const tooltip = document.getElementById('tooltip');
+            const bars = document.querySelectorAll('.bar');
+
+            bars.forEach(bar => {
+                bar.addEventListener('mouseenter', (e) => {
+                    const tooltipText = e.target.getAttribute('data-tooltip');
+                    tooltip.textContent = tooltipText;
+                    tooltip.style.opacity = '1';
+                });
+
+                bar.addEventListener('mousemove', (e) => {
+                    tooltip.style.left = (e.pageX + 10) + 'px';
+                    tooltip.style.top = (e.pageY - 10) + 'px';
+                });
+
+                bar.addEventListener('mouseleave', () => {
+                    tooltip.style.opacity = '0';
+                });
+            });
+        }
+
+        // Initialize the chart when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            createButterflyChart();
+            initializeTooltips();
+        });
+
+        // Department filter functionality (optional)
+        document.querySelector('.department-select').addEventListener('change', (e) => {
+            // Here you could implement filtering logic
+            console.log('Department changed to:', e.target.value);
+        });
+    </script>
+</body>
+</html>

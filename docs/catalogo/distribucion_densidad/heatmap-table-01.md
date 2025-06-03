@@ -94,7 +94,6 @@
 </style>
 
 ## 8. Requerimientos Técnicos
-- **Dependencias**: HTML/CSS, D3.js.
 - **Formato de salida**: HTML.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo.
 
