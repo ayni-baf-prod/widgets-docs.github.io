@@ -12,9 +12,6 @@
     - Analizar el rendimiento de productos por características (calidad, precio, durabilidad) en finanzas o comercial.
     - Evaluar la eficiencia de procesos por factores (tiempo, costo, calidad) en operaciones.
     - Monitorear el balance de habilidades por proyecto (planificación, ejecución, comunicación) en gestión de proyectos.
-- **Uso en la industria de analítica**:
-    - Comúnmente utilizado en Business Intelligence y análisis de recursos humanos para evaluar perfiles (ej. competencias, desempeño).
-    - Herramientas como Tableau, Power BI y Excel lo emplean para visualizaciones de comparación multidimensional.
     - En RRHH, se usa para análisis de habilidades o encuestas de satisfacción.
     - En marketing, ayuda a comparar el perfil de clientes o productos frente a competidores.
     - En deportes, se usa para evaluar estadísticas de jugadores (fuerza, velocidad, resistencia).
@@ -94,7 +91,7 @@
 </style>
 
 ## 8. Requerimientos Técnicos
-- **Dependencias**: HTML/CSS, Chart.js.
+- **Dependencias**: HTML/CSS.
 - **Formato de salida**: Canvas.
 - **Compatibilidad**: Chrome, Firefox, Safari; responsivo (móvil, desktop).
 

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Burbujas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(237, 242, 251, 0.8); 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; box-sizing: border-box; min-height: 500px;
+        }
+        .bubble-widget-container {
+            background-color: #FFFFFF;
+            padding: 20px 24px; border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            width: 100%; max-width: 700px; /* Bubble charts can be wide */
+        }
+        .bubble-header { /* For the icons at the top left */
+            text-align: left;
+            margin-bottom: 15px;
+            height: 20px; /* To align with top of Y axis labels */
+        }
+        .chart-wrapper-bubble {
+            position: relative; height: 350px; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="bubble-widget-container">
+        
+        <div class="chart-wrapper-bubble">
+            <canvas id="bubbleChartCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxBubble = document.getElementById('bubbleChartCanvas').getContext('2d');
+            
+            const bubbleChart = new Chart(ctxBubble, {
+                type: 'bubble',
+                data: {
+                    // labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul"], // Not used directly for bubble x-values if numeric
+                    datasets: [{
+                        label: 'Productos', // General label for the dataset
+                        data: [{"x": 20, "y": 350, "r": 26.666666666666668, "label": "Producto A", "color": "rgba(192, 132, 252, 0.7)"}, {"x": 35, "y": 120, "r": 13.333333333333334, "label": "Producto B", "color": "rgba(72, 202, 228, 0.7)"}, {"x": 55, "y": 250, "r": 31.666666666666668, "label": "Producto C", "color": "rgba(251, 143, 168, 0.7)"}, {"x": 70, "y": 150, "r": 16.666666666666668, "label": "Producto D", "color": "rgba(251, 146, 60, 0.7)"}, {"x": 85, "y": 280, "r": 25.0, "label": "Producto E", "color": "rgba(253, 186, 116, 0.7)"}, {"x": 100, "y": 50, "r": 10.0, "label": "Producto F", "color": "rgba(134, 239, 172, 0.7)"}, {"x": 115, "y": 150, "r": 15.0, "label": "Producto G", "color": "rgba(250, 204, 21, 0.7)"}], // Pass the array of {x,y,r,label} objects
+                        backgroundColor: ["rgba(192, 132, 252, 0.7)","rgba(72, 202, 228, 0.7)","rgba(251, 143, 168, 0.7)","rgba(251, 146, 60, 0.7)","rgba(253, 186, 116, 0.7)","rgba(134, 239, 172, 0.7)","rgba(250, 204, 21, 0.7)"],
+                        borderColor: ["rgba(192, 132, 252, 1)","rgba(72, 202, 228, 1)","rgba(251, 143, 168, 1)","rgba(251, 146, 60, 1)","rgba(253, 186, 116, 1)","rgba(134, 239, 172, 1)","rgba(250, 204, 21, 1)"], // Darker border
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { // Value axis (Costos)
+                            min: 0,
+                            max: 500, // Based on image
+                            ticks: {
+                                stepSize: 100, // Based on image (0, 100, 200...)
+                                color: "rgba(107, 114, 128, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 11, weight: '500'
+                                },
+                                padding: 8,
+                                callback: function(value, index, values) {
+                                    return value === 0 ? '0' : value; // Show '0' instead of '0$'
+                                }
+                            },
+                            grid: {
+                                color: "rgba(229, 231, 235, 0.7)",
+                                drawBorder: false, 
+                                drawTicks: true,
+                                tickLength: 8,
+                                tickColor: "rgba(229, 231, 235, 0.7)"
+                            }
+                        },
+                        x: { // Category/Value axis (Ingresos, visually mapped to Jan-Jul)
+                            type: 'linear', // If X values from CSV are numeric
+                            // If X were truly categorical like months: type: 'category', labels: chartXLabels
+                            grid: {
+                                display: false, // No vertical grid lines from image
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: "rgba(107, 114, 128, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 11, weight: '500'
+                                },
+                                padding: 10,
+                                // Dynamically create X-axis labels matching the image's "Jan, Feb..." style
+                                // We need to map the numeric X data range to these labels.
+                                // This is tricky if X isn't perfectly aligned.
+                                // For now, let's use fewer ticks based on data range for numeric X.
+                                // Or, if we MUST have Jan-Jul, the X data needs to be mapped to 0-6 indices.
+                                // For this example, use numeric ticks but try to match image density.
+                                 callback: function(value, index, values) {
+                                    // This is a hack to show month-like labels based on numeric X values.
+                                    // Assumes X values (Ingresos) are somewhat spread like months.
+                                    const xLabels = ["Jan","Feb","Mar","Apr","May","Jun","Jul"];
+                                    // Map numeric value to an index in xLabels array.
+                                    // This requires knowing min/max of your X data.
+                                    // Example: if X range is 0-120, and 7 labels: 120/6 = 20 per step.
+                                    // A value of 20 could be 'Jan', 40 'Feb', etc.
+                                    // For now, just show numeric value, styling Jan-Jul is complex without time data for X
+                                    // return value; // Simple numeric ticks
+                                    
+                                    // Simplified: Show fewer numeric ticks
+                                    if (index % 2 === 0 || index === values.length -1) { // Show every other tick
+                                        return value;
+                                    }
+                                    return '';
+
+                                    // To show actual month labels if X data was 0,1,2,3,4,5,6:
+                                    // if (value >=0 && value < xLabels.length) return xLabels[value];
+                                    // return '';
+                                }
+                            },
+                            // Adjust min/max based on 'X (Ingresos)' data
+                            afterDataLimits: (scale) => {
+                                const xData = [20,35,55,70,85,100,115];
+                                const minVal = Math.min(...xData);
+                                const maxVal = Math.max(...xData);
+                                scale.min = Math.floor(minVal / 10) * 10; // Adjust to nearest 10
+                                scale.max = Math.ceil(maxVal / 10) * 10 + 10; // Adjust and add padding
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0,0,0,0.75)',
+                            titleFont: { size: 12, family: 'Poppins', weight: '600' },
+                            bodyFont: { size: 12, family: 'Poppins' },
+                            padding: 10,
+                            displayColors: false,
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    // Access custom label stored in data point
+                                    return tooltipItems[0].raw.label || '';
+                                },
+                                label: function(tooltipItem) {
+                                    const dataPoint = tooltipItem.raw;
+                                    return [
+                                        `Ingresos (X): ${dataPoint.x.toLocaleString()}`,
+                                        `Costos (Y): ${dataPoint.y.toLocaleString()}`,
+                                        `Ventas (Tamaño): ${ (dataPoint.r * 30).toLocaleString() }` // Back to original scale for display
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
