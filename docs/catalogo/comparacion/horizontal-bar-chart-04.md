@@ -21,8 +21,9 @@
 
     | Grupo           | Categoría 1 (Salary) | Categoría 2 (Bonus) | Categoría 3 (Overtime) |
     |-----------------|----------------------|---------------------|------------------------|
-    | Department 1    | 100                  | 50                  | 30                     |
-    | Department 2    | 80                   | 40                  | 20                     |
+    | Department 1    | 106                  | 90                  | 60                     |
+    | Department 2    | 807                  | 160                 | 200                    |
+    | Department 3    | 107                  | 70                  | 60                     |
 
 - **Fuente de datos**: Tablas SQL desde un datawarehouse (ej. tabla de métricas por grupo y categoría).
 - **Volumen de datos**: Hasta 20 grupos y 5 categorías; recomendado 10 grupos y 3 categorías.
@@ -57,19 +58,31 @@
   ```
   | Grupo           | Salary | Bonus | Overtime |
   |-----------------|--------|-------|----------|
-  | Department 1    | 100    | 50    | 30       |
-  | Department 2    | 80     | 10    | 20       |
-  | Department 3    | 100    | 10    | 30       |
-  | Department 4    | 80     | 20    | 20       |
-  | Department 5    | 100    | 20    | 30       |
-  | Department 6    | 80     | 30    | 20       |
-  | Department 7    | 100    | 30    | 30       |
-  | Department 8    | 80     | 40    | 20       |
+  | Department 1    | 106    | 90    | 60       |
+  | Department 2    | 107    | 160   | 200      |
+  | Department 3    | 107    | 70    | 60       |
   ```
 - **Resultado visual**: 
   - Gráfico de barras apiladas: Department 1 (azul 100, rojo 50, verde 30).
   - Leyenda: Salary (azul), Bonus (rojo), Overtime (verde).
 - **Configuración aplicada**: Colores azul, rojo, verde; formato numérico.
+
+## Ejemplo Interactivo
+
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 480px; position: relative;">
+  <iframe src="../../../assets/widgets_html/comparacion/horizontal_bar_chart_04_interactive.html" 
+          style="width: 100%; height: 480px; border: none; overflow: auto;"
+          loading="lazy"
+          title="Ejemplo Interactivo de Gráfico de barras horizontal 4">
+  </iframe>
+</div>
+
+<style>
+/* Opcional: Para asegurar que el iframe se ajuste bien si el contenido es más alto */
+.widget-interactive-container iframe {
+    min-height: 480px; /* Ajusta según la altura típica de tus widgets */
+}
+</style>
 
 ## 8. Requerimientos Técnicos
 - **Formato de salida**: Canvas.
