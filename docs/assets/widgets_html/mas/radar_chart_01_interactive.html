@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Radar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(243, 244, 246, 1); 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; box-sizing: border-box; min-height: 500px; /* Radar charts can be tall */
+        }
+        .radar-widget-container {
+            background-color: #FFFFFF;
+            padding: 24px; border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+            width: 100%; max-width: 450px; /* Adjusted width */
+        }
+        .radar-header {
+            display: flex;
+            justify-content: space-between; /* Title left, (omitted) filter right */
+            align-items: center;
+            margin-bottom: 15px; 
+        }
+        .radar-title {
+            font-size: 20px; font-weight: 700; 
+            color: rgba(31, 41, 55, 1);
+            text-align: left;
+        }
+        .chart-wrapper-radar {
+            position: relative; 
+            height: 350px; /* Give enough height for radar and its labels */
+        }
+    </style>
+</head>
+<body>
+    <div class="radar-widget-container">
+        <div class="radar-header">
+            <div class="radar-title">Productivity</div>
+            
+        </div>
+        <div class="chart-wrapper-radar">
+            <canvas id="radarChartCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxRadar = document.getElementById('radarChartCanvas').getContext('2d');
+            
+            const radarChart = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ["Communication","Delivery","Effectiveness","Knowledge","Skill set"], // ['Communication', 'Delivery', ...]
+                    datasets: [{
+                        label: 'Productivity Profile', 
+                        data: [3,2,1,2,3], // [3, 2, ...]
+                        backgroundColor: "rgba(254, 243, 199, 0.6)",
+                        borderColor: "rgba(251, 191, 36, 1)",
+                        borderWidth: 2.5,
+                        pointRadius: 0, // No points on vertices
+                        pointHoverRadius: 5,
+                        pointBackgroundColor: "rgba(251, 191, 36, 1)",
+                        pointHoverBorderColor: "rgba(251, 191, 36, 1)",
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { // Radial axis (the "rings" and scale numbers)
+                            min: 0,
+                            max: 4,
+                            stepSize: 1,
+                            grid: {
+                                color: "rgba(209, 213, 219, 0.8)", // Color of the concentric polygon lines (rings)
+                            },
+                            angleLines: {
+                                display: true, // These are the radial lines (spokes)
+                                color: "rgba(96, 165, 250, 1)" 
+                            },
+                            pointLabels: { // Labels for dimensions (Communication, Skill set, etc.)
+                                color: "rgba(55, 65, 81, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 12, // Font size for dimension labels
+                                    weight: '500'
+                                },
+                                backdropPadding: 2, // Padding around labels if backdrop is shown
+                                // backdropColor: 'rgba(255,255,255,0.5)' // Optional backdrop
+                            },
+                            ticks: { // Numerical scale labels (1, 2, 3, 4)
+                                display: true, // Show numerical scale
+                                color: "rgba(107, 114, 128, 1)",
+                                font: {
+                                    family: 'Poppins',
+                                    size: 10,
+                                },
+                                stepSize: 1,
+                                backdropColor: 'rgba(255, 255, 255, 0.75)', // Make ticks more readable
+                                backdropPadding: 2,
+                                // To show only 1,2,3,4 and not 0 if min is 0:
+                                callback: function(value, index, ticks) {
+                                   return value === 0 ? '' : value; // Hide '0' tick if min is 0
+                                   // return value; // Default: shows all ticks including 0 if min is 0
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // No legend shown in prototype
+                        },
+                        tooltip: {
+                            enabled: true, // Standard tooltips enabled
+                            backgroundColor: 'rgba(0,0,0,0.75)',
+                            titleFont: { size: 12, family: 'Poppins', weight: '600' },
+                            bodyFont: { size: 12, family: 'Poppins' },
+                            padding: 10,
+                            displayColors: false, // No color box in tooltip
+                            callbacks: {
+                                // title: function(tooltipItems) { return ''; }, // No title
+                                label: function(tooltipItem) {
+                                    return `${tooltipItem.chart.data.labels[tooltipItem.dataIndex]}: ${tooltipItem.formattedValue}`;
+                                }
+                            }
+                        }
+                    },
+                    // Element specific styling can also be done here
+                    // elements: { line: { tension: 0.1 } } // if less smoothness is desired
+                }
+            });
+        });
+    </script>
+</body>
+</html>

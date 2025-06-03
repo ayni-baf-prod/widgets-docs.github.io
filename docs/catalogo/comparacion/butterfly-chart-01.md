@@ -78,7 +78,7 @@
   <iframe src="../../../assets/widgets_html/BUTTERFLY_CHART_01/butterfly_chart_interactive.html" 
           style="width: 100%; height: 500px; border: none; overflow: auto;"
           loading="lazy"
-          title="Ejemplo Interactivo de Gráfico Combinado">
+          title="Ejemplo Interactivo de Gráfico Mariposa">
   </iframe>
 </div>
 

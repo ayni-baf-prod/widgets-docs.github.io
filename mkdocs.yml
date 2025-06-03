@@ -116,4 +116,5 @@ nav:
         - Selector rango de fechas: catalogo/mas_widgets/date-range-picker-01.md
         - Sankey: catalogo/mas_widgets/sankey-chart-01.md
         - Gantt Chart: catalogo/mas_widgets/critical-path-chart-01.md
+        - Radar Chart: catalogo/mas_widgets/radar-chart-01.md
   - Changelog: changelog.md
