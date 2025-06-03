@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dona con Indicador Central (v3 - Mejorado)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgba(237, 242, 251, 1);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; min-height: 350px;
+        }
+        .donut-kpi-widget-container {
+            background-color: #FFFFFF;
+            padding: 20px; 
+            border-radius: 16px; 
+            box-shadow: 0 0 0 10px rgba(219, 229, 255, 0.4), 0 8px 25px rgba(0,0,0,0.07); 
+            width: 100%; max-width: 280px; 
+            position: relative; 
+        }
+        .donut-chart-wrapper {
+            width: 100%; max-width: 220px; 
+            margin: 0 auto; position: relative; 
+        }
+        #donutKpiCanvasV3 { 
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Custom tooltip styles */
+        .custom-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            pointer-events: none;
+            z-index: 1000;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.1s ease;
+        }
+        
+        .custom-tooltip::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+        }
+        
+        .custom-tooltip.tooltip-bottom::before {
+            top: -10px;
+            border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="donut-kpi-widget-container">
+        <div class="donut-chart-wrapper">
+            <canvas id="donutKpiCanvasV3"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctxDonutKPIV3 = document.getElementById('donutKpiCanvasV3').getContext('2d');
+            
+            // Custom tooltip element
+            let customTooltip = null;
+
+            const centerTextPluginV3 = {
+                id: 'centerTextDonutKPIV3',
+                afterDraw: (chart, args, options) => {
+                    const { ctx, chartArea } = chart;
+                    if (!chartArea) return;
+                    const { top, bottom, left, right, width, height } = chartArea;
+                    const centerX = left + width / 2;
+                    const centerY = top + height / 2;
+
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    const pluginConf = chart.options.plugins[centerTextPluginV3.id] || {};
+
+                    // 1. Title "Headcount"
+                    ctx.font = `500 14px ${pluginConf.fontFamily || 'Poppins'}`;
+                    ctx.fillStyle = pluginConf.titleColor || 'rgba(107, 114, 128, 1)';
+                    ctx.fillText(pluginConf.titleText || 'Title', centerX, centerY - 35);
+
+                    // 2. Main Value "250"
+                    ctx.font = `700 40px ${pluginConf.fontFamily || 'Poppins'}`;
+                    ctx.fillStyle = pluginConf.valueColor || 'rgba(31, 41, 55, 1)';
+                    ctx.fillText(pluginConf.valueText || '0', centerX, centerY - 5);
+
+                    // 3. Variation "2% ▼"
+                    const variationText = (pluginConf.variationValue !== undefined ? Math.abs(pluginConf.variationValue) : '0') + '%';
+                    const variationArrow = pluginConf.variationArrow || '';
+                    
+                    ctx.font = `500 13px ${pluginConf.fontFamily || 'Poppins'}`;
+                    const varTextWidth = ctx.measureText(variationText).width;
+                    const arrowTextWidth = ctx.measureText(variationArrow).width;
+                    const totalVarWidth = varTextWidth + (variationArrow ? arrowTextWidth : 0);
+                    const varStartX = centerX - totalVarWidth / 2;
+
+                    ctx.fillStyle = pluginConf.variationColorText || 'rgba(107, 114, 128, 1)';
+                    ctx.fillText(variationText, varStartX + varTextWidth / 2, centerY + 20);
+                    
+                    if (variationArrow) {
+                        ctx.fillStyle = pluginConf.variationArrowColor || '#000';
+                        ctx.fillText(variationArrow, varStartX + varTextWidth + arrowTextWidth / 2, centerY + 20);
+                    }
+
+                    // 4. Legend "■ M ■ F"
+                    ctx.font = `500 12px ${pluginConf.fontFamily || 'Poppins'}`;
+                    const legendYPos = centerY + 45;
+                    const legendItems = pluginConf.legendItems || [];
+                    let currentX = centerX;
+                    const legendItemSpacing = 12; 
+                    const squareSize = 7; 
+
+                    let totalLegendWidth = 0;
+                    legendItems.forEach(item => {
+                        totalLegendWidth += squareSize + 3 + ctx.measureText(item.label).width + legendItemSpacing;
+                    });
+                    totalLegendWidth -= legendItemSpacing; 
+                    currentX -= totalLegendWidth / 2;
+
+                    legendItems.forEach(item => {
+                        ctx.fillStyle = item.color;
+                        ctx.fillRect(currentX, legendYPos - squareSize / 2, squareSize, squareSize);
+                        currentX += squareSize + 3; 
+                        
+                        ctx.fillStyle = pluginConf.legendColorText || 'rgba(55, 65, 81, 1)';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(item.label, currentX, legendYPos);
+                        currentX += ctx.measureText(item.label).width + legendItemSpacing; 
+                    });
+                    ctx.restore();
+                }
+            };
+
+            // Function to create/update custom tooltip
+            function updateCustomTooltip(chart, tooltip) {
+                if (!customTooltip) {
+                    customTooltip = document.createElement('div');
+                    customTooltip.className = 'custom-tooltip';
+                    document.body.appendChild(customTooltip);
+                }
+
+                if (tooltip.opacity === 0) {
+                    customTooltip.style.opacity = 0;
+                    return;
+                }
+
+                // Get tooltip data
+                const tooltipModel = tooltip.dataPoints[0];
+                const label = chart.data.labels[tooltipModel.dataIndex] || '';
+                const value = tooltipModel.parsed;
+                const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                const percentage = ((value / total) * 100).toFixed(1);
+                
+                // Set tooltip content
+                customTooltip.innerHTML = `${label}: ${value.toLocaleString()} (${percentage}%)`;
+
+                // Get chart position
+                const canvasPosition = Chart.helpers.getRelativePosition(tooltip, chart);
+                const chartRect = chart.canvas.getBoundingClientRect();
+                
+                // Calculate tooltip position
+                let tooltipX = chartRect.left + window.pageXOffset + canvasPosition.x;
+                let tooltipY = chartRect.top + window.pageYOffset + canvasPosition.y;
+                
+                // Adjust position to avoid center overlap
+                const centerX = chartRect.left + window.pageXOffset + chartRect.width / 2;
+                const centerY = chartRect.top + window.pageYOffset + chartRect.height / 2;
+                
+                // If tooltip would be in the center area, move it outside
+                const centerRadius = 80; // Radius around center to avoid
+                const distanceFromCenter = Math.sqrt(Math.pow(tooltipX - centerX, 2) + Math.pow(tooltipY - centerY, 2));
+                
+                if (distanceFromCenter < centerRadius) {
+                    // Position tooltip outside the donut
+                    const angle = Math.atan2(tooltipY - centerY, tooltipX - centerX);
+                    const pushDistance = 120; // Distance to push tooltip away from center
+                    
+                    tooltipX = centerX + Math.cos(angle) * pushDistance;
+                    tooltipY = centerY + Math.sin(angle) * pushDistance;
+                }
+                
+                // Ensure tooltip doesn't go off screen
+                const tooltipRect = customTooltip.getBoundingClientRect();
+                const padding = 10;
+                
+                if (tooltipX + tooltipRect.width > window.innerWidth - padding) {
+                    tooltipX = window.innerWidth - tooltipRect.width - padding;
+                }
+                if (tooltipX < padding) {
+                    tooltipX = padding;
+                }
+                if (tooltipY < padding) {
+                    tooltipY = padding;
+                    customTooltip.classList.add('tooltip-bottom');
+                } else {
+                    customTooltip.classList.remove('tooltip-bottom');
+                    tooltipY -= 40; // Offset to show above cursor
+                }
+
+                // Apply position and show tooltip
+                customTooltip.style.left = tooltipX + 'px';
+                customTooltip.style.top = tooltipY + 'px';
+                customTooltip.style.opacity = 1;
+            }
+
+            const chartInstance = new Chart(ctxDonutKPIV3, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Masculino","Femenino"],
+                    datasets: [{
+                        data: [150,100],
+                        backgroundColor: ["rgba(79, 70, 229, 1)","rgba(252, 211, 77, 1)"],
+                        borderWidth: 0,
+                        hoverBorderWidth: 2,
+                        hoverBorderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { 
+                            enabled: false, // Disable default tooltip
+                            external: function(context) {
+                                updateCustomTooltip(context.chart, context.tooltip);
+                            }
+                        },
+                        [centerTextPluginV3.id]: {
+                            fontFamily: 'Poppins',
+                            titleText: 'Headcount',
+                            titleColor: 'rgba(107, 114, 128, 1)',
+                            valueText: '250',
+                            valueColor: 'rgba(31, 41, 55, 1)',
+                            variationValue: -2.0,
+                            variationArrow: '▼',
+                            variationColorText: 'rgba(107, 114, 128, 1)',
+                            variationArrowColor: 'rgba(239, 68, 68, 1)',
+                            legendColorText: 'rgba(55, 65, 81, 1)',
+                            legendItems: [
+                                { label: 'M', color: 'rgba(79, 70, 229, 1)' },
+                                { label: 'F', color: 'rgba(252, 211, 77, 1)' }
+                            ]
+                        }
+                    },
+                    animation: { 
+                        animateRotate: true, 
+                        animateScale: true 
+                    },
+                    onHover: (event, activeElements) => {
+                        event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+                    }
+                },
+                plugins: [centerTextPluginV3]
+            });
+
+            // Clean up tooltip when mouse leaves canvas
+            ctxDonutKPIV3.canvas.addEventListener('mouseleave', function() {
+                if (customTooltip) {
+                    customTooltip.style.opacity = 0;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -87,6 +87,7 @@ nav:
         - Gauge Chart Progress: catalogo/progreso_proporcion/gauge-chart-02.md
         - Progreso Circular: catalogo/progreso_proporcion/circular-progress-01.md
         - Donut Chart: catalogo/progreso_proporcion/donut-chart-01.md
+        - Donut Chart v2: catalogo/progreso_proporcion/donut-chart-02.md
     - Gráficos de Comparación:
         - catalogo/comparacion/index.md
         - Gráfico Combinado: catalogo/comparacion/combo-chart-01.md
