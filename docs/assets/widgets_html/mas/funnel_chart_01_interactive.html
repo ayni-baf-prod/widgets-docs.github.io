@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funnel Chart Widget</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fb;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .widget-container {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(70, 114, 251, 0.08);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .widget-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1d29;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .funnel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .funnel-stage {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .funnel-stage:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .funnel-stage.prospects {
+            background: linear-gradient(135deg, #4672FB 0%, #5B7CFC 100%);
+            width: 100%;
+        }
+
+        .funnel-stage.proposal {
+            background: linear-gradient(135deg, #6B8AFD 0%, #7C95FD 100%);
+            width: 85%;
+        }
+
+        .funnel-stage.negotiation {
+            background: linear-gradient(135deg, #8FA5FE 0%, #A0B0FE 100%);
+            width: 70%;
+        }
+
+        .funnel-stage.wins {
+            background: linear-gradient(135deg, #B3C5FF 0%, #C4D0FF 100%);
+            width: 55%;
+        }
+
+        .stage-value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .legend-color.prospects {
+            background: linear-gradient(135deg, #4672FB 0%, #5B7CFC 100%);
+        }
+
+        .legend-color.proposal {
+            background: linear-gradient(135deg, #6B8AFD 0%, #7C95FD 100%);
+        }
+
+        .legend-color.negotiation {
+            background: linear-gradient(135deg, #8FA5FE 0%, #A0B0FE 100%);
+        }
+
+        .legend-color.wins {
+            background: linear-gradient(135deg, #B3C5FF 0%, #C4D0FF 100%);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(26, 29, 41, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(26, 29, 41, 0.9);
+        }
+
+        .funnel-stage:hover .tooltip {
+            opacity: 1;
+        }
+
+        .conversion-rate {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 480px) {
+            .widget-container {
+                padding: 24px;
+            }
+            
+            .widget-title {
+                font-size: 24px;
+                margin-bottom: 24px;
+            }
+            
+            .funnel-stage {
+                height: 70px;
+                font-size: 16px;
+            }
+            
+            .stage-value {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <h2 class="widget-title">Funnel</h2>
+        
+        <div class="funnel-container" id="funnelContainer">
+            <!-- Funnel stages will be generated here -->
+        </div>
+        
+        <div class="legend" id="legendContainer">
+            <!-- Legend will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        // Data from CSV
+        const funnelData = [
+            { stage: 'Prospects', value: 20, unit: 'M' },
+            { stage: 'Proposal', value: 10, unit: 'M' },
+            { stage: 'Negotiation', value: 8, unit: 'M' },
+            { stage: 'Wins', value: 5, unit: 'M' }
+        ];
+
+        // Stage classes for styling
+        const stageClasses = ['prospects', 'proposal', 'negotiation', 'wins'];
+
+        // Calculate conversion rates
+        function calculateConversionRates(data) {
+            const rates = [];
+            for (let i = 1; i < data.length; i++) {
+                const rate = ((data[i].value / data[i-1].value) * 100).toFixed(1);
+                rates.push(rate);
+            }
+            return rates;
+        }
+
+        // Format currency value
+        function formatValue(value, unit) {
+            return `$ ${value}${unit}`;
+        }
+
+        // Generate funnel chart
+        function generateFunnelChart() {
+            const container = document.getElementById('funnelContainer');
+            const conversionRates = calculateConversionRates(funnelData);
+            
+            funnelData.forEach((item, index) => {
+                const stage = document.createElement('div');
+                stage.className = `funnel-stage ${stageClasses[index]}`;
+                
+                const conversionText = index > 0 ? 
+                    `<div class="conversion-rate">Conversión: ${conversionRates[index-1]}%</div>` : '';
+                
+                stage.innerHTML = `
+                    <div class="stage-content">
+                        <div class="stage-value">${formatValue(item.value, item.unit)}</div>
+                    </div>
+                    <div class="tooltip">
+                        ${item.stage}: ${formatValue(item.value, item.unit)}
+                        ${conversionText}
+                    </div>
+                `;
+                
+                container.appendChild(stage);
+            });
+        }
+
+        // Generate legend
+        function generateLegend() {
+            const container = document.getElementById('legendContainer');
+            
+            funnelData.forEach((item, index) => {
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                legendItem.innerHTML = `
+                    <div class="legend-color ${stageClasses[index]}"></div>
+                    <span>${item.stage}</span>
+                `;
+                container.appendChild(legendItem);
+            });
+        }
+
+        // Initialize the chart
+        document.addEventListener('DOMContentLoaded', function() {
+            generateFunnelChart();
+            generateLegend();
+        });
+
+        // Add smooth animations on load
+        window.addEventListener('load', function() {
+            const stages = document.querySelectorAll('.funnel-stage');
+            stages.forEach((stage, index) => {
+                setTimeout(() => {
+                    stage.style.opacity = '0';
+                    stage.style.transform = 'translateY(20px)';
+                    stage.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        stage.style.opacity = '1';
+                        stage.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>

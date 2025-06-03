@@ -118,4 +118,5 @@ nav:
         - Gantt Chart: catalogo/mas_widgets/critical-path-chart-01.md
         - Radar Chart: catalogo/mas_widgets/radar-chart-01.md
         - Bubble Chart: catalogo/mas_widgets/bubble-chart-01.md
+        - Funnel Chart: catalogo/mas_widgets/funnel-chart-01.md
   - Changelog: changelog.md
