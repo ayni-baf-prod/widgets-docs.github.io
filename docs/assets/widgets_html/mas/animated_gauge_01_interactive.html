@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Gauge Widget</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <div id="gaugeContainer" style="width:200px"></div>
+  <script>
+  // Hardcoded values for logroI and metaI
+const logroI = 750000; // Example value for 'logro'
+const metaI = 1000000; // Example value for 'meta'
+
+// Function to simplify numbers (unchanged)
+function simplifyNumber(number) {
+  if (number >= 1000000) { return (number / 1000000).toFixed(1) + 'M'; }
+  else if (number >= 1000) { return (number / 1000).toFixed(1) + 'K'; } 
+  else { return number.toString(); }
+}
+
+// Calculate percentage and gauge properties (unchanged)
+const porcentajeI = Math.round(100 * logroI / metaI);
+let color = "";
+let altura = 0;
+if (porcentajeI >= 100) { altura = 0; }
+else if (porcentajeI <= 0) { altura = 180; }
+else { altura = 180 - (porcentajeI / 100) * 180; }
+if (porcentajeI < 35) { color = "#FF7E7E"; }
+else if (porcentajeI < 55) { color = "#FACC15"; }
+else if (porcentajeI > 54) { color = "#66CFA1"; }
+console.log("altura: ", altura);
+// Function to generate the SVG gauge
+function generateSVG() {
+  // Select the target div and append SVG
+  const svgContainer = d3.select("#gaugeContainer")
+    .append("svg")
+    .attr("id", "AnimatedGaugeContainer")
+    .attr("viewBox", "0 0 200 200")
+    .attr("height", "100%");
+
+  // Outer circle
+  svgContainer.append("circle")
+    .attr("cx", 100)
+    .attr("cy", 100)
+    .attr("r", 97)
+    .attr("fill", "none")
+    .attr("stroke", color)
+    .attr("stroke-width", 6);
+
+  // Clip path for the gauge
+  const clipPath = svgContainer.append("clipPath")
+    .attr("id", "window-Clip");
+  clipPath.append("circle")
+    .attr("cx", 100)
+    .attr("cy", 100)
+    .attr("r", 90);
+
+  // Group with clip path
+  const group = svgContainer.append("g")
+    .attr("clip-path", "url(#window-Clip)");
+
+  // Green layer (wave animation)
+  const greenLayer = group.append("path")
+    .attr("id", "greenLayer")
+    .attr("d", "M 0 15 Q 15 5 30 15 Q 45 25 60 15 Q 75 5 90 15 Q 105 25 120 15 Q 135 5 150 15 Q 165 25 180 15 Q 195 5 210 15 Q 225 25 240 15 Q 255 5 270 15 Q 285 25 300 15 Q 315 5 330 15 Q 345 25 360 15 L 360 220 L 0 220 L 0 15")
+    .attr("fill", color);
+
+  // Animations
+  greenLayer.append("animateTransform")
+    .attr("id", "appearAnimation")
+    .attr("attributeName", "transform")
+    .attr("attributeType", "XML")
+    .attr("type", "translate")
+    .attr("from", "-120 200")
+    .attr("to", `0 ${altura}`)
+    .attr("begin", "0s")
+    .attr("dur", "1s")
+    .attr("fill", "freeze")
+    .attr("repeatCount", "1");
+
+  greenLayer.append("animateTransform")
+    .attr("attributeName", "transform")
+    .attr("attributeType", "XML")
+    .attr("type", "translate")
+    .attr("from", `-120 ${altura}`)
+    .attr("to", `0 ${altura}`)
+    .attr("begin", "appearAnimation.end")
+    .attr("dur", "2s")
+    .attr("repeatCount", "indefinite");
+
+  // Text for amount
+  svgContainer.append("text")
+    .attr("id", "amount")
+    .attr("x", 100)
+    .attr("y", 90)
+    .attr("text-anchor", "middle")
+    .attr("dy", ".35em")
+    .attr("font-size", "2em")
+    .attr("font-family", "Poppins")
+    .attr("fill", "black")
+    .text("$" + simplifyNumber(logroI));
+
+  // Text for percentage counter
+  svgContainer.append("text")
+    .attr("id", "counter")
+    .attr("x", 100)
+    .attr("y", 120)
+    .attr("text-anchor", "middle")
+    .attr("dy", ".35em")
+    .attr("font-size", "1.8em")
+    .attr("font-family", "Poppins")
+    .attr("fill", "black");
+}
+
+// Call the SVG generation
+generateSVG();
+
+// Animate the percentage counter
+const start = 0;
+const end = porcentajeI;
+d3.select('#counter')
+  .transition()
+  .tween("text", () => {
+    const interpolator = d3.interpolateNumber(0, end);
+    return function(t) { d3.select(this).text(Math.round(interpolator(t)) + "%"); };
+  })
+  .duration(1000);
+  </script>
+</body>
+</html>
