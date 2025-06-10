@@ -64,7 +64,7 @@
 ## Ejemplo Interactivo
 
 <div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 300px; position: relative;">
-  <iframe src="../../../assets/widgets_html/FILTER_DROPDOWN_01/filter_dropdown_01_interactive.html" 
+  <iframe src="../../../assets/widgets_html/mas/filter_dropdown_01_interactive.html" 
           style="width: 100%; height: 300px; border: none; overflow: auto;"
           loading="lazy"
           title="Ejemplo Interactivo del Filtro">

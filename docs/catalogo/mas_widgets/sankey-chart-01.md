@@ -89,7 +89,7 @@
 ## Ejemplo Interactivo
 
 <div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; height: 765px; position: relative; overflow: hidden;">
-  <iframe src="../../../assets/widgets_html/SANKEY_CHART_01/sankey_chart_01_interactive.html" 
+  <iframe src="../../../assets/widgets_html/mas/sankey_chart_01_interactive.html" 
           style="width: 100%; height: 675px; border: none; overflow: hidden; "
           loading="lazy"
           title="Ejemplo Interactivo del Diagrama Sankey">
