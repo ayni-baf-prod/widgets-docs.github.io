@@ -69,9 +69,9 @@
 
 ## Ejemplo Interactivo
 
-<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 220px; position: relative;">
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; min-height: 340px; position: relative;">
   <iframe src="../../../assets/widgets_html/mas/liquid_fill_gauge_chart_01_interactive.html" 
-          style="width: 100%; height: 220px; border: none; overflow: auto;"
+          style="width: 100%; height: 340px; border: none; overflow: auto;"
           loading="lazy"
           title="Ejemplo Interactivo Tanque">
   </iframe>
