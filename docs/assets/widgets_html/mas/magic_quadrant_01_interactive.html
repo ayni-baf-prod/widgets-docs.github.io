@@ -3,170 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Quadrant Widget</title>
+    <title>Magic Quadrant Widget (Final Style v3)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
-            padding: 20px;
+            display: flex; justify-content: center; align-items: center; padding: 20px;
         }
-
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: #7f8c8d;
-            font-size: 14px;
-        }
-
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { color: #2c3e50; font-size: 24px; margin-bottom: 8px; font-weight: 600; }
+        .header p { color: #7f8c8d; font-size: 14px; }
         .chart-container {
             width: 100%;
             height: 600px;
-            position: relative; /* Tooltip will be positioned relative to this */
+            position: relative;
         }
 
-        .quadrant-label {
-            font-size: 12px;
+        /* SVG Styles */
+        .quadrant-line, .quadrant-box-border {
+            stroke: #bdc3c7; 
+            stroke-width: 1;
+        }
+        .quadrant-label-box {
+            fill: #f5f5f5;
+            stroke: #e0e0e0;
+            stroke-width: 1;
+        }
+        .quadrant-label-text {
+            font-size: 11px;
             font-weight: 600;
-            fill: #34495e;
+            fill: #7f8c8d;
             text-anchor: middle;
-            opacity: 0.8;
+            text-transform: uppercase;
         }
-
-        .axis-label {
-            font-size: 12px;
-            font-weight: 500;
-            fill: #2c3e50;
-            text-anchor: middle;
-        }
-
-        .element-label {
+        .axis-label-group text {
             font-size: 10px;
-            fill: #34495e;
-            text-anchor: middle;
-            opacity: 0.7;
-            font-weight: 400;
+            font-weight: 600;
+            fill: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-
-        .element-circle {
-            stroke: white;
-            stroke-width: 2;
+        .element-group .element-circle {
+            fill: #B0BEC5;
+            stroke: #37474F;
+            stroke-width: 1.5;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
-        .element-circle:hover {
-            stroke-width: 3;
+        .element-group:hover .element-circle {
+            fill: #42A5F5;
+            stroke: #1E88E5;
             r: 8;
         }
-
-        .grid-line {
-            stroke: #ecf0f1;
-            stroke-width: 1;
-            opacity: 0.5;
+        .element-group .element-label {
+            font-size: 10px;
+            fill: #37474F;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+        .quadrant-bg-shaded {
+            fill: #f7f7f7;
         }
 
-        .quadrant-line {
-            stroke: #34495e;
-            stroke-width: 2;
-            opacity: 0.6;
-        }
-
-        .quadrant-bg {
-            /* fill: #f8f9fa; */ /* Using colors from the reference image */
-            opacity: 0.3;
-        }
-
+        /* Tooltip */
         .tooltip {
             position: absolute;
             background: rgba(44, 62, 80, 0.95);
-            color: white;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            pointer-events: none;
-            opacity: 0;
-            transform: translate(-50%, -110%); /* Position tooltip above and centered on cursor */
+            color: white; padding: 10px 12px; border-radius: 6px;
+            font-size: 12px; pointer-events: none; opacity: 0;
+            transform: translateY(-110%);
             transition: opacity 0.2s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 1000;
+            min-width: 180px;
         }
-
         .tooltip-title {
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 13px;
-            color: #ecf0f1;
+            font-weight: 700; margin-bottom: 6px; font-size: 13px; color: #fff;
+            border-bottom: 1px solid #566573; padding-bottom: 4px;
         }
-
-        .tooltip-content {
-            font-size: 11px;
-            line-height: 1.4;
-            color: #bdc3c7;
-        }
+        .tooltip-content { font-size: 11px; line-height: 1.5; color: #CFD8DC; }
+        .tooltip-content div { display: flex; justify-content: space-between; }
+        .tooltip-content strong { color: #90A4AE; font-weight: 600; margin-right: 8px; }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 20px;
-            }
-            
-            .chart-container {
-                height: 400px;
-            }
-            
-            .quadrant-label {
-                font-size: 10px;
-            }
-            
-            .axis-label {
-                font-size: 10px;
-            }
-            
-            .element-label {
-                font-size: 8px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .chart-container {
-                height: 350px;
-            }
-            
-            .quadrant-label {
-                font-size: 9px;
-            }
-            
-            .element-label {
-                display: none; /* Hide labels on very small screens */
-            }
+            .container { padding: 15px; }
+            .header h1 { font-size: 20px; }
+            .chart-container { height: 450px; }
         }
     </style>
 </head>
@@ -182,34 +113,31 @@
     </div>
 
     <script>
-        // Data from the documentation example
         const data = [
-            { element: "Microsoft", dimension_x: 89, dimension_y: 72, color: "#3498db" },
-            { element: "Tableau", dimension_x: 86, dimension_y: 89, color: "#2ecc71" },
-            { element: "Qlik", dimension_x: 73, dimension_y: 84, color: "#9b59b6" },
-            { element: "SAS", dimension_x: 63, dimension_y: 59, color: "#e74c3c" },
-            { element: "SAP", dimension_x: 68, dimension_y: 49, color: "#f39c12" },
-            { element: "IBM", dimension_x: 47, dimension_y: 63, color: "#1abc9c" },
-            { element: "Oracle", dimension_x: 27, dimension_y: 64, color: "#34495e" },
-            { element: "Sisense", dimension_x: 37, dimension_y: 45, color: "#e67e22" }
+            { element: "Microsoft", x: 72, y: 89 },
+            { element: "Tableau", x: 89, y: 86 },
+            { element: "Qlik", x: 84, y: 73 },
+            { element: "SAS", x: 59, y: 63 },
+            { element: "SAP", x: 49, y: 68 },
+            { element: "IBM", x: 63, y: 47 },
+            { element: "Oracle", x: 64, y: 27 },
+            { element: "Sisense", x: 45, y: 37 }
         ];
 
-        // Configuration
         const config = {
             quadrants: {
-                topRight: "Leaders",
-                topLeft: "Challengers", 
-                bottomRight: "Visionaries",
-                bottomLeft: "Niche Players"
+                topRight: "LEADERS",
+                topLeft: "CHALLENGERS", 
+                bottomRight: "VISIONARIES",
+                bottomLeft: "NICHE PLAYERS"
             },
             axisLabels: {
-                x: "Ability to Execute",
-                y: "Completeness of Vision"
+                x: "COMPLETENESS OF VISION",
+                y: "ABILITY TO EXECUTE"
             },
-            margin: { top: 40, right: 40, bottom: 60, left: 60 }
+            margin: { top: 40, right: 30, bottom: 50, left: 50 }
         };
 
-        // Function to determine quadrant
         function getQuadrant(x, y) {
             if (x >= 50 && y >= 50) return config.quadrants.topRight;
             if (x < 50 && y >= 50) return config.quadrants.topLeft;
@@ -217,232 +145,97 @@
             return config.quadrants.bottomLeft;
         }
 
-        // Create the chart
         function createMagicQuadrant() {
             const container = d3.select('.chart-container');
             const tooltip = d3.select('.tooltip');
-            
-            // Clear any existing content
             container.select('svg').remove();
-            
-            // Get container dimensions
+
             const containerRect = container.node().getBoundingClientRect();
             const width = containerRect.width;
             const height = containerRect.height;
-            
             const innerWidth = width - config.margin.left - config.margin.right;
             const innerHeight = height - config.margin.top - config.margin.bottom;
 
-            // Create SVG
-            const svg = container.append('svg')
-                .attr('width', width)
-                .attr('height', height);
+            const svg = container.append('svg').attr('width', width).attr('height', height);
+            const g = svg.append('g').attr('transform', `translate(${config.margin.left}, ${config.margin.top})`);
 
-            const g = svg.append('g')
-                .attr('transform', `translate(${config.margin.left}, ${config.margin.top})`);
+            const xScale = d3.scaleLinear().domain([0, 100]).range([0, innerWidth]);
+            const yScale = d3.scaleLinear().domain([0, 100]).range([innerHeight, 0]);
 
-            // Scales
-            const xScale = d3.scaleLinear()
-                .domain([0, 100])
-                .range([0, innerWidth]);
-
-            const yScale = d3.scaleLinear()
-                .domain([0, 100])
-                .range([innerHeight, 0]);
-
-            // Grid lines
-            const gridLines = g.append('g').attr('class', 'grid');
+            // Shaded quadrant backgrounds
+            g.append('rect').attr('class', 'quadrant-bg-shaded').attr('x', 0).attr('y', 0).attr('width', innerWidth / 2).attr('height', innerHeight / 2);
+            g.append('rect').attr('class', 'quadrant-bg-shaded').attr('x', innerWidth / 2).attr('y', innerHeight / 2).attr('width', innerWidth / 2).attr('height', innerHeight / 2);
             
-            // Vertical grid lines
-            gridLines.selectAll('.vertical-grid')
-                .data(d3.range(0, 101, 10))
-                .enter()
-                .append('line')
-                .attr('class', 'grid-line')
-                .attr('x1', d => xScale(d))
-                .attr('x2', d => xScale(d))
-                .attr('y1', 0)
-                .attr('y2', innerHeight);
-
-            // Horizontal grid lines
-            gridLines.selectAll('.horizontal-grid')
-                .data(d3.range(0, 101, 10))
-                .enter()
-                .append('line')
-                .attr('class', 'grid-line')
-                .attr('x1', 0)
-                .attr('x2', innerWidth)
-                .attr('y1', d => yScale(d))
-                .attr('y2', d => yScale(d));
-
-            // Quadrant backgrounds
-            const quadrantBg = g.append('g').attr('class', 'quadrants-bg');
-            
-            quadrantBg.append('rect')
-                .attr('class', 'quadrant-bg')
-                .attr('x', xScale(50))
-                .attr('y', yScale(100))
-                .attr('width', xScale(50))
-                .attr('height', yScale(50))
-                .style('fill', '#e8f5e8'); // Greenish for Leaders
-
-            quadrantBg.append('rect')
-                .attr('class', 'quadrant-bg')
-                .attr('x', 0)
-                .attr('y', yScale(100))
-                .attr('width', xScale(50))
-                .attr('height', yScale(50))
-                .style('fill', '#fffaf0'); // Off-white for Challengers
-
-            quadrantBg.append('rect')
-                .attr('class', 'quadrant-bg')
-                .attr('x', xScale(50))
-                .attr('y', yScale(50))
-                .attr('width', xScale(50))
-                .attr('height', yScale(50))
-                .style('fill', '#fffaf0'); // Off-white for Visionaries
-
-            quadrantBg.append('rect')
-                .attr('class', 'quadrant-bg')
-                .attr('x', 0)
-                .attr('y', yScale(50))
-                .attr('width', xScale(50))
-                .attr('height', yScale(50))
-                .style('fill', '#fffaf0'); // Off-white for Niche Players
-
             // Quadrant dividing lines
-            g.append('line')
-                .attr('class', 'quadrant-line')
-                .attr('x1', xScale(50))
-                .attr('x2', xScale(50))
-                .attr('y1', 0)
-                .attr('y2', innerHeight);
+            g.append('line').attr('class', 'quadrant-line').attr('x1', xScale(50)).attr('x2', xScale(50)).attr('y1', 0).attr('y2', innerHeight);
+            g.append('line').attr('class', 'quadrant-line').attr('x1', 0).attr('x2', innerWidth).attr('y1', yScale(50)).attr('y2', yScale(50));
 
-            g.append('line')
-                .attr('class', 'quadrant-line')
-                .attr('x1', 0)
-                .attr('x2', innerWidth)
-                .attr('y1', yScale(50))
-                .attr('y2', yScale(50));
-
-            // Quadrant labels
-            g.append('text')
-                .attr('class', 'quadrant-label')
-                .attr('x', xScale(75))
-                .attr('y', yScale(95)) // FEEDBACK: Moved from 85 to 95 (closer to top)
-                .attr('dy', '-0.5em')   // Padding from top edge
-                .text(config.quadrants.topRight);
-
-            g.append('text')
-                .attr('class', 'quadrant-label')
-                .attr('x', xScale(25))
-                .attr('y', yScale(95)) // FEEDBACK: Moved from 85 to 95 (closer to top)
-                .attr('dy', '-0.5em')   // Padding from top edge
-                .text(config.quadrants.topLeft);
-
-            g.append('text')
-                .attr('class', 'quadrant-label')
-                .attr('x', xScale(75))
-                .attr('y', yScale(5))  // FEEDBACK: Moved from 15 to 5 (closer to bottom)
-                .attr('dy', '1.2em')   // Padding from bottom edge
-                .text(config.quadrants.bottomRight);
-
-            g.append('text')
-                .attr('class', 'quadrant-label')
-                .attr('x', xScale(25))
-                .attr('y', yScale(5))  // FEEDBACK: Moved from 15 to 5 (closer to bottom)
-                .attr('dy', '1.2em')   // Padding from bottom edge
-                .text(config.quadrants.bottomLeft);
-
-            // Axes
-            g.append('g')
-                .attr('transform', `translate(0, ${innerHeight})`)
-                .call(d3.axisBottom(xScale).tickSize(0).tickPadding(10)) // Added tickPadding
-                .selectAll('text')
-                .style('fill', '#7f8c8d')
-                .style('font-size', '11px');
-
-            g.append('g')
-                .call(d3.axisLeft(yScale).tickSize(0).tickPadding(10)) // Added tickPadding
-                .selectAll('text')
-                .style('fill', '#7f8c8d')
-                .style('font-size', '11px');
+            // Quadrant Box/Frame
+            g.append('rect').attr('class', 'quadrant-box-border').attr('x', 0).attr('y', 0).attr('width', innerWidth).attr('height', innerHeight).style('fill', 'none');
             
-            // Remove default axis domain lines
-            g.selectAll(".domain").remove();
+            // Quadrant Labels with "tab" effect
+            const quadLabels = [
+                { name: config.quadrants.topLeft, x: xScale(25), y: 0, dy: "1.5em", anchor: "middle" },
+                { name: config.quadrants.topRight, x: xScale(75), y: 0, dy: "1.5em", anchor: "middle" },
+                { name: config.quadrants.bottomLeft, x: xScale(25), y: innerHeight, dy: "-0.8em", anchor: "middle" },
+                { name: config.quadrants.bottomRight, x: xScale(75), y: innerHeight, dy: "-0.8em", anchor: "middle" }
+            ];
+            
+            const quadLabelGroup = g.selectAll('.quadrant-label-group').data(quadLabels).enter().append('g');
+            quadLabelGroup.each(function(d) {
+                const text = d3.select(this).append('text').attr('class', 'quadrant-label-text').attr('x', d.x).attr('y', d.y).attr('dy', d.dy).attr('text-anchor', d.anchor).text(d => d.name);
+                const bbox = text.node().getBBox();
+                d3.select(this).insert('rect', 'text').attr('class', 'quadrant-label-box').attr('x', bbox.x - 8).attr('y', bbox.y - 4).attr('width', bbox.width + 16).attr('height', bbox.height + 8).attr('rx', 3);
+            });
 
-            // Axis labels
-            g.append('text')
-                .attr('class', 'axis-label')
-                .attr('x', innerWidth / 2)
-                .attr('y', innerHeight + 45)
-                .text(config.axisLabels.x);
+            // Axis labels with arrows next to text
+            g.append('g').attr('class', 'axis-label-group')
+                .append('text')
+                .attr('x', 0)
+                .attr('y', innerHeight + 30)
+                .attr('text-anchor', 'start')
+                .text(config.axisLabels.x + ' ►');
 
-            g.append('text')
-                .attr('class', 'axis-label')
-                .attr('transform', 'rotate(-90)')
-                .attr('x', -innerHeight / 2)
-                .attr('y', -45) // Adjusted y position
-                .text(config.axisLabels.y);
+            g.append('g').attr('class', 'axis-label-group')
+                .append('text')
+                .attr('transform', `translate(-35, ${innerHeight}) rotate(-90)`)
+                .attr('text-anchor', 'start')
+                .text(config.axisLabels.y + ' ►');
+
 
             // Data points
-            const points = g.selectAll('.element-group')
-                .data(data)
-                .enter()
-                .append('g')
-                .attr('class', 'element-group');
+            const points = g.selectAll('.element-group').data(data).enter().append('g').attr('class', 'element-group');
 
-            // Circles
             points.append('circle')
                 .attr('class', 'element-circle')
-                .attr('cx', d => xScale(d.dimension_x))
-                .attr('cy', d => yScale(d.dimension_y))
+                .attr('cx', d => xScale(d.x))
+                .attr('cy', d => yScale(d.y))
                 .attr('r', 6)
-                .attr('fill', d => d.color)
                 .on('mouseover', function(event, d) {
-                    const quadrant = getQuadrant(d.dimension_x, d.dimension_y);
-                    tooltip.style('opacity', 1)
-                        .html(`
-                            <div class="tooltip-title">${d.element}</div>
-                            <div class="tooltip-content">
-                                <div><strong>Quadrant:</strong> ${quadrant}</div>
-                                <div><strong>${config.axisLabels.x}:</strong> ${d.dimension_x}%</div>
-                                <div><strong>${config.axisLabels.y}:</strong> ${d.dimension_y}%</div>
-                            </div>
-                        `);
+                    const quadrant = getQuadrant(d.x, d.y);
+                    tooltip.style('opacity', 1).html(`
+                        <div class="tooltip-title">${d.element}</div>
+                        <div class="tooltip-content">
+                            <div><strong>Quadrant:</strong> <span>${quadrant}</span></div>
+                            <div><strong>${config.axisLabels.y}:</strong> <span>${d.y}%</span></div>
+                            <div><strong>${config.axisLabels.x}:</strong> <span>${d.x}%</span></div>
+                        </div>`);
                 })
-                .on('mouseout', function() {
-                    tooltip.style('opacity', 0);
-                })
+                .on('mouseout', function() { tooltip.style('opacity', 0); })
                 .on('mousemove', function(event) {
-                    // FEEDBACK: Use d3.pointer to get coordinates relative to the chart container
-                    const [x, y] = d3.pointer(event, container.node());
-                    tooltip
-                        .style('left', x + 'px')
-                        .style('top', y + 'px');
+                    const [mx, my] = d3.pointer(event, container.node());
+                    tooltip.style('left', (mx + 10) + 'px').style('top', (my) + 'px');
                 });
 
-            // Labels for points
-            if (width > 480) {
-                points.append('text')
-                    .attr('class', 'element-label')
-                    .attr('x', d => xScale(d.dimension_x))
-                    .attr('y', d => yScale(d.dimension_y) + 18) // Increased distance from point
-                    .text(d => d.element);
-            }
+            points.append('text')
+                .attr('class', 'element-label')
+                .attr('x', d => xScale(d.x))
+                .attr('y', d => yScale(d.y) + 16)
+                .text(d => d.element);
         }
 
-        // Initialize chart
         createMagicQuadrant();
-
-        // Resize handler
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                createMagicQuadrant();
-            }, 250);
-        });
+        window.addEventListener('resize', () => { createMagicQuadrant(); });
     </script>
 </body>
 </html>
