@@ -90,16 +90,16 @@
 
 ## Ejemplo Interactivo
 
-<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; height: 760px; position: relative; overflow: hidden;">
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; height: 810px; position: relative; overflow: hidden;">
   <iframe src="../../../assets/widgets_html/mas/magic_quadrant_01_interactive.html" 
-          style="width: 100%; height: 760px; border: none; overflow: hidden; "
+          style="width: 100%; height: 810px; border: none; overflow: hidden; "
           loading="lazy"
           title="Ejemplo Interactivo del Magic Quadrant">
   </iframe>
 </div>
 
 <style>
-.widget-interactive-container iframe { min-height: 760px; }
+.widget-interactive-container iframe { min-height: 810px; }
 </style>
 
 ## 8. Requerimientos Técnicos
