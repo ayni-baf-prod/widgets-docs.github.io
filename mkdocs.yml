@@ -120,4 +120,5 @@ nav:
         - Bubble Chart: catalogo/mas_widgets/bubble-chart-01.md
         - Funnel Chart: catalogo/mas_widgets/funnel-chart-01.md
         - Liquid Fill Gauge: catalogo/mas_widgets/liquid-fill-gauge-chart_01.md
+        - Magic Quadrant: catalogo/mas_widgets/magic_quadrant.md
   - Changelog: changelog.md
