@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Indicator Bubble Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 24px 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 500px;
+        }
+
+        .chart-section {
+            flex: 1;
+            padding: 20px;
+            position: relative;
+        }
+
+        .controls-section {
+            width: 280px;
+            background: #f8f9fa;
+            border-left: 1px solid #e9ecef;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .control-group {
+            margin-bottom: 24px;
+        }
+
+        .control-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .axis-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .x-indicator {
+            background: #3498db;
+        }
+
+        .y-indicator {
+            background: #e74c3c;
+        }
+
+        .size-indicator {
+            background: #f39c12;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .radio-option:hover:not(.disabled) {
+            background-color: #e3f2fd;
+        }
+
+        .radio-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .radio-option.disabled input[type="radio"] {
+            cursor: not-allowed;
+        }
+
+        .radio-label {
+            font-size: 13px;
+            color: #495057;
+            cursor: pointer;
+        }
+
+        .size-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .size-info-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .size-info-text {
+            font-size: 12px;
+            color: #856404;
+            line-height: 1.4;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+        }
+
+        .bubble {
+            stroke: white;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bubble:hover {
+            stroke-width: 3;
+            filter: brightness(1.1);
+        }
+
+        .grid-line {
+            stroke: #e9ecef;
+            stroke-width: 1;
+            opacity: 0.7;
+        }
+
+        .axis-line {
+            stroke: #495057;
+            stroke-width: 1.5;
+        }
+
+        .axis-label {
+            font-size: 13px;
+            font-weight: 500;
+            fill: #2c3e50;
+            text-anchor: middle;
+        }
+
+        .element-label {
+            font-size: 11px;
+            fill: #495057;
+            text-anchor: middle;
+            opacity: 0.8;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(33, 37, 41, 0.95);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            max-width: 200px;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 4px;
+        }
+
+        .tooltip-content {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .tooltip-row {
+            margin-bottom: 3px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .controls-section {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e9ecef;
+                max-height: none;
+            }
+
+            .control-group {
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .chart-container {
+                min-height: 350px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+
+            .header {
+                padding: 15px 20px 8px;
+            }
+
+            .chart-section {
+                padding: 15px;
+            }
+
+            .controls-section {
+                padding: 15px;
+            }
+
+            .element-label {
+                display: none; /* Hide labels on very small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Product Portfolio Analysis</h1>
+            <p>Multi-indicator bubble chart with dynamic axis selection</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="chart-section">
+                <div class="chart-container">
+                    <div class="tooltip"></div>
+                </div>
+            </div>
+            
+            <div class="controls-section">
+                <div class="control-group">
+                    <div class="control-title">
+                        <span class="axis-indicator x-indicator">X</span>
+                        X Axis
+                    </div>
+                    <div class="radio-group" id="x-axis-controls">
+                        <!-- X-axis radio buttons will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">
+                        <span class="axis-indicator y-indicator">Y</span>
+                        Y Axis
+                    </div>
+                    <div class="radio-group" id="y-axis-controls">
+                        <!-- Y-axis radio buttons will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="size-info">
+                    <div class="size-info-title">
+                        <span class="axis-indicator size-indicator">●</span>
+                        Bubble Size
+                    </div>
+                    <div class="size-info-text" id="size-info-text">
+                        Sales Volume (Units)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data based on documentation
+        const rawData = [
+            { elemento: "Producto A", indicador_name: "Market_Share", valor: 25.5, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto A", indicador_name: "Profit_Margin", valor: 15.2, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto A", indicador_name: "Sales_Volume", valor: 1200, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto A", indicador_name: "Growth_Rate", valor: 8.3, is_size_indicator: false, label_indicador: "Growth Rate (%)" },
+            { elemento: "Producto B", indicador_name: "Market_Share", valor: 18.7, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto B", indicador_name: "Profit_Margin", valor: 22.1, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto B", indicador_name: "Sales_Volume", valor: 950, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto B", indicador_name: "Growth_Rate", valor: 12.5, is_size_indicator: false, label_indicador: "Growth Rate (%)" },
+            { elemento: "Producto C", indicador_name: "Market_Share", valor: 31.2, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto C", indicador_name: "Profit_Margin", valor: 18.8, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto C", indicador_name: "Sales_Volume", valor: 1450, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto C", indicador_name: "Growth_Rate", valor: 5.7, is_size_indicator: false, label_indicador: "Growth Rate (%)" },
+            { elemento: "Producto D", indicador_name: "Market_Share", valor: 14.3, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto D", indicador_name: "Profit_Margin", valor: 28.5, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto D", indicador_name: "Sales_Volume", valor: 650, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto D", indicador_name: "Growth_Rate", valor: 18.9, is_size_indicator: false, label_indicador: "Growth Rate (%)" }
+        ];
+
+        // Data processing
+        let processedData = {};
+        let indicators = [];
+        let sizeIndicator = null;
+        let elements = [];
+
+        // Process raw data
+        function processData() {
+            // Group by elemento
+            processedData = {};
+            const indicatorSet = new Set();
+            const elementSet = new Set();
+
+            rawData.forEach(row => {
+                if (!processedData[row.elemento]) {
+                    processedData[row.elemento] = {};
+                }
+                processedData[row.elemento][row.indicador_name] = {
+                    valor: row.valor,
+                    label: row.label_indicador
+                };
+                
+                if (row.is_size_indicator) {
+                    sizeIndicator = {
+                        name: row.indicador_name,
+                        label: row.label_indicador
+                    };
+                } else {
+                    indicatorSet.add(JSON.stringify({
+                        name: row.indicador_name,
+                        label: row.label_indicador
+                    }));
+                }
+                elementSet.add(row.elemento);
+            });
+
+            indicators = Array.from(indicatorSet).map(item => JSON.parse(item));
+            elements = Array.from(elementSet);
+        }
+
+        // State management
+        let currentState = {
+            xAxis: null,
+            yAxis: null
+        };
+
+        // Colors for elements
+        const colors = [
+            '#3498db', '#e74c3c', '#2ecc71', '#f39c12', 
+            '#9b59b6', '#1abc9c', '#34495e', '#e67e22'
+        ];
+
+        // Chart variables
+        let svg, g, tooltip, xScale, yScale, sizeScale;
+        let margin = { top: 40, right: 40, bottom: 60, left: 60 };
+
+        function initializeControls() {
+            const xControlsContainer = document.getElementById('x-axis-controls');
+            const yControlsContainer = document.getElementById('y-axis-controls');
+            const sizeInfoText = document.getElementById('size-info-text');
+
+            // Set size indicator info
+            if (sizeIndicator) {
+                sizeInfoText.textContent = sizeIndicator.label;
+            }
+
+            // Create radio buttons for each axis
+            indicators.forEach((indicator, index) => {
+                // X-axis controls
+                const xOption = document.createElement('div');
+                xOption.className = 'radio-option';
+                xOption.innerHTML = `
+                    <input type="radio" name="x-axis" value="${indicator.name}" id="x-${indicator.name}">
+                    <label for="x-${indicator.name}" class="radio-label">${indicator.label}</label>
+                `;
+                xControlsContainer.appendChild(xOption);
+
+                // Y-axis controls
+                const yOption = document.createElement('div');
+                yOption.className = 'radio-option';
+                yOption.innerHTML = `
+                    <input type="radio" name="y-axis" value="${indicator.name}" id="y-${indicator.name}">
+                    <label for="y-${indicator.name}" class="radio-label">${indicator.label}</label>
+                `;
+                yControlsContainer.appendChild(yOption);
+            });
+
+            // Set default selections (first two indicators)
+            if (indicators.length >= 2) {
+                currentState.xAxis = indicators[0].name;
+                currentState.yAxis = indicators[1].name;
+                document.getElementById(`x-${indicators[0].name}`).checked = true;
+                document.getElementById(`y-${indicators[1].name}`).checked = true;
+            }
+
+            // Add event listeners
+            document.querySelectorAll('input[name="x-axis"]').forEach(radio => {
+                radio.addEventListener('change', handleAxisChange);
+            });
+            
+            document.querySelectorAll('input[name="y-axis"]').forEach(radio => {
+                radio.addEventListener('change', handleAxisChange);
+            });
+
+            updateControlStates();
+        }
+
+        function handleAxisChange(event) {
+            const axis = event.target.name.split('-')[0]; // 'x' or 'y'
+            const value = event.target.value;
+            
+            currentState[axis + 'Axis'] = value;
+            updateControlStates();
+            updateChart();
+        }
+
+        function updateControlStates() {
+            // Enable/disable options based on current selection
+            document.querySelectorAll('input[name="x-axis"]').forEach(radio => {
+                const option = radio.closest('.radio-option');
+                if (radio.value === currentState.yAxis) {
+                    option.classList.add('disabled');
+                    radio.disabled = true;
+                } else {
+                    option.classList.remove('disabled');
+                    radio.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('input[name="y-axis"]').forEach(radio => {
+                const option = radio.closest('.radio-option');
+                if (radio.value === currentState.xAxis) {
+                    option.classList.add('disabled');
+                    radio.disabled = true;
+                } else {
+                    option.classList.remove('disabled');
+                    radio.disabled = false;
+                }
+            });
+        }
+
+        function initializeChart() {
+            const container = d3.select('.chart-container');
+            tooltip = d3.select('.tooltip');
+            
+            // Clear any existing content
+            container.select('svg').remove();
+            
+            const containerRect = container.node().getBoundingClientRect();
+            const width = containerRect.width;
+            const height = containerRect.height;
+            
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            g = svg.append('g')
+                .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+            // Create scales
+            xScale = d3.scaleLinear().range([0, innerWidth]);
+            yScale = d3.scaleLinear().range([innerHeight, 0]);
+            sizeScale = d3.scaleSqrt().range([5, 25]);
+        }
+
+        function updateChart() {
+            if (!currentState.xAxis || !currentState.yAxis || !sizeIndicator) return;
+
+            // Prepare chart data
+            const chartData = elements.map((element, index) => {
+                const elementData = processedData[element];
+                return {
+                    element: element,
+                    x: elementData[currentState.xAxis]?.valor || 0,
+                    y: elementData[currentState.yAxis]?.valor || 0,
+                    size: elementData[sizeIndicator.name]?.valor || 0,
+                    color: colors[index % colors.length],
+                    xLabel: elementData[currentState.xAxis]?.label || '',
+                    yLabel: elementData[currentState.yAxis]?.label || '',
+                    sizeLabel: elementData[sizeIndicator.name]?.label || ''
+                };
+            });
+
+            // Update scales
+            const xExtent = d3.extent(chartData, d => d.x);
+            const yExtent = d3.extent(chartData, d => d.y);
+            const sizeExtent = d3.extent(chartData, d => d.size);
+
+            xScale.domain([Math.min(0, xExtent[0] * 0.9), xExtent[1] * 1.1]);
+            yScale.domain([Math.min(0, yExtent[0] * 0.9), yExtent[1] * 1.1]);
+            sizeScale.domain(sizeExtent);
+
+            // Clear previous content
+            g.selectAll('.grid').remove();
+            g.selectAll('.axis').remove();
+            g.selectAll('.bubble').remove();
+            g.selectAll('.element-label').remove();
+            g.selectAll('.axis-label').remove();
+
+            // Add grid
+            const gridGroup = g.append('g').attr('class', 'grid');
+            
+            // Vertical grid lines
+            gridGroup.selectAll('.vertical-grid')
+                .data(xScale.ticks(8))
+                .enter()
+                .append('line')
+                .attr('class', 'grid-line')
+                .attr('x1', d => xScale(d))
+                .attr('x2', d => xScale(d))
+                .attr('y1', 0)
+                .attr('y2', yScale.range()[0]);
+
+            // Horizontal grid lines
+            gridGroup.selectAll('.horizontal-grid')
+                .data(yScale.ticks(6))
+                .enter()
+                .append('line')
+                .attr('class', 'grid-line')
+                .attr('x1', 0)
+                .attr('x2', xScale.range()[1])
+                .attr('y1', d => yScale(d))
+                .attr('y2', d => yScale(d));
+
+            // Add axes
+            g.append('g')
+                .attr('class', 'axis')
+                .attr('transform', `translate(0, ${yScale.range()[0]})`)
+                .call(d3.axisBottom(xScale).tickSize(0))
+                .selectAll('text')
+                .style('fill', '#6c757d')
+                .style('font-size', '11px');
+
+            g.append('g')
+                .attr('class', 'axis')
+                .call(d3.axisLeft(yScale).tickSize(0))
+                .selectAll('text')
+                .style('fill', '#6c757d')
+                .style('font-size', '11px');
+
+            // Add axis labels
+            const xIndicator = indicators.find(ind => ind.name === currentState.xAxis);
+            const yIndicator = indicators.find(ind => ind.name === currentState.yAxis);
+
+            g.append('text')
+                .attr('class', 'axis-label')
+                .attr('x', xScale.range()[1] / 2)
+                .attr('y', yScale.range()[0] + 45)
+                .text(xIndicator?.label || '');
+
+            g.append('text')
+                .attr('class', 'axis-label')
+                .attr('transform', 'rotate(-90)')
+                .attr('x', -yScale.range()[0] / 2)
+                .attr('y', -35)
+                .text(yIndicator?.label || '');
+
+            // Add bubbles
+            g.selectAll('.bubble')
+                .data(chartData)
+                .enter()
+                .append('circle')
+                .attr('class', 'bubble')
+                .attr('cx', d => xScale(d.x))
+                .attr('cy', d => yScale(d.y))
+                .attr('r', d => sizeScale(d.size))
+                .attr('fill', d => d.color)
+                .on('mouseover', function(event, d) {
+                    tooltip.style('opacity', 1)
+                        .html(`
+                            <div class="tooltip-title">${d.element}</div>
+                            <div class="tooltip-content">
+                                <div class="tooltip-row"><strong>X-Axis:</strong> ${d.xLabel}: ${d.x.toLocaleString()}</div>
+                                <div class="tooltip-row"><strong>Y-Axis:</strong> ${d.yLabel}: ${d.y.toLocaleString()}</div>
+                                <div class="tooltip-row"><strong>Size:</strong> ${d.sizeLabel}: ${d.size.toLocaleString()}</div>
+                            </div>
+                        `)
+                        .style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 10) + 'px');
+                })
+                .on('mouseout', function() {
+                    tooltip.style('opacity', 0);
+                })
+                .on('mousemove', function(event) {
+                    tooltip.style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 10) + 'px');
+                });
+
+            // Add labels (only on larger screens)
+            if (window.innerWidth > 480) {
+                g.selectAll('.element-label')
+                    .data(chartData)
+                    .enter()
+                    .append('text')
+                    .attr('class', 'element-label')
+                    .attr('x', d => xScale(d.x))
+                    .attr('y', d => yScale(d.y) + sizeScale(d.size) + 15)
+                    .text(d => d.element);
+            }
+        }
+
+        // Resize handler
+        let resizeTimer;
+        function handleResize() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                initializeChart();
+                updateChart();
+            }, 250);
+        }
+
+        // Initialize everything
+        function init() {
+            processData();
+            initializeControls();
+            initializeChart();
+            updateChart();
+            
+            window.addEventListener('resize', handleResize);
+        }
+
+        // Start when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
