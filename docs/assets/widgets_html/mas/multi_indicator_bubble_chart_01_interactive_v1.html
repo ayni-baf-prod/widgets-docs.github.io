@@ -91,55 +91,15 @@
         }
 
         .x-indicator {
-            background: #6c757d;
+            background: #3498db;
         }
 
         .y-indicator {
-            background: #495057;
+            background: #e74c3c;
         }
 
         .size-indicator {
-            background: #868e96;
-        }
-
-        .axis-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-        }
-
-        .axis-table th {
-            background: #f8f9fa;
-            color: #495057;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 8px 12px;
-            text-align: center;
-            border: 1px solid #dee2e6;
-        }
-
-        .axis-table td {
-            padding: 8px 12px;
-            text-align: center;
-            border: 1px solid #dee2e6;
-            background: white;
-        }
-
-        .axis-table tr:hover td {
-            background: #f8f9fa;
-        }
-
-        .axis-table input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .axis-table .indicator-label {
-            font-size: 12px;
-            color: #495057;
-            text-align: left;
-            padding-left: 8px;
+            background: #f39c12;
         }
 
         .radio-group {
@@ -182,8 +142,8 @@
         }
 
         .size-info {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
             border-radius: 6px;
             padding: 12px;
             margin-top: 16px;
@@ -192,7 +152,7 @@
         .size-info-title {
             font-size: 13px;
             font-weight: 600;
-            color: #495057;
+            color: #856404;
             margin-bottom: 6px;
             display: flex;
             align-items: center;
@@ -200,7 +160,7 @@
 
         .size-info-text {
             font-size: 12px;
-            color: #6c757d;
+            color: #856404;
             line-height: 1.4;
         }
 
@@ -347,20 +307,21 @@
                 <div class="control-group">
                     <div class="control-title">
                         <span class="axis-indicator x-indicator">X</span>
-                        Axis Configuration
+                        X Axis
                     </div>
-                    <table class="axis-table" id="axis-table">
-                        <thead>
-                            <tr>
-                                <th>X</th>
-                                <th>Y</th>
-                                <th>Indicator</th>
-                            </tr>
-                        </thead>
-                        <tbody id="axis-table-body">
-                            <!-- Axis checkboxes will be populated here -->
-                        </tbody>
-                    </table>
+                    <div class="radio-group" id="x-axis-controls">
+                        <!-- X-axis radio buttons will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">
+                        <span class="axis-indicator y-indicator">Y</span>
+                        Y Axis
+                    </div>
+                    <div class="radio-group" id="y-axis-controls">
+                        <!-- Y-axis radio buttons will be populated here -->
+                    </div>
                 </div>
                 
                 <div class="size-info">
@@ -379,22 +340,22 @@
     <script>
         // Sample data based on documentation
         const rawData = [
-            { elemento: "Producto A", indicador_name: "Market_Share", valor: 25.5, is_size_indicator: false, label_indicador: "Market Share (%)", color: "#3498db" },
-            { elemento: "Producto A", indicador_name: "Profit_Margin", valor: 15.2, is_size_indicator: false, label_indicador: "Profit Margin (%)", color: "#3498db" },
-            { elemento: "Producto A", indicador_name: "Sales_Volume", valor: 1200, is_size_indicator: true, label_indicador: "Sales Volume (Units)", color: "#3498db" },
-            { elemento: "Producto A", indicador_name: "Growth_Rate", valor: 8.3, is_size_indicator: false, label_indicador: "Growth Rate (%)", color: "#3498db" },
-            { elemento: "Producto B", indicador_name: "Market_Share", valor: 18.7, is_size_indicator: false, label_indicador: "Market Share (%)", color: "#2ecc71" },
-            { elemento: "Producto B", indicador_name: "Profit_Margin", valor: 22.1, is_size_indicator: false, label_indicador: "Profit Margin (%)", color: "#2ecc71" },
-            { elemento: "Producto B", indicador_name: "Sales_Volume", valor: 950, is_size_indicator: true, label_indicador: "Sales Volume (Units)", color: "#2ecc71" },
-            { elemento: "Producto B", indicador_name: "Growth_Rate", valor: 12.5, is_size_indicator: false, label_indicador: "Growth Rate (%)", color: "#2ecc71" },
-            { elemento: "Producto C", indicador_name: "Market_Share", valor: 31.2, is_size_indicator: false, label_indicador: "Market Share (%)", color: "#2ecc71" },
-            { elemento: "Producto C", indicador_name: "Profit_Margin", valor: 18.8, is_size_indicator: false, label_indicador: "Profit Margin (%)", color: "#2ecc71" },
-            { elemento: "Producto C", indicador_name: "Sales_Volume", valor: 1450, is_size_indicator: true, label_indicador: "Sales Volume (Units)", color: "#2ecc71" },
-            { elemento: "Producto C", indicador_name: "Growth_Rate", valor: 5.7, is_size_indicator: false, label_indicador: "Growth Rate (%)", color: "#2ecc71" },
-            { elemento: "Producto D", indicador_name: "Market_Share", valor: 14.3, is_size_indicator: false, label_indicador: "Market Share (%)", color: "#2ecc71" },
-            { elemento: "Producto D", indicador_name: "Profit_Margin", valor: 28.5, is_size_indicator: false, label_indicador: "Profit Margin (%)", color: "#2ecc71" },
-            { elemento: "Producto D", indicador_name: "Sales_Volume", valor: 650, is_size_indicator: true, label_indicador: "Sales Volume (Units)", color: "#2ecc71" },
-            { elemento: "Producto D", indicador_name: "Growth_Rate", valor: 18.9, is_size_indicator: false, label_indicador: "Growth Rate (%)", color: "#2ecc71" }
+            { elemento: "Producto A", indicador_name: "Market_Share", valor: 25.5, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto A", indicador_name: "Profit_Margin", valor: 15.2, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto A", indicador_name: "Sales_Volume", valor: 1200, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto A", indicador_name: "Growth_Rate", valor: 8.3, is_size_indicator: false, label_indicador: "Growth Rate (%)" },
+            { elemento: "Producto B", indicador_name: "Market_Share", valor: 18.7, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto B", indicador_name: "Profit_Margin", valor: 22.1, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto B", indicador_name: "Sales_Volume", valor: 950, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto B", indicador_name: "Growth_Rate", valor: 12.5, is_size_indicator: false, label_indicador: "Growth Rate (%)" },
+            { elemento: "Producto C", indicador_name: "Market_Share", valor: 31.2, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto C", indicador_name: "Profit_Margin", valor: 18.8, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto C", indicador_name: "Sales_Volume", valor: 1450, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto C", indicador_name: "Growth_Rate", valor: 5.7, is_size_indicator: false, label_indicador: "Growth Rate (%)" },
+            { elemento: "Producto D", indicador_name: "Market_Share", valor: 14.3, is_size_indicator: false, label_indicador: "Market Share (%)" },
+            { elemento: "Producto D", indicador_name: "Profit_Margin", valor: 28.5, is_size_indicator: false, label_indicador: "Profit Margin (%)" },
+            { elemento: "Producto D", indicador_name: "Sales_Volume", valor: 650, is_size_indicator: true, label_indicador: "Sales Volume (Units)" },
+            { elemento: "Producto D", indicador_name: "Growth_Rate", valor: 18.9, is_size_indicator: false, label_indicador: "Growth Rate (%)" }
         ];
 
         // Data processing
@@ -402,7 +363,6 @@
         let indicators = [];
         let sizeIndicator = null;
         let elements = [];
-        let elementColors = {};
 
         // Process raw data
         function processData() {
@@ -419,9 +379,6 @@
                     valor: row.valor,
                     label: row.label_indicador
                 };
-                
-                // Store element color
-                elementColors[row.elemento] = row.color;
                 
                 if (row.is_size_indicator) {
                     sizeIndicator = {
@@ -458,7 +415,8 @@
         let margin = { top: 40, right: 40, bottom: 60, left: 60 };
 
         function initializeControls() {
-            const axisTableBody = document.getElementById('axis-table-body');
+            const xControlsContainer = document.getElementById('x-axis-controls');
+            const yControlsContainer = document.getElementById('y-axis-controls');
             const sizeInfoText = document.getElementById('size-info-text');
 
             // Set size indicator info
@@ -466,19 +424,25 @@
                 sizeInfoText.textContent = sizeIndicator.label;
             }
 
-            // Create table rows for each indicator
+            // Create radio buttons for each axis
             indicators.forEach((indicator, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <input type="checkbox" id="x-${indicator.name}" value="${indicator.name}">
-                    </td>
-                    <td>
-                        <input type="checkbox" id="y-${indicator.name}" value="${indicator.name}">
-                    </td>
-                    <td class="indicator-label">${indicator.label}</td>
+                // X-axis controls
+                const xOption = document.createElement('div');
+                xOption.className = 'radio-option';
+                xOption.innerHTML = `
+                    <input type="radio" name="x-axis" value="${indicator.name}" id="x-${indicator.name}">
+                    <label for="x-${indicator.name}" class="radio-label">${indicator.label}</label>
                 `;
-                axisTableBody.appendChild(row);
+                xControlsContainer.appendChild(xOption);
+
+                // Y-axis controls
+                const yOption = document.createElement('div');
+                yOption.className = 'radio-option';
+                yOption.innerHTML = `
+                    <input type="radio" name="y-axis" value="${indicator.name}" id="y-${indicator.name}">
+                    <label for="y-${indicator.name}" class="radio-label">${indicator.label}</label>
+                `;
+                yControlsContainer.appendChild(yOption);
             });
 
             // Set default selections (first two indicators)
@@ -489,58 +453,48 @@
                 document.getElementById(`y-${indicators[1].name}`).checked = true;
             }
 
-            // Add event listeners for checkboxes
-            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.addEventListener('change', handleAxisChange);
+            // Add event listeners
+            document.querySelectorAll('input[name="x-axis"]').forEach(radio => {
+                radio.addEventListener('change', handleAxisChange);
+            });
+            
+            document.querySelectorAll('input[name="y-axis"]').forEach(radio => {
+                radio.addEventListener('change', handleAxisChange);
             });
 
             updateControlStates();
         }
 
         function handleAxisChange(event) {
-            const checkbox = event.target;
-            const isChecked = checkbox.checked;
-            const axis = checkbox.id.split('-')[0]; // 'x' or 'y'
-            const value = checkbox.value;
+            const axis = event.target.name.split('-')[0]; // 'x' or 'y'
+            const value = event.target.value;
             
-            if (isChecked) {
-                // Uncheck all other checkboxes in the same column
-                document.querySelectorAll(`input[id^="${axis}-"]`).forEach(cb => {
-                    if (cb !== checkbox) {
-                        cb.checked = false;
-                    }
-                });
-                currentState[axis + 'Axis'] = value;
-            } else {
-                // If unchecking, clear the axis selection
-                currentState[axis + 'Axis'] = null;
-            }
-            
+            currentState[axis + 'Axis'] = value;
             updateControlStates();
             updateChart();
         }
 
         function updateControlStates() {
-            // Disable checkboxes that would create conflicts
-            document.querySelectorAll('input[id^="x-"]').forEach(checkbox => {
-                const value = checkbox.value;
-                if (value === currentState.yAxis) {
-                    checkbox.disabled = true;
-                    checkbox.closest('tr').style.opacity = '0.5';
+            // Enable/disable options based on current selection
+            document.querySelectorAll('input[name="x-axis"]').forEach(radio => {
+                const option = radio.closest('.radio-option');
+                if (radio.value === currentState.yAxis) {
+                    option.classList.add('disabled');
+                    radio.disabled = true;
                 } else {
-                    checkbox.disabled = false;
-                    checkbox.closest('tr').style.opacity = '1';
+                    option.classList.remove('disabled');
+                    radio.disabled = false;
                 }
             });
 
-            document.querySelectorAll('input[id^="y-"]').forEach(checkbox => {
-                const value = checkbox.value;
-                if (value === currentState.xAxis) {
-                    checkbox.disabled = true;
-                    checkbox.closest('tr').style.opacity = '0.5';
+            document.querySelectorAll('input[name="y-axis"]').forEach(radio => {
+                const option = radio.closest('.radio-option');
+                if (radio.value === currentState.xAxis) {
+                    option.classList.add('disabled');
+                    radio.disabled = true;
                 } else {
-                    checkbox.disabled = false;
-                    checkbox.closest('tr').style.opacity = '1';
+                    option.classList.remove('disabled');
+                    radio.disabled = false;
                 }
             });
         }
@@ -583,7 +537,7 @@
                     x: elementData[currentState.xAxis]?.valor || 0,
                     y: elementData[currentState.yAxis]?.valor || 0,
                     size: elementData[sizeIndicator.name]?.valor || 0,
-                    color: elementColors[element] || colors[index % colors.length], // Use data color or fallback
+                    color: colors[index % colors.length],
                     xLabel: elementData[currentState.xAxis]?.label || '',
                     yLabel: elementData[currentState.yAxis]?.label || '',
                     sizeLabel: elementData[sizeIndicator.name]?.label || ''
