@@ -93,16 +93,16 @@
 
 ## Ejemplo Interactivo
 
-<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; height: 565px; position: relative; overflow: hidden;">
+<div class="widget-interactive-container" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px; margin-bottom: 20px; height: 650px; position: relative; overflow: hidden;">
   <iframe src="../../../assets/widgets_html/mas/multi_indicator_bubble_chart_01_interactive.html" 
-          style="width: 100%; height: 475px; border: none; overflow: hidden; "
+          style="width: 100%; height: 575px; border: none; overflow: hidden; "
           loading="lazy"
           title="Ejemplo Interactivo del Multi-Indicator Bubble Chart">
   </iframe>
 </div>
 
 <style>
-.widget-interactive-container iframe { min-height: 550px; }
+.widget-interactive-container iframe { min-height: 650px; }
 </style>
 
 ## 8. Requerimientos Técnicos
